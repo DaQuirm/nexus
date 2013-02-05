@@ -7,7 +7,18 @@ describe('nx.Property', function() {
 			property.should.be.an.instanceof(nx.Property);
 		});
 
-		it('accepts a property setter for side effects');
+		it('accepts a property setter for side effects', function() {
+			var counter = 0;
+			var property = new nx.Property({
+				set: function(value) {
+					counter++;
+				}
+			});
+
+			property.value = "cellar door";
+			counter.should.equal(1);
+		});
+
 		it('accepts a compare function for comparing values');
 	});
 
@@ -102,7 +113,6 @@ describe('nx.Property', function() {
 			year.value.should.equal(1985);
 		});
 
-		it('accepts arrays of converters and mappings for multistage data transformations');
 	});
 
 	describe('unbind', function() {
