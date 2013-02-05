@@ -10,9 +10,15 @@
   <script src="chai/chai.js"></script>
   <script src="mocha/mocha.js"></script>
   <script>mocha.setup('bdd')</script>
+
+  <!-- Source -->
+  <script src="src/property.js"></script>
+
+  <!-- Specs -->
   <script src="test/property.spec.js"></script>
   <script src="test/mapping.spec.js"></script>
   <script src="test/binding.spec.js"></script>
+
   <script>
     window.onload = function(){
       var should = chai.should();
