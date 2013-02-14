@@ -49,17 +49,6 @@ describe('nx.Property', function() {
 			var binding = p.bind(q, '->');
 			binding.should.be.an.instanceof(nx.Binding);
 		});
-
-		it('accepts an nx.Binding instance as the second argument', function() {
-			var date = new nx.Property();
-			var year = new nx.Property();
-			var yearBinding = new nx.Binding(date, year, '<->', new nx.Mapping({ '@':'year' }));
-			date.bind(year, yearBinding);
-			year.value = 2015 // also 88mph
-			date.value.year.should.equal(2015);
-			date.value = { year: 1985, month: 'October', day:26 };
-			year.value.should.equal(1985);
-		});
 	});
 
 	describe('onvalue', function() {
