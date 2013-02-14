@@ -79,5 +79,6 @@ describe('nx.Binding', function() {
 			year.value.should.equal(1985);
 		});
 
+		it('prevents perpetual update when syncing two-way bound properties');
 	});
 });
