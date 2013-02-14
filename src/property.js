@@ -5,8 +5,6 @@ window.nx = window.nx || {};
 nx.Property = function(options) {
 	var _value;
 	options = options || {};
-	this.bindings = {};
-	this.bindingIndex = 0;
 
 	Object.defineProperty(this, 'value', {
 		enumerable : true,
@@ -16,16 +14,14 @@ nx.Property = function(options) {
 			if (typeof options.set !== 'undefined') {
 				options.set.call(this, value);
 			}
-			Object.keys(this.bindings).forEach(function(binding) {
-				this.bindings.sync();
-			});
 		}
 	});
 };
 
-nx.Property.prototype.bind = function(target, mode, sTransform, tTransform) {
-	this.bindings[this.bindingIndex++] = new nx.Binding(
-		bindingIndex,
+nx.Property.prototype.bind = function(target, mode, sConversion, tConversion) {
+	new nx.Binding(
+		this,
+		target,
 		mode,
 		sTransform,
 		tTransform
