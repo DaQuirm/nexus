@@ -7,8 +7,9 @@
 </head>
 <body>
   <div id="mocha"></div>
-  <script src="chai/chai.js"></script>
   <script src="mocha/mocha.js"></script>
+  <script src="chai/chai.js"></script>
+  <script src="chai-spies/chai-spies.js"></script>
   <script>mocha.setup('bdd')</script>
 
   <!-- Source -->
@@ -18,6 +19,7 @@
   <script src="test/property.spec.js"></script>
   <script src="test/mapping.spec.js"></script>
   <script src="test/binding.spec.js"></script>
+  <script src="test/event.spec.js"></script>
 
   <script>
     window.onload = function(){
