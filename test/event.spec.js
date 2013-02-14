@@ -19,6 +19,17 @@ describe('nx.Event', function() {
 			evt.trigger('cellar door');
 			triggerCount.should.equal(1);
 		});
+
+		it('triggers all registered handlers', function() {
+			var evt = new nx.Event();
+			var handler = function(value) { return value; };
+			var anotherHandler = function(value) { return value; };
+			var handlerSpy = chai.spy(handler);
+			var anotherHandlerSpy = chai.spy(anotherHandler);
+			evt.trigger('cellar door');
+			handlerSpy.should.have.been.called;
+			anotherHandlerSpy.should.have.been.called;
+		});
 	});
 
 	describe('add', function() {
