@@ -49,15 +49,15 @@ describe('nx.Event', function() {
 	describe('remove', function() {
 		it('removes a handler from the event handler list by its name', function() {
 			var evt = new nx.Event();
-			var triggerCount = 0;
-			evt.add(function(){
+			var handler = function(){
 				triggerCount++;
-			}, 'event-handler');
+			};
+			var handlerSpy = chai.spy(handler);
+			evt.add(handler, 'event-handler');
 			evt.trigger();
-			triggerCount.should.equal(1);
 			evt.remove('event-handler');
 			evt.trigger();
-			triggerCount.should.not.equal(2);
+			handlerSpy.should.have.been.called.once;
 		});
 	});
 });
