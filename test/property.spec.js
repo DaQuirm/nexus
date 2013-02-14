@@ -73,4 +73,22 @@ describe('nx.Property', function() {
 			p.value.should.not.equal('cellar door');
 		});
 	});
+
+	describe('onvalue', function() {
+		it('is an nx.Event instance', function() {
+			var p = new nx.Property();
+			p.onvalue.should.be.an.instanceof(nx.Event);
+		});
+
+		it('is triggered when value is set and the new value is passed to the event handlers as an argument', function() {
+			var p = new nx.Property();
+			var handler = function(value){
+				value.should.equal('cellar door');
+			};
+			var handlerSpy = chai.spy(handler);
+			p.onvalue.add(handler);
+			p.value = 'cellar door';
+			handlerSpy.should.have.been.called;
+		});
+	});
 });
