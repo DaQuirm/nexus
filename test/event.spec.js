@@ -31,6 +31,8 @@ describe('nx.Event', function() {
 			evt.trigger();
 			triggerCount.should.equal(1);
 		});
+
+		it('throws an error if handler\'s name is alredy in list');
 	});
 
 	describe('remove', function() {
