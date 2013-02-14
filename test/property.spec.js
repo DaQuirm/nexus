@@ -62,18 +62,6 @@ describe('nx.Property', function() {
 		});
 	});
 
-	describe('unbind', function() {
-		it('removes specified binding', function() {
-			var p = new nx.Property();
-			var q = new nx.Property();
-			p.value = 'echo'
-			var binding = p.bind(q, '<->');
-			p.unbind(q);
-			q.value = 'cellar door';
-			p.value.should.not.equal('cellar door');
-		});
-	});
-
 	describe('onvalue', function() {
 		it('is an nx.Event instance', function() {
 			var p = new nx.Property();
