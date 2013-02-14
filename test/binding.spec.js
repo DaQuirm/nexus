@@ -12,7 +12,6 @@ describe('nx.Binding', function() {
 			source.value = 'cellar door';
 			var target = new nx.Property();
 			var binding = new nx.Binding(source, target, '<->');
-			binding.sync();
 			target.value.should.equal('cellar door');
 		});
 
@@ -21,7 +20,6 @@ describe('nx.Binding', function() {
 			var q = new nx.Property();
 			var binding = new nx.Binding(p, q, '<-');
 			p.value = 'cellar door';
-			binding.sync();
 			q.value.should.not.equal('cellar door');
 			q.value = 'echo';
 			p.value.should.equal('echo');
@@ -32,7 +30,6 @@ describe('nx.Binding', function() {
 			var q = new nx.Property();
 			var binding = new nx.Binding(p, q, '->');
 			p.value = 'cellar door';
-			binding.sync();
 			q.value.should.equal('cellar door');
 			q.value = 'echo';
 			p.value.should.not.equal('echo');
@@ -43,7 +40,6 @@ describe('nx.Binding', function() {
 			var negative = new nx.Property();
 			var binding = new nx.Binding(positive, negative, '->', function(value) { return -value; });
 			positive.value = 1;
-			binding.sync();
 			negative.value.should.equal(-1);
 		});
 
@@ -59,10 +55,8 @@ describe('nx.Binding', function() {
 			);
 
 			minutes.value = 2;
-			binding.sync();
 			seconds.value.should.equal(120);
 			seconds.value = 240;
-			binding.sync();
 			minutes.value.should.equal(4);
 		});
 
@@ -71,9 +65,7 @@ describe('nx.Binding', function() {
 			var year = new nx.Property();
 			var binding = new nx.Binding(date, year, '<-', new nx.Mapping({ '@':'year' }));
 			date.value = { year: 1985, month: 'October', day:26 };
-			binding.sync();
 			year.value = 2015 // also 88mph
-			binding.sync();
 			date.value.year.should.equal(2015);
 		});
 
@@ -82,23 +74,10 @@ describe('nx.Binding', function() {
 			var year = new nx.Property();
 			var binding = new nx.Binding(date, year, '<->', new nx.Mapping({ '@':'year' }));
 			year.value = 2015 // also 88mph
-			binding.sync();
 			date.value.year.should.equal(2015);
 			date.value = { year: 1985, month: 'October', day:26 };
-			binding.sync();
 			year.value.should.equal(1985);
 		});
 
-	});
-
-	describe('sync', function() {
-		it('updates bound property values from source to target', function() {
-			var p = new nx.Property();
-			var q = new nx.Property();
-			p.value = 'cellar door';
-			var binding = p.bind(q, '->');
-			binding.sync();
-			q.value.should.equal('cellar door');
-		});
 	});
 });
