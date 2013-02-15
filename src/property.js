@@ -23,7 +23,7 @@ nx.Property = function(options) {
 };
 
 nx.Property.prototype.bind = function(target, mode, sourceConversion, targetConversion) {
-	new nx.Binding(
+	return new nx.Binding(
 		this,
 		target,
 		mode,
