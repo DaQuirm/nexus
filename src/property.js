@@ -22,12 +22,12 @@ nx.Property = function(options) {
 	this.onvalue = new nx.Event();
 };
 
-nx.Property.prototype.bind = function(target, mode, sConversion, tConversion) {
+nx.Property.prototype.bind = function(target, mode, sourceConversion, targetConversion) {
 	new nx.Binding(
 		this,
 		target,
 		mode,
-		sTransform,
-		tTransform
+		sourceConversion,
+		targetConversion
 	);
 };

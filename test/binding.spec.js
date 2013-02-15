@@ -2,16 +2,18 @@ describe('nx.Binding', function() {
 
 	describe('constructor', function() {
 		it('creates a binding instance', function() {
-			var binding = new nx.Binding();
+			var p = new nx.Property();
+			var q = new nx.Property();
+			var binding = new nx.Binding(p, q, '->');
 			binding.should.be.an('object');
 			binding.should.be.an.instanceof(nx.Binding);
 		});
 
 		it('creates a binding for a source property and a target property using specified mode', function() {
 			var source = new nx.Property();
-			source.value = 'cellar door';
 			var target = new nx.Property();
 			var binding = new nx.Binding(source, target, '<->');
+			source.value = 'cellar door';
 			target.value.should.equal('cellar door');
 		});
 
@@ -19,10 +21,10 @@ describe('nx.Binding', function() {
 			var p = new nx.Property();
 			var q = new nx.Property();
 			var binding = new nx.Binding(p, q, '<-');
-			p.value = 'cellar door';
-			q.value.should.not.equal('cellar door');
 			q.value = 'echo';
 			p.value.should.equal('echo');
+			p.value = 'cellar door';
+			q.value.should.not.equal('cellar door');
 		});
 
 		it('can create one way bindings from source property to target', function(){
@@ -78,7 +80,5 @@ describe('nx.Binding', function() {
 			date.value = { year: 1985, month: 'October', day:26 };
 			year.value.should.equal(1985);
 		});
-
-		it('prevents perpetual update when syncing two-way bound properties');
 	});
 });
