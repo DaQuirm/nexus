@@ -17,7 +17,7 @@ describe('nx.Binding', function() {
 			target.value.should.equal('cellar door');
 		});
 
-		it('can create one way bindings from target property to source', function(){
+		it('can create one way bindings from target property to source', function() {
 			var p = new nx.Property();
 			var q = new nx.Property();
 			var binding = new nx.Binding(p, q, '<-');
@@ -27,7 +27,7 @@ describe('nx.Binding', function() {
 			q.value.should.not.equal('cellar door');
 		});
 
-		it('can create one way bindings from source property to target', function(){
+		it('can create one way bindings from source property to target', function() {
 			var p = new nx.Property();
 			var q = new nx.Property();
 			var binding = new nx.Binding(p, q, '->');
