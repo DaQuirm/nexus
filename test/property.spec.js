@@ -59,13 +59,12 @@ describe('nx.Property', function() {
 
 		it('is triggered when value is set and the new value is passed to the event handlers as an argument', function() {
 			var p = new nx.Property();
-			var handler = function(value){
+			var handler = chai.spy(function(value){
 				value.should.equal('cellar door');
-			};
-			var handlerSpy = chai.spy(handler);
+			});
 			p.onvalue.add(handler);
 			p.value = 'cellar door';
-			handlerSpy.should.have.been.called;
+			handler.should.have.been.called();
 		});
 	});
 });

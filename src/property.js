@@ -3,6 +3,7 @@
 window.nx = window.nx || {};
 
 nx.Property = function(options) {
+	var _this = this;
 	var _value;
 	options = options || {};
 
@@ -14,8 +15,11 @@ nx.Property = function(options) {
 			if (typeof options.set !== 'undefined') {
 				options.set.call(this, value);
 			}
+			_this.onvalue.trigger(value);
 		}
 	});
+
+	this.onvalue = new nx.Event();
 };
 
 nx.Property.prototype.bind = function(target, mode, sConversion, tConversion) {
