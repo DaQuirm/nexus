@@ -9,7 +9,7 @@ nx.Event = function() {
 
 nx.Event.prototype.trigger = function(argument) {
 	for (var name in this.handlers) {
-		this.handlers[name](argument);
+		this.handlers[name].call(null, argument);
 	}
 };
 
