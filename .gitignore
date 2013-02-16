@@ -2,3 +2,4 @@ mocha
 chai
 chai-spies
 node_modules
+build
