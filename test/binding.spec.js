@@ -52,8 +52,8 @@ describe('nx.Binding', function() {
 				seconds,
 				minutes,
 				'<->',
-				function(value) {return value/60;},
-				function(value) {return value*60;}
+				function(value) { return value/60; },
+				function(value) { return value*60; }
 			);
 
 			minutes.value = 2;
@@ -65,7 +65,7 @@ describe('nx.Binding', function() {
 		it('accepts a data mapping for one-way bindings', function() {
 			var date = new nx.Property();
 			var year = new nx.Property();
-			var binding = new nx.Binding(date, year, '<-', new nx.Mapping({ '@':'year' }));
+			var binding = new nx.Binding(date, year, '<-', new nx.Mapping({ '_':'year' }));
 			date.value = { year: 1985, month: 'October', day:26 };
 			year.value = 2015 // also 88mph
 			date.value.year.should.equal(2015);
@@ -74,7 +74,7 @@ describe('nx.Binding', function() {
 		it('inverts the data mapping if only one is passed for a two-way binding', function() {
 			var date = new nx.Property();
 			var year = new nx.Property();
-			var binding = new nx.Binding(date, year, '<->', new nx.Mapping({ '@':'year' }));
+			var binding = new nx.Binding(date, year, '<->', new nx.Mapping({ '_':'year' }));
 			year.value = 2015 // also 88mph
 			date.value.year.should.equal(2015);
 			date.value = { year: 1985, month: 'October', day:26 };

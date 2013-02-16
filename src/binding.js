@@ -4,6 +4,7 @@ window.nx = window.nx || {};
 
 nx.Binding = function(source, target, mode, sourceConversion, targetConversion) {
 	var _this = this;
+	targetConversion = targetConversion || sourceConversion; // for <- mode
 	this.mode = mode;
 	this.locked = false;
 	if (mode !== '<-') { // -> or <->
@@ -28,9 +29,12 @@ nx.Binding.prototype.sync = function(recipient, value, conversion) {
 		}
 	}
 	if (typeof conversion !== 'undefined') {
-		if (typeof conversion === 'function') {
-			value = conversion(value);
+		if (conversion instanceof nx.Mapping) {
+			value = conversion.map(value, recipient.value);
+		} else if (typeof conversion === 'function') {
+			recipient.value = conversion(value);
 		}
+	} else {
+		recipient.value = value;
 	}
-	recipient.value = value;
 };
