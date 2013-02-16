@@ -74,8 +74,9 @@ describe('nx.Binding', function() {
 		it('inverts the data mapping if only one is passed for a two-way binding', function() {
 			var date = new nx.Property();
 			var year = new nx.Property();
-			var binding = new nx.Binding(date, year, '<->', new nx.Mapping({ '_':'year' }));
-			year.value = 2015 // also 88mph
+			date.value = {};
+			var binding = new nx.Binding(date, year, '<->', new nx.Mapping({ 'year':'_' }));
+			year.value = 2015; // also 88mph
 			date.value.year.should.equal(2015);
 			date.value = { year: 1985, month: 'October', day:26 };
 			year.value.should.equal(1985);
