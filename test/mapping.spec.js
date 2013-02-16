@@ -16,23 +16,21 @@ describe('nx.Mapping', function() {
 			var mapping = new nx.Mapping({'price':'_'});
 			var price = 0;
 			var book = { title:'The Last Hero', price:24.73 }
-			mapping.map(book, price);
+			price = mapping.map(book);
 			price.should.equal(24.73);
 		});
 
-		it('returns mapping result as well as sets it to the second argument', function() {
+		it('returns mapping result', function() {
 			var mapping = new nx.Mapping({'price':'_'});
-			var price = 0;
 			var book = { title:'The Last Hero', price:24.73 }
-			var result = mapping.map(book, price);
+			var price = mapping.map(book);
 			price.should.equal(24.73);
-			result.should.equal(price);
 		});
 
-		it('maps a value to a field in an object literal', function() {
+		it('maps a value to a field in an object literal and merges it with the second argument', function() {
 			var mapping = new nx.Mapping({'_':'price'});
 			var price = 24.73;
-			var book = { title:'The Last Hero' }
+			var book = { title:'The Last Hero' };
 			mapping.map(price, book);
 			book.price.should.equal(24.73);
 		});

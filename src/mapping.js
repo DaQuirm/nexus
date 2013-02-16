@@ -6,19 +6,19 @@ nx.Mapping = function(pattern) {
 	this.pattern = pattern;
 };
 
-nx.Mapping.prototype.map = function(from, to) {
+nx.Mapping.prototype.map = function(source, target) {
 	if (typeof this.pattern !== 'undefined') {
 		for (var item in this.pattern) {
 			if (item === '_') {
-				return to[this.pattern[item]] = from;
+				return target[this.pattern[item]] = source;
 			} else if (this.pattern[item] === '_') {
-				return to = from[this.pattern[item]];
+				return target = source[item];
 			} else {
-				to[this.pattern[item]] = from[item];
+				target[this.pattern[item]] = source[item];
 			}
 		}
-		return to;
+		return target;
 	} else {
-		return to = from;
+		return target = source;
 	}
 };
