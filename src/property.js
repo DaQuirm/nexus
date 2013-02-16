@@ -12,9 +12,6 @@ nx.Property = function(options) {
 		get: function() { return _value; },
 		set: function(value) {
 			_value = value;
-			if (typeof options.set !== 'undefined') {
-				options.set.call(this, value);
-			}
 			_this.onvalue.trigger(value);
 		}
 	});

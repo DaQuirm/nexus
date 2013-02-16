@@ -7,18 +7,6 @@ describe('nx.Property', function() {
 			property.should.be.an.instanceof(nx.Property);
 		});
 
-		it('accepts a property setter for side effects', function() {
-			var counter = 0;
-			var property = new nx.Property({
-				set: function(value) {
-					counter++;
-				}
-			});
-
-			property.value = "cellar door";
-			counter.should.equal(1);
-		});
-
 		it('accepts a compare function for comparing values');
 	});
 
