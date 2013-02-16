@@ -1,0 +1,12 @@
+{
+  "name": "nexus",
+  "version": "0.0.0",
+  "author": "DaQuirm <leo.daquirm@gmail.com>",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.0rc8"
+  },
+  "engines": {
+    "node": ">=0.8"
+  }
+}
