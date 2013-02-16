@@ -35,4 +35,15 @@ describe('nx.Mapping', function() {
 			book.price.should.equal(24.73);
 		});
 	});
+
+	describe('inverse', function() {
+		it('is a factory method that creates a mirror mapping', function() {
+			var mapping = new nx.Mapping({'_':'price'});
+			var inverse = mapping.inverse();
+			inverse.should.be.an.instanceof(nx.Mapping);
+			var book = { title:'The Last Hero', price:24.73 };
+			var price = inverse.map(book);
+			price.should.equal(24.73);
+		})
+	});
 });

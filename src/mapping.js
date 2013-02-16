@@ -22,3 +22,11 @@ nx.Mapping.prototype.map = function(source, target) {
 		return target = source;
 	}
 };
+
+nx.Mapping.prototype.inverse = function() {
+	var inversePattern = {};
+	for (var item in this.pattern) {
+		inversePattern[this.pattern[item]] = item;
+	}
+	return new nx.Mapping(inversePattern);
+};
