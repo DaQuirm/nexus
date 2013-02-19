@@ -1,4 +1,5 @@
 describe('nx.Binding', function() {
+	'use strict';
 
 	describe('constructor', function() {
 		it('creates a binding instance', function() {
@@ -67,7 +68,7 @@ describe('nx.Binding', function() {
 			var year = new nx.Property();
 			var binding = new nx.Binding(date, year, '<-', new nx.Mapping({ '_':'year' }));
 			date.value = { year: 1985, month: 'October', day:26 };
-			year.value = 2015 // also 88mph
+			year.value = 2015; // also 88mph
 			date.value.year.should.equal(2015);
 		});
 

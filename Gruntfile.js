@@ -26,17 +26,34 @@ module.exports = function(grunt) {
 			}
 		},
 		jshint: {
-			build: ['build/nexus.js'],
-			source: ['src/**/*.js'],
-			test: ['test/**/*.js'],
-			options: {
-				boss: true,
-				browser: true,
-				forin: false,
-				strict: true,
-				globals: {
-					'nx': true
+			build: {
+				files: {
+					src: 'build/nexus.js'
 				},
+				options: {
+					boss: true,
+					browser: true,
+					forin: false,
+					strict: true,
+					globals: {
+						nx: true
+					}
+				}
+			},
+			test: {
+				files: {
+					src: 'test/**/*.js'
+				},
+				options: {
+					es5: true, // instanceof assertions
+					strict: true,
+					globals: {
+						chai: true,
+						describe: true,
+						it: true,
+						nx: true
+					}
+				}
 			}
 		}
 	});

@@ -1,4 +1,5 @@
 describe('nx.Property', function() {
+	'use strict';
 
 	describe('constructor', function() {
 		it('creates a property instance', function() {

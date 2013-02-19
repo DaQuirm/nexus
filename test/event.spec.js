@@ -1,4 +1,5 @@
 describe('nx.Event', function() {
+	'use strict';
 
 	describe('constructor', function() {
 		it('creates an event instance', function() {

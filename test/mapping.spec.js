@@ -1,4 +1,6 @@
 describe('nx.Mapping', function() {
+	'use strict';
+
 	describe('constructor', function() {
 		it('creates a mapping', function() {
 			var mapping = new nx.Mapping();
@@ -15,14 +17,14 @@ describe('nx.Mapping', function() {
 		it('maps an object literal to its field', function() {
 			var mapping = new nx.Mapping({'price':'_'});
 			var price = 0;
-			var book = { title:'The Last Hero', price:24.73 }
+			var book = { title:'The Last Hero', price:24.73 };
 			price = mapping.map(book);
 			price.should.equal(24.73);
 		});
 
 		it('returns mapping result', function() {
 			var mapping = new nx.Mapping({'price':'_'});
-			var book = { title:'The Last Hero', price:24.73 }
+			var book = { title:'The Last Hero', price:24.73 };
 			var price = mapping.map(book);
 			price.should.equal(24.73);
 		});
@@ -44,6 +46,6 @@ describe('nx.Mapping', function() {
 			var book = { title:'The Last Hero', price:24.73 };
 			var price = inverse.map(book);
 			price.should.equal(24.73);
-		})
+		});
 	});
 });
