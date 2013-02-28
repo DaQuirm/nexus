@@ -36,7 +36,8 @@ module.exports = function(grunt) {
 					forin: false,
 					strict: true,
 					globals: {
-						nx: true
+						nx: true,
+						nxt: true
 					}
 				}
 			},
@@ -51,7 +52,8 @@ module.exports = function(grunt) {
 						chai: true,
 						describe: true,
 						it: true,
-						nx: true
+						nx: true,
+						nxt: true
 					}
 				}
 			}
