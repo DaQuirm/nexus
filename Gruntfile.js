@@ -46,6 +46,7 @@ module.exports = function(grunt) {
 					src: 'test/**/*.js'
 				},
 				options: {
+					browser: true,
 					es5: true, // instanceof assertions
 					strict: true,
 					globals: {
