@@ -7,13 +7,6 @@ describe('nxt.AttrRenderer', function() {
 			renderer.name.should.equal('class');
 			renderer.value.should.equal('large-text');
 		});
-
-		it('can be created with a helper');
-
-		it('has \'attr\' type', function() {
-			var renderer = new nxt.AttrRenderer('class', 'large-text');
-			renderer.type.should.equal('attr');
-		});
 	});
 
 	describe('render', function() {

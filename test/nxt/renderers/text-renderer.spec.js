@@ -7,12 +7,6 @@ describe('nxt.TextRenderer', function() {
 			var renderer = new nxt.TextRenderer(element);
 			renderer.element.should.equal(element);
 		});
-
-		it('has \'Text\' type', function() {
-			var element = document.createElement('div');
-			var renderer = new nxt.TextRenderer(element);
-			renderer.type.should.equal('Text');
-		});
 	});
 
 	describe('render', function() {
