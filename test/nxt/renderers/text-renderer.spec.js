@@ -36,7 +36,7 @@ describe('nxt.TextRenderer', function() {
 		it('stores rendered content reference in the `content` property', function() {
 			var element = document.createElement('span');
 			var renderer = new nxt.TextRenderer(element);
-			var content = renderer.render(new nxt.Text('cellar door'));
+			var content = renderer.render(nxt.Text('cellar door'));
 			renderer.content.should.equal(content);
 		});
 
@@ -55,7 +55,7 @@ describe('nxt.TextRenderer', function() {
 			element.appendChild(movieNode);
 			var renderer = new nxt.TextRenderer(element);
 			renderer.insertReference = movieNode;
-			renderer.render(new nxt.Text('Lethal Weapon I'));
+			renderer.render(nxt.Text('Lethal Weapon I'));
 			element.childNodes.length.should.equal(2);
 			element.childNodes[0].nodeValue.should.equal('Lethal Weapon I');
 			element.childNodes[1].nodeValue.should.equal('Lethal Weapon II');
