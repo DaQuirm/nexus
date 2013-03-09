@@ -43,7 +43,7 @@ describe('nxt.TextRenderer', function() {
 		it('replaces previously rendered content', function() {
 			var element = document.createElement('span');
 			var renderer = new nxt.TextRenderer(element);
-			var content = renderer.render(nxt.Text('before'));
+			renderer.render(nxt.Text('before'));
 			element.textContent.should.equal('before');
 			renderer.render(nxt.Text('after'));
 			element.textContent.should.equal('after');
