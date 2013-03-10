@@ -60,5 +60,12 @@ describe('nxt helpers', function() {
 			obj.conversion.should.equal(converter);
 			obj.type.should.equal('Binding');
 		});
+
+		it('has mode set to `->` by default', function() {
+			var property = new nx.Property();
+			var converter = function(value) { return -value; };
+			var obj = nxt.Binding(property, converter);
+			obj.type.should.equal('->');
+		});
 	});
 });
