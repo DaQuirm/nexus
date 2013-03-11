@@ -64,5 +64,21 @@ describe('nxt.ContentManager', function() {
 			);
 			manager.regions[0].element.should.equal(element);
 		});
+
+		it('passes insert reference if a content region is followed by a static item', function () {
+			var element = document.createElement('div');
+			var manager = new nxt.ContentManager(element);
+			var property = new nx.Property();
+			manager.render(
+				nxt.Attr('class', 'container'),
+				nxt.Element('div'),
+				nxt.Binding(property, function(value) { return value; }),
+				nxt.Binding(property, function(value) { return value; }),
+				nxt.Element('div', nxt.Text('cellar door'))
+			);
+			manager.regions[0].insertReference.nodeType.should.equal(Node.ELEMENT_NODE);
+			manager.regions[0].insertReference.nodeName.should.equal('div');
+			manager.regions[0].insertReference.textContent.should.equal('cellar door');
+		});
 	});
 });
