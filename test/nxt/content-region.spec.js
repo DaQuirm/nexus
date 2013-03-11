@@ -4,7 +4,7 @@ describe('nxt.ContentRegion', function() {
 	describe('constructor', function() {
 		it('creates a new content region', function() {
 			var container = document.createElement('div');
-			var region = new nxt.ContentRegion(element);
+			var region = new nxt.ContentRegion(container);
 			region.element.should.equal(container);
 			region.items.should.be.an.instanceof(Array);
 			region.items.should.be.empty();
@@ -17,12 +17,12 @@ describe('nxt.ContentRegion', function() {
 			var container = document.createElement('div');
 			var region = new nxt.ContentRegion(container);
 			region.add(nxt.Binding(label, function(value) { return nxt.Text(value); }));
-			region.add(nxt.Binding(label, function(value) { return nxt.Text(',' value); }));
+			region.add(nxt.Binding(label, function(value) { return nxt.Text(value); }));
 			region.items.length.should.equal(2);
 		});
 	});
 
-	it('keeps track of items\' visibility and updates insert references so that items are rendered in the correct order', function () {\
+	it('keeps track of items\' visibility and updates insert references so that items are rendered in the correct order', function () {
 		var container = document.createElement('div');
 		var region = new nxt.ContentRegion(container);
 		var first = new nx.Property();
@@ -42,7 +42,7 @@ describe('nxt.ContentRegion', function() {
 		container.textContent.should.equal('rock & roll');
 	});
 
-	it('uses an insert reference for prepending content instead of appending it to the element directly', function () {\
+	it('uses an insert reference for prepending content instead of appending it to the element directly', function () {
 		var container = document.createElement('div');
 		var exclamationMark = document.createTextNode('!');
 		container.appendChild(exclamationMark);

@@ -40,8 +40,8 @@ describe('nxt helpers', function() {
 
 		it('renders inner content', function() {
 			var elem = nxt.Element('div',
-				Attr('class', 'button-big-blue'),
-				Text('Click Me!')
+				nxt.Attr('class', 'button-big-blue'),
+				nxt.Text('Click Me!')
 			);
 			elem.childNodes.length.should.equal(1);
 			elem.childNodes[0].nodeType.should.equal(Node.TEXT_NODE);
