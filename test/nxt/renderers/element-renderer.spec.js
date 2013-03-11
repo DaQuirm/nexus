@@ -7,10 +7,16 @@ describe('nxt.ElementRenderer', function() {
 			var renderer = new nxt.ElementRenderer(element);
 			renderer.element.should.equal(element);
 		});
+
+		it('replaces previously rendered content by default', function() {
+			var element = document.createElement('div');
+			var renderer = new nxt.ElementRenderer(element);
+			renderer.replace.should.equal(true);
+		});
 	});
 
 	describe('render', function() {
-		it('appends an element to the container if there is no insert reference and no previously rendered content', function() {
+		it('appends an element to the container if there is no insert reference and replace is `false`', function() {
 			var element = document.createElement('div');
 			var renderer = new nxt.ElementRenderer(element);
 			renderer.render(nxt.Element('span', nxt.Text('cellar door')));
@@ -35,13 +41,16 @@ describe('nxt.ElementRenderer', function() {
 			renderer.content.should.equal(content);
 		});
 
-		it('replaces previously rendered content', function() {
+		it('replaces previously rendered content if `replace` is true', function() {
 			var element = document.createElement('div');
 			var renderer = new nxt.ElementRenderer(element);
 			renderer.render(nxt.Element('span', nxt.Text('before')));
 			element.textContent.should.equal('before');
 			renderer.render(nxt.Element('span', nxt.Text('after')));
 			element.textContent.should.equal('after');
+			renderer.replace = false;
+			renderer.render(nxt.Element('span', nxt.Text('party')));
+			element.textContent.should.equal('afterparty');
 		});
 
 		it('inserts an element node before another node if an insert reference has been set', function() {

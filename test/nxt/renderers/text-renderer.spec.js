@@ -7,10 +7,16 @@ describe('nxt.TextRenderer', function() {
 			var renderer = new nxt.TextRenderer(element);
 			renderer.element.should.equal(element);
 		});
+
+		it('replaces previously rendered content by default', function() {
+			var element = document.createElement('div');
+			var renderer = new nxt.TextRenderer(element);
+			renderer.replace.should.equal(true);
+		});
 	});
 
 	describe('render', function() {
-		it('appends a text node to an element if there is no insert reference and no previously rendered content', function() {
+		it('appends a text node to an element if there is no insert reference and `replace` is false', function() {
 			var element = document.createElement('span');
 			var renderer = new nxt.TextRenderer(element);
 			renderer.render(nxt.Text('cellar door'));
@@ -34,12 +40,15 @@ describe('nxt.TextRenderer', function() {
 			renderer.content.should.equal(content);
 		});
 
-		it('replaces previously rendered content', function() {
+		it('replaces previously rendered content if `replace` is true', function() {
 			var element = document.createElement('span');
 			var renderer = new nxt.TextRenderer(element);
 			renderer.render(nxt.Text('before'));
 			element.textContent.should.equal('before');
 			renderer.render(nxt.Text('after'));
+			element.textContent.should.equal('after');
+			renderer.replace = false;
+			renderer.render(nxt.Text('party'));
 			element.textContent.should.equal('after');
 		});
 
