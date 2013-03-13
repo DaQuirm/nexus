@@ -21,6 +21,24 @@ describe('nx.Property', function() {
 		});
 	});
 
+	describe('set', function () {
+		it('sets property value', function () {
+			var property = new nx.Property();
+			property.set('cellar door');
+			property.value.should.equal('cellar door');
+		});
+
+		it('doesn\'t trigger onvalue', function () {
+			var p = new nx.Property();
+			var handler = chai.spy(function(value){
+				value.should.equal('cellar door');
+			});
+			p.onvalue.add(handler);
+			p.set('cellar door');
+			handler.should.not.have.been.called();
+		});
+	});
+
 	describe('bind', function() {
 		it('connects a property to another property and keeps their value synchronized', function() {
 			var p = new nx.Property();
