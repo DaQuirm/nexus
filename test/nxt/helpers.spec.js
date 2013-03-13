@@ -67,7 +67,7 @@ describe('nxt helpers', function() {
 			var property = new nx.Property();
 			var converter = function(value) { return -value; };
 			var obj = nxt.Binding(property, converter);
-			obj.type.should.equal('->');
+			obj.mode.should.equal('->');
 		});
 	});
 });
