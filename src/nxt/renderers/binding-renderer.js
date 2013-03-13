@@ -7,6 +7,7 @@ nxt.BindingRenderer = function(element) {
 	this.property.onvalue.add(function(data) {
 		if (!_this.contentRenderer || !_this.contentRenderer instanceof nxt[data.type+'Renderer']) {
 			_this.contentRenderer = new nxt[data.type+'Renderer'](_this.element);
+			_this.contentRenderer.insertReference = _this.insertReference;
 		}
 		_this.contentRenderer.render(data);
 	});

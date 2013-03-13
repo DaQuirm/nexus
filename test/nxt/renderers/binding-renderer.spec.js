@@ -54,8 +54,7 @@ describe('nxt.BindingRenderer', function() {
 
 	it('passes its insert reference to contentRenderer', function() {
 		var element = document.createElement('div');
-		var movieNode = document.createElement('span');
-		movieNode.textContent = 'Lethal Weapon II';
+		var movieNode = document.createTextNode('Lethal Weapon II');
 		element.appendChild(movieNode);
 		var property = new nx.Property();
 		var renderer = new nxt.BindingRenderer(element);
@@ -63,12 +62,12 @@ describe('nxt.BindingRenderer', function() {
 		renderer.render(
 			nxt.Binding(property, function(value) { return nxt.Text(value); })
 		);
+		property.value = 'Lethal Weapon I';
 		renderer.contentRenderer.insertReference.should.equal(renderer.insertReference);
-		property.value = 'Lethal Weapon';
 		element.childNodes.length.should.equal(2);
 		element.childNodes[0].textContent.should.equal('Lethal Weapon I');
-		element.childNodes[0].nodeName.should.equal('span');
+		element.childNodes[0].nodeType.should.equal(Node.TEXT_NODE);
 		element.childNodes[1].textContent.should.equal('Lethal Weapon II');
-		element.childNodes[1].nodeName.should.equal('span');
+		element.childNodes[1].nodeType.should.equal(Node.TEXT_NODE);
 	});
 });
