@@ -1,7 +1,6 @@
 window.nx = window.nx || {};
 
 nx.Property = function(options) {
-	var _this = this;
 	var _value;
 	options = options || {};
 
@@ -10,7 +9,7 @@ nx.Property = function(options) {
 		get: function() { return _value; },
 		set: function(value) {
 			_value = value;
-			_this.onvalue.trigger(value);
+			this.onvalue.trigger(value);
 		}
 	});
 
