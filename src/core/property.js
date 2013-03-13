@@ -3,6 +3,10 @@ window.nx = window.nx || {};
 nx.Property = function(options) {
 	options = options || {};
 
+	if (typeof options.value !== 'undefined') {
+		this._value = options.value;
+	}
+
 	Object.defineProperty(this, 'value', {
 		enumerable : true,
 		get: function() { return this._value; },

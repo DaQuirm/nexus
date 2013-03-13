@@ -8,6 +8,11 @@ describe('nx.Property', function() {
 			property.should.be.an.instanceof(nx.Property);
 		});
 
+		it('can be initialized with the `value` option', function () {
+			var property = new nx.Property({value:'cellar door'});
+			property.value.should.equal('cellar door');
+		});
+
 		it('accepts a compare function for comparing values');
 	});
 
