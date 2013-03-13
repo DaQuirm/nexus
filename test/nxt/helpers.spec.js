@@ -35,6 +35,8 @@ describe('nxt helpers', function() {
 		it('creates an element object', function() {
 			var obj = nxt.Element('div');
 			obj.name.should.equal('div');
+			obj.node.nodeType.should.equal(Node.ELEMENT_NODE);
+			obj.node.nodeName.should.equal('div');
 			obj.type.should.equal('Element');
 		});
 
