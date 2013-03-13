@@ -49,7 +49,7 @@ describe('nxt.TextRenderer', function() {
 			element.textContent.should.equal('after');
 			renderer.replace = false;
 			renderer.render(nxt.Text('party'));
-			element.textContent.should.equal('after');
+			element.textContent.should.equal('afterparty');
 		});
 
 		it('inserts a text node before another node if an insert reference has been set', function() {

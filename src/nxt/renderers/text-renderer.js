@@ -7,10 +7,10 @@ nxt.TextRenderer = function(element) {
 
 nxt.TextRenderer.prototype.render = function(text) {
 	if (typeof this.insertReference !== 'undefined') {
-		this.element.insertBefore(this.insertReference, text.node);
+		this.element.insertBefore(text.node, this.insertReference);
 	} else {
 		if (typeof this.content !== 'undefined' && this.replace) {
-			this.element.replaceChild(this.content, text.node);
+			this.element.replaceChild(text.node, this.content);
 		} else {
 			this.element.appendChild(text.node);
 		}
