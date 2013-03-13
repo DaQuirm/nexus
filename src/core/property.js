@@ -1,14 +1,13 @@
 window.nx = window.nx || {};
 
 nx.Property = function(options) {
-	var _value;
 	options = options || {};
 
 	Object.defineProperty(this, 'value', {
 		enumerable : true,
-		get: function() { return _value; },
+		get: function() { return this._value; },
 		set: function(value) {
-			_value = value;
+			this._value = value;
 			this.onvalue.trigger(value);
 		}
 	});
@@ -24,4 +23,8 @@ nx.Property.prototype.bind = function(target, mode, sourceConversion, targetConv
 		sourceConversion,
 		targetConversion
 	);
+};
+
+nx.Property.prototype.set = function(value) {
+	this._value = value;
 };
