@@ -33,20 +33,20 @@ AuthApp.Views.AuthForm = function(user) {
 				nxt.Attr('id', 'login-input'),
 				nxt.Binding(user.login, function(value) { return nxt.Text(value); }),
 				nxt.Event('change', function() {
-					user.login.value = this.value;
+					user.login.set(this.value);
 				})
 			),
 			nxt.Element('label',
 				nxt.Attr('for', 'password-input'),
-				nxt.Text('Password'),
-				nxt.Event('change', function() {
-					user.password.value = this.value;
-				})
+				nxt.Text('Password')
 			),
 			nxt.Element('input',
 				nxt.Attr('type', 'password')
 				nxt.Attr('id', 'password-input')
-				nxt.Binding(user.password, function(value) { return nxt.Text(value); })
+				nxt.Binding(user.password, function(value) { return nxt.Text(value); }),
+				nxt.Event('change', function() {
+					user.password.set(this.value);
+				})
 			),
 			nxt.Element('input',
 				nxt.Attr('type', 'submit')
