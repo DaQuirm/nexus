@@ -18,7 +18,7 @@ describe('nxt.BindingRenderer', function() {
 	});
 
 	describe('render', function() {
-		it('creates a data binding with specified parameters and saves it in `binding` property', function() {
+		it('creates a data binding with specified parameters and saves it in the `binding` property', function() {
 			var element = document.createElement('div');
 			var property = new nx.Property();
 			var renderer = new nxt.BindingRenderer(element);
