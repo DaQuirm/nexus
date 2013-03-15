@@ -53,7 +53,7 @@ describe('nxt helpers', function() {
 		});
 	});
 
-	describe('nxt.Binding', function () {
+	describe('nxt.Binding', function() {
 		it('creates a binding object', function () {
 			var property = new nx.Property();
 			var converter = function(value) { return -value; };
@@ -68,6 +68,17 @@ describe('nxt helpers', function() {
 			var converter = function(value) { return -value; };
 			var obj = nxt.Binding(property, converter);
 			obj.mode.should.equal('->');
+		});
+	});
+
+	describe('nxt.Collection', function() {
+		it('creates a collection object', function () {
+			var collection = new nx.Collection();
+			var converter = function(item) { return nxt.Text(value); }
+			var obj = new nxt.Collection(collection, converter);
+			obj.collection.should.equal(collection);
+			obj.conversion.should.equal(converter);
+			obj.type.should.equal('Collection');
 		});
 	});
 });
