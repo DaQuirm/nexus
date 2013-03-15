@@ -22,6 +22,27 @@ describe('nxt.ContentRegion', function() {
 		});
 	});
 
+	describe('update', function () {
+		it('updates items\' insertReferences based on visibility change of a certain element', function () {
+			var properties = [];
+			var container = document.createElement('div');
+			var region = new nxt.ContentRegion(container);
+			var converter = function(value) {
+				if (value === 'on') {
+					return nxt.Text('*');
+				}
+			};
+			for (var index = 0; index < 4; index++) {
+				properties[index] = new nx.Property({value: 'off'});
+				region.add(nxt.Binding(properties[index], converter));
+			}
+			container.textContent.should.be.empty();
+			properties[1].value = 'on';
+			container.textContent.should.equal('*');
+			region.items[0].insertReference.should.equal()
+		});
+	});
+
 	it('keeps track of items\' visibility and updates insert references so that items are rendered in the correct order', function () {
 		var container = document.createElement('div');
 		var region = new nxt.ContentRegion(container);
