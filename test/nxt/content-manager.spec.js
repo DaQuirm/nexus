@@ -10,7 +10,7 @@ describe('nxt.ContentManager', function() {
 	});
 
 	describe('render', function() {
-		it('creates appropriate renderers for content items or reuses existing ones', function () {
+		it('creates appropriate static renderers for content items or reuses existing ones', function () {
 			var element = document.createElement('div');
 			var manager = new nxt.ContentManager(element);
 			manager.render(nxt.Element('span'), nxt.Text('cellar door'), nxt.Attr('class', 'container'));
