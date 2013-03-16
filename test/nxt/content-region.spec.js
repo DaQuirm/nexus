@@ -16,8 +16,12 @@ describe('nxt.ContentRegion', function() {
 			var label = new nx.Property();
 			var container = document.createElement('div');
 			var region = new nxt.ContentRegion(container);
-			region.add(nxt.Binding(label, function(value) { return nxt.Text(value); }));
-			region.add(nxt.Binding(label, function(value) { return nxt.Text(value); }));
+			var renderer;
+			for (var index = 0; index < 3; index++) {
+				renderer = new nxt.BindingRenderer(container);
+				renderer.render(nxt.Binding(label, function(value) { return nxt.Text(value); }));
+				region.add(renderer);
+			}
 			region.items.length.should.equal(2);
 		});
 	});
@@ -28,18 +32,69 @@ describe('nxt.ContentRegion', function() {
 			var container = document.createElement('div');
 			var region = new nxt.ContentRegion(container);
 			var converter = function(value) {
-				if (value === 'on') {
-					return nxt.Text('*');
+				if (value !== 'off') {
+					return nxt.Text(value);
 				}
 			};
 			for (var index = 0; index < 4; index++) {
 				properties[index] = new nx.Property({value: 'off'});
+				var renderer = new nxt.BindingRenderer(container);
+				renderer.render(nxt.Binding(properties[index], converter));
 				region.add(nxt.Binding(properties[index], converter));
 			}
 			container.textContent.should.be.empty();
-			properties[1].value = 'on';
-			container.textContent.should.equal('*');
-			region.items[0].insertReference.should.equal()
+			properties[1].value = 'b';
+			region.items[0].insertReference.should.equal(region.items[1].contentRenderer.content);
+			region.items[1].insertReference.should.be.empty();
+			container.textContent.should.equal('b');
+			properties[3].value = 'd';
+			region.items[0].insertReference.should.equal(region.items[1].contentRenderer.content);
+			region.items[1].insertReference.should.equal(region.items[3].contentRenderer.content);
+			region.items[2].insertReference.should.equal(region.items[3].contentRenderer.content);
+			region.items[3].insertReference.should.be.empty();
+			container.textContent.should.equal('bd');
+			properties[2].value = 'c';
+			region.items[0].insertReference.should.equal(region.items[1].contentRenderer.content);
+			region.items[1].insertReference.should.equal(region.items[2].contentRenderer.content);
+			region.items[2].insertReference.should.equal(region.items[3].contentRenderer.content);
+			region.items[3].insertReference.should.be.empty();
+			container.textContent.should.equal('bcd');
+			properties[2].value = 'off';
+			region.items[0].insertReference.should.equal(region.items[1].contentRenderer.content);
+			region.items[1].insertReference.should.equal(region.items[3].contentRenderer.content);
+			region.items[2].insertReference.should.equal(region.items[3].contentRenderer.content);
+			region.items[3].insertReference.should.be.empty();
+			container.textContent.should.equal('bd');
+			properties[1].value = 'off';
+			region.items[0].insertReference.should.equal(region.items[3].contentRenderer.content);
+			region.items[1].insertReference.should.equal(region.items[3].contentRenderer.content);
+			region.items[2].insertReference.should.equal(region.items[3].contentRenderer.content);
+			region.items[3].insertReference.should.be.empty();
+			container.textContent.should.equal('d');
+			properties[3].value = 'off';
+			region.items[0].insertReference.should.be.empty();
+			region.items[1].insertReference.should.be.empty();
+			region.items[2].insertReference.should.be.empty();
+			region.items[3].insertReference.should.be.empty();
+			container.textContent.should.be.empty();
+			properties[3].value = 'd';
+			region.items[0].insertReference.should.equal(region.items[3].contentRenderer.content);
+			region.items[1].insertReference.should.equal(region.items[3].contentRenderer.content);
+			region.items[2].insertReference.should.equal(region.items[3].contentRenderer.content);
+			region.items[3].insertReference.should.be.empty();
+			container.textContent.should.equal('d');
+			properties[0].value = 'a';
+			region.items[0].insertReference.should.equal(region.items[3].contentRenderer.content);
+			region.items[1].insertReference.should.equal(region.items[3].contentRenderer.content);
+			region.items[2].insertReference.should.equal(region.items[3].contentRenderer.content);
+			region.items[3].insertReference.should.be.empty();
+			container.textContent.should.equal('ad');
+			properties[2].value = 'c';
+			region.items[0].insertReference.should.equal(region.items[2].contentRenderer.content);
+			region.items[1].insertReference.should.equal(region.items[2].contentRenderer.content);
+			region.items[2].insertReference.should.equal(region.items[3].contentRenderer.content);
+			region.items[3].insertReference.should.be.empty();
+			container.textContent.should.equal('acd');
 		});
 	});
 
@@ -49,9 +104,12 @@ describe('nxt.ContentRegion', function() {
 		var first = new nx.Property();
 		var second = new nx.Property();
 		var between = new nx.Property();
-		region.add(nxt.Binding(first, function(value) { return nxt.Text(value); }));
-		region.add(nxt.Binding(between, function(value) { return nxt.Text(value); }));
-		region.add(nxt.Binding(second, function(value) { return nxt.Text(value); }));
+		var renderer;
+		for (var index = 0; index < 3; index++) {
+			renderer = new nxt.BindingRenderer(container);
+			renderer.render(nxt.Binding(label, function(value) { return nxt.Text(value); }));
+			region.add(renderer);
+		}
 		second.value = 'roll';
 		container.childNodes.length.should.equal(1);
 		container.textContent.should.equal('roll');
