@@ -43,7 +43,7 @@ describe('nxt.CollectionRenderer', function() {
 					return nxt.Element('li', nxt.Text(value));
 				})
 			);
-			renderer.append(collection.contentRenderer.render(nxt.Element('li', nxt.Text('cellar door'))));
+			renderer.append({items:['cellar door']});
 			container.childNodes.length.should.equal(3);
 			container.lastChild.nodeType.should.equal(Node.TEXT_NODE);
 			container.lastChild.nodeValue.should.equal('cellar door');
@@ -61,10 +61,10 @@ describe('nxt.CollectionRenderer', function() {
 				})
 			);
 			container.childNodes.length.should.equal(3);
-			renderer.remove();
+			renderer.remove({items:['b'], indexes:[1]});
 			container.childNodes.length.should.equal(2);
 			container.firstChild.nodeValue.should.equal('a');
-			container.lastChild.nodeValue.should.equal('b');
+			container.lastChild.nodeValue.should.equal('c');
 		});
 	});
 
@@ -78,11 +78,25 @@ describe('nxt.CollectionRenderer', function() {
 					return nxt.Element('li', nxt.Text(value));
 				})
 			);
-			container.childNodes.length.should.equal(2);
-			collection.remove('b');
-			container.childNodes.length.should.equal(2);
+			collection.insertBefore({items: ['b'], index: 1});
+			container.childNodes.length.should.equal(3);
 			container.firstChild.nodeValue.should.equal('a');
-			container.lastChild.nodeValue.should.equal('b');
+			container.childNodes[1].nodeValue.should.equal('b');
+		});
+	});
+
+	describe('removeAll', function () {
+		it('removes all content items from the element', function () {
+			var container = document.createElement('ul');
+			var collection = new nx.Collection({items: ['a','b','c']});
+			var renderer = new nxt.CollectionRenderer(container);
+			renderer.render(
+				nxt.Collection(collection, function(value) {
+					return nxt.Element('li', nxt.Text(value));
+				})
+			);
+			renderer.removeAll();
+			container.childNodes.length.should.equal(0);
 		});
 	});
 
