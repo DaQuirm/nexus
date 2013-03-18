@@ -18,7 +18,7 @@ describe('nx.Collection', function() {
 		it('is an array representing collection\'s items', function() {
 			var collection = new nx.Collection();
 			collection.items.should.be.an.instanceof(Array);
-			collection.items.should.be.empty();
+			collection.items.should.be.empty;
 		});
 	});
 
@@ -71,7 +71,7 @@ describe('nx.Collection', function() {
 		it('fires the `oninsertbefore` event', function() {
 			var collection = new nx.Collection({items: [1,2,4]});
 			var handler = chai.spy(function(event) {
-				event.items.should.deep.equal([3]);
+				event.item.should.deep.equal(3);
 				event.index.should.equal(2);
 			});
 			collection.oninsertbefore.add(handler);
