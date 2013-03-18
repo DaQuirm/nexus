@@ -9,7 +9,8 @@ describe('nx.Collection', function() {
 		});
 
 		it('can be initialized with the `items` option', function () {
-			var collection = new nx.Collection({items});
+			var collection = new nx.Collection({items: [1,2,3]});
+			collection.items.should.deep.equal([1,2,3]);
 		});
 	});
 

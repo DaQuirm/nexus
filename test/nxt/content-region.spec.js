@@ -19,7 +19,7 @@ describe('nxt.ContentRegion', function() {
 			var renderer;
 			for (var index = 0; index < 3; index++) {
 				renderer = new nxt.BindingRenderer(container);
-				renderer.render(nxt.Binding(label, function(value) { return nxt.Text(value); }));
+				renderer.render(nxt.Binding(label, nxt.Text));
 				region.add(renderer);
 			}
 			region.items.length.should.equal(2);
@@ -101,22 +101,23 @@ describe('nxt.ContentRegion', function() {
 	it('keeps track of items\' visibility and updates insert references so that items are rendered in the correct order', function () {
 		var container = document.createElement('div');
 		var region = new nxt.ContentRegion(container);
-		var first = new nx.Property();
-		var second = new nx.Property();
-		var between = new nx.Property();
+		var properties = {};
+		properties.first = new nx.Property();
+		properties.second = new nx.Property();
+		properties.between = new nx.Property();
 		var renderer;
-		for (var index = 0; index < 3; index++) {
+		for (var index in properties) {
 			renderer = new nxt.BindingRenderer(container);
-			renderer.render(nxt.Binding(label, function(value) { return nxt.Text(value); }));
+			renderer.render(nxt.Binding(properties[index], nxt.Text));
 			region.add(renderer);
 		}
-		second.value = 'roll';
+		properties.second.value = 'roll';
 		container.childNodes.length.should.equal(1);
 		container.textContent.should.equal('roll');
-		first.value = 'rock';
+		properties.first.value = 'rock';
 		container.childNodes.length.should.equal(2);
 		container.textContent.should.equal('rockroll');
-		between.value = ' & ';
+		properties.between.value = ' & ';
 		container.childNodes.length.should.equal(3);
 		container.textContent.should.equal('rock & roll');
 	});
@@ -126,20 +127,24 @@ describe('nxt.ContentRegion', function() {
 		var exclamationMark = document.createTextNode('!');
 		container.appendChild(exclamationMark);
 		var region = new nxt.ContentRegion(container);
-		var first = new nx.Property();
-		var second = new nx.Property();
-		var between = new nx.Property();
-		region.add(nxt.Binding(first, function(value) { return nxt.Text(value); }));
-		region.add(nxt.Binding(between, function(value) { return nxt.Text(value); }));
-		region.add(nxt.Binding(second, function(value) { return nxt.Text(value); }));
+		var properties = {};
+		properties.first = new nx.Property();
+		properties.second = new nx.Property();
+		properties.between = new nx.Property();
+		var renderer;
+		for (var index in properties) {
+			renderer = new nxt.BindingRenderer(container);
+			renderer.render(nxt.Binding(properties[index], nxt.Text));
+			region.add(renderer);
+		}
 		region.insertReference = exclamationMark;
-		second.value = 'roll';
+		properties.second.value = 'roll';
 		container.childNodes.length.should.equal(1);
 		container.textContent.should.equal('roll!');
-		first.value = 'rock';
+		properties.first.value = 'rock';
 		container.childNodes.length.should.equal(2);
 		container.textContent.should.equal('rockroll!');
-		between.value = ' & ';
+		properties.between.value = ' & ';
 		container.childNodes.length.should.equal(3);
 		container.textContent.should.equal('rock & roll!');
 	});

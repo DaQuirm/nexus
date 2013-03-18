@@ -25,7 +25,7 @@ describe('nxt.CollectionRenderer', function() {
 			var collection = new nx.Collection();
 			var renderer = new nxt.CollectionRenderer(element);
 			renderer.render(
-				nxt.Collection(property, nxt.Text)
+				nxt.Collection(collection, nxt.Text)
 			);
 			Object.keys(collection.onappend.handlers).length.should.equal(1);
 			Object.keys(collection.oninsertbefore.handlers).length.should.equal(1);

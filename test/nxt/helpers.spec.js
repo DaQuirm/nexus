@@ -74,7 +74,7 @@ describe('nxt helpers', function() {
 	describe('nxt.Collection', function() {
 		it('creates a collection object', function () {
 			var collection = new nx.Collection();
-			var converter = function(item) { return nxt.Text(value); }
+			var converter = function(item) { return nxt.Text(item); };
 			var obj = new nxt.Collection(collection, converter);
 			obj.collection.should.equal(collection);
 			obj.conversion.should.equal(converter);
