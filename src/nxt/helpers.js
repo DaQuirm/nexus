@@ -35,7 +35,8 @@ nxt.Binding = function(property, conversion, mode) {
 		property: property,
 		conversion: conversion,
 		mode: mode || '->',
-		type: 'Binding'
+		type: 'Binding',
+		dynamic: true
 	};
 };
 

@@ -61,9 +61,10 @@ describe('nxt helpers', function() {
 			obj.property.should.equal(property);
 			obj.conversion.should.equal(converter);
 			obj.type.should.equal('Binding');
+			obj.dynamic.should.equal(true);
 		});
 
-		it('has mode set to `->` by default', function() {
+		it('has `mode` set to `->` by default', function() {
 			var property = new nx.Property();
 			var converter = function(value) { return -value; };
 			var obj = nxt.Binding(property, converter);
@@ -79,6 +80,7 @@ describe('nxt helpers', function() {
 			obj.collection.should.equal(collection);
 			obj.conversion.should.equal(converter);
 			obj.type.should.equal('Collection');
+			obj.dynamic.should.equal(true);
 		});
 	});
 });
