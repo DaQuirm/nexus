@@ -70,4 +70,15 @@ describe('nxt.BindingRenderer', function() {
 		element.childNodes[1].textContent.should.equal('Lethal Weapon II');
 		element.childNodes[1].nodeType.should.equal(Node.TEXT_NODE);
 	});
+
+	it('doesn\'t fail on undefined values', function () {
+		var element = document.createElement('div');
+		var property = new nx.Property();
+		var renderer = new nxt.BindingRenderer(element);
+		renderer.render(
+			nxt.Binding(property, function(value) { })
+		);
+		property.value = 'cellar door';
+		element.textContent.should.be.empty;
+	});
 });

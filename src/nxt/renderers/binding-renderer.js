@@ -5,11 +5,15 @@ nxt.BindingRenderer = function(element) {
 	this.element = element;
 	this.property = new nx.Property();
 	this.property.onvalue.add(function(data) {
-		if (!_this.contentRenderer || !_this.contentRenderer instanceof nxt[data.type+'Renderer']) {
-			_this.contentRenderer = new nxt[data.type+'Renderer'](_this.element);
-			_this.contentRenderer.insertReference = _this.insertReference;
+		if (typeof data !== 'undefined') {
+			if (!_this.contentRenderer || !_this.contentRenderer instanceof nxt[data.type+'Renderer']) {
+				_this.contentRenderer = new nxt[data.type+'Renderer'](_this.element);
+			}
 		}
-		_this.contentRenderer.render(data);
+		if (typeof _this.contentRenderer !== 'undefined') {
+			_this.contentRenderer.insertReference = _this.insertReference;
+			_this.contentRenderer.render(data);
+		}
 	});
 };
 
