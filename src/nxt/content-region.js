@@ -34,7 +34,7 @@ nxt.ContentRegion.prototype.update = function(id, visible) {
 		insertReference = this.items[id].insertReference;
 	}
 	for (var index = id-1; index >= 0; index--) {
-		if (this.visibility[index]) { break; }
 		this.items[index].insertReference = insertReference;
+		if (this.visibility[index]) { break; }
 	}
 };
