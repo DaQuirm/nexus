@@ -63,5 +63,17 @@ describe('nxt.TextRenderer', function() {
 			element.childNodes[0].nodeValue.should.equal('Lethal Weapon I');
 			element.childNodes[1].nodeValue.should.equal('Lethal Weapon II');
 		});
+
+		it('clears rendered text content when called with undefined or no parameters', function(){
+			var element = document.createElement('span');
+			var renderer = new nxt.TextRenderer(element);
+			renderer.render(nxt.Text('cellar door'));
+			element.childNodes.length.should.equal(1);
+			element.textContent.should.equal('cellar door');
+			renderer.render();
+			should.not.exist(renderer.content);
+			element.childNodes.length.should.equal(0);
+			element.textContent.should.be.empty;
+		});
 	});
 });

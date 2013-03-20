@@ -6,15 +6,21 @@ nxt.TextRenderer = function(element) {
 };
 
 nxt.TextRenderer.prototype.render = function(text) {
-	if (typeof this.insertReference !== 'undefined') {
-		this.element.insertBefore(text.node, this.insertReference);
-	} else {
-		if (typeof this.content !== 'undefined' && this.replace) {
-			this.element.replaceChild(text.node, this.content);
+	if (typeof text !== 'undefined') {
+		if (typeof this.insertReference !== 'undefined') {
+			this.element.insertBefore(text.node, this.insertReference);
 		} else {
-			this.element.appendChild(text.node);
+			if (typeof this.content !== 'undefined' && this.replace) {
+				this.element.replaceChild(text.node, this.content);
+			} else {
+				this.element.appendChild(text.node);
+			}
 		}
+		this.content = text.node;
+	} else {
+		this.element.removeChild(this.content);
+		this.content = undefined;
 	}
-	this.content = text.node;
+
 	return this.content;
 };
