@@ -31,6 +31,18 @@ describe('nxt.CollectionRenderer', function() {
 			Object.keys(collection.oninsertbefore.handlers).length.should.equal(1);
 			Object.keys(collection.onreset.handlers).length.should.equal(1);
 		});
+
+		it('appends all collection items to the element', function () {
+			var container = document.createElement('div');
+			var collection = new nx.Collection({items: ['a','b','c']});
+			var renderer = new nxt.CollectionRenderer(container);
+			renderer.render(
+				nxt.Collection(collection, nxt.Text)
+			);
+			container.childNodes.length.should.equal(3);
+			container.firstChild.textContent.should.equal('a');
+			container.lastChild.textContent.should.equal('c');
+		});
 	});
 
 	describe('append', function () {

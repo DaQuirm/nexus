@@ -13,6 +13,7 @@ nxt.CollectionRenderer.prototype.render = function(data) {
 	this.collection.oninsertbefore.add(function(evt){ _this.insertBefore(evt); });
 	this.collection.onremove.add(function(evt){	_this.remove(evt); });
 	this.collection.onreset.add(function(evt){ _this.reset(evt); });
+	this.append({items: this.collection.items});
 };
 
 nxt.CollectionRenderer.prototype.append = function(evt) {
