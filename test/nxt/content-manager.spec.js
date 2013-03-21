@@ -25,7 +25,7 @@ describe('nxt.ContentManager', function() {
 			manager.render(nxt.Element('span'), nxt.Text('cellar door'), nxt.Attr('class', 'container'));
 			element.childNodes.length.should.equal(2);
 			element.childNodes[0].nodeType.should.equal(Node.ELEMENT_NODE);
-			element.childNodes[0].nodeName.should.equal('span');
+			element.childNodes[0].nodeName.toLowerCase().should.equal('span');
 			element.childNodes[1].nodeType.should.equal(Node.TEXT_NODE);
 			element.childNodes[1].nodeValue.should.equal('cellar door');
 			element.getAttribute('class').should.equal('container');
@@ -46,8 +46,7 @@ describe('nxt.ContentManager', function() {
 				nxt.Element('div'),
 				nxt.Binding(property, function(value) { return value; }),
 				nxt.Binding(property, function(value) { return value; }),
-				nxt.Binding(property, function(value) { return value; }),
-				nxt.Element('div')
+				nxt.Binding(property, function(value) { return value; })
 			);
 			manager.regions.length.should.equal(3);
 			manager.regions[0].should.be.an.instanceof(nxt.ContentRegion);
@@ -77,7 +76,7 @@ describe('nxt.ContentManager', function() {
 				nxt.Element('div', nxt.Text('cellar door'))
 			);
 			manager.regions[0].insertReference.nodeType.should.equal(Node.ELEMENT_NODE);
-			manager.regions[0].insertReference.nodeName.should.equal('div');
+			manager.regions[0].insertReference.nodeName.toLowerCase().should.equal('div');
 			manager.regions[0].insertReference.textContent.should.equal('cellar door');
 		});
 	});
