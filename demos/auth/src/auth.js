@@ -41,18 +41,17 @@ AuthApp.Views.AuthForm = function(user) {
 				nxt.Text('Password')
 			),
 			nxt.Element('input',
-				nxt.Attr('type', 'password')
-				nxt.Attr('id', 'password-input')
+				nxt.Attr('type', 'password'),
+				nxt.Attr('id', 'password-input'),
 				nxt.Binding(user.password, function(value) { return nxt.Text(value); }),
 				nxt.Event('change', function() {
 					user.password.set(this.value);
 				})
 			),
 			nxt.Element('input',
-				nxt.Attr('type', 'submit')
-				nxt.Attr('value', 'Authenticate')
-				nxt.Event('submit', function(event) {
-					event.preventDefault();
+				nxt.Attr('type', 'button'),
+				nxt.Attr('value', 'Authenticate'),
+				nxt.Event('click', function(event) {
 					user.authenticate();
 				})
 			)
@@ -63,7 +62,7 @@ AuthApp.Views.AuthForm = function(user) {
 	);
 };
 
-document.addEventListener('load', function() {
+window.addEventListener('load', function() {
 	var user = new AuthApp.User('');
-	document.body.appendChild(AuthApp.Views.AuthForm(user).element);
+	document.body.appendChild(AuthApp.Views.AuthForm(user).node);
 });
