@@ -50,3 +50,11 @@ nxt.Binding = function(property, conversion, mode) {
 	};
 };
 
+nxt.Collection = function (collection, conversion) {
+	return {
+		collection: collection,
+		conversion: conversion,
+		type: 'Collection',
+		dynamic: true
+	};
+};
