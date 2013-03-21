@@ -29,7 +29,7 @@ describe('nxt.ElementRenderer', function() {
 			var renderer = new nxt.ElementRenderer(element);
 			var content = renderer.render(new nxt.Element('span', new nxt.Text('cellar door')));
 			content.nodeType.should.equal(Node.ELEMENT_NODE);
-			content.nodeName.should.equal('span');
+			content.nodeName.toLowerCase().should.equal('span');
 			content.textContent.should.equal('cellar door');
 			content.parentElement.should.equal(element);
 		});
@@ -63,9 +63,9 @@ describe('nxt.ElementRenderer', function() {
 			renderer.render(nxt.Element('span', nxt.Text('Lethal Weapon I')));
 			element.childNodes.length.should.equal(2);
 			element.childNodes[0].textContent.should.equal('Lethal Weapon I');
-			element.childNodes[0].nodeName.should.equal('span');
+			element.childNodes[0].nodeName.toLowerCase().should.equal('span');
 			element.childNodes[1].textContent.should.equal('Lethal Weapon II');
-			element.childNodes[1].nodeName.should.equal('span');
+			element.childNodes[1].nodeName.toLowerCase().should.equal('span');
 		});
 
 		it('clears rendered content when called with undefined or no parameters', function(){
