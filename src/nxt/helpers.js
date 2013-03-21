@@ -25,8 +25,18 @@ nxt.Event = function(name, handler) {
 };
 
 nxt.Element = function() {
+	var args = Array.prototype.slice.call(arguments);
+	var name = args[0];
+	var node = document.createElement(name);
+	if (args.length > 1) {
+		var content = args.slice(1);
+		var contentManager = new nxt.ContentManager(node);
+		nxt.ContentManager.prototype.render.apply(contentManager, content);
+	}
 	return {
-
+		name: name,
+		node: node,
+		type: 'Element'
 	};
 };
 

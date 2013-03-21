@@ -36,7 +36,7 @@ describe('nxt helpers', function() {
 			var obj = nxt.Element('div');
 			obj.name.should.equal('div');
 			obj.node.nodeType.should.equal(Node.ELEMENT_NODE);
-			obj.node.nodeName.should.equal('div');
+			obj.node.nodeName.toLowerCase().should.equal('div');
 			obj.type.should.equal('Element');
 		});
 
@@ -45,11 +45,11 @@ describe('nxt helpers', function() {
 				nxt.Attr('class', 'button-big-blue'),
 				nxt.Text('Click Me!')
 			);
-			elem.childNodes.length.should.equal(1);
-			elem.childNodes[0].nodeType.should.equal(Node.TEXT_NODE);
-			elem.childNodes[0].nodeValue.should.equal('Click Me!');
-			elem.attributes.length.should.equal(1);
-			elem.getAttribute('class').should.equal('button-big-blue');
+			elem.node.childNodes.length.should.equal(1);
+			elem.node.childNodes[0].nodeType.should.equal(Node.TEXT_NODE);
+			elem.node.childNodes[0].nodeValue.should.equal('Click Me!');
+			elem.node.attributes.length.should.equal(1);
+			elem.node.getAttribute('class').should.equal('button-big-blue');
 		});
 	});
 
