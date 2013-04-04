@@ -3,6 +3,7 @@ window.nxt = window.nxt || {};
 nxt.CollectionRenderer = function(element) {
 	var _this = this;
 	this.element = element;
+	this.visible = new nx.Property();
 };
 
 nxt.CollectionRenderer.prototype.render = function(data) {
@@ -20,6 +21,12 @@ nxt.CollectionRenderer.prototype.append = function(evt) {
 	var convItems = evt.items.map(this.conversion);
 	var manager = new nxt.ContentManager(this.element);
 	nxt.ContentManager.prototype.render.apply(manager, convItems);
+	this.visible.value = this.collection.items.length > 0;
+	if (this.collection.items.length > 0) {
+		this.insertReference = this.collection.items[0];
+	} else {
+		this.insertReference = undefined;
+	}
 };
 
 nxt.CollectionRenderer.prototype.insertBefore = function(evt) {
@@ -29,6 +36,7 @@ nxt.CollectionRenderer.prototype.insertBefore = function(evt) {
 		renderer.insertReference = _this.element.childNodes[evt.index];
 		renderer.render(item);
 	});
+	this.insertReference = this.collection.items[0];
 };
 
 nxt.CollectionRenderer.prototype.remove = function(evt) {
@@ -36,6 +44,12 @@ nxt.CollectionRenderer.prototype.remove = function(evt) {
 	evt.indexes.forEach(function(index){
 		_this.element.removeChild(_this.element.childNodes[index]);
 	});
+	this.visible.value = this.collection.items.length > 0;
+	if (this.collection.items.length > 0) {
+		this.insertReference = this.collection.items[0];
+	} else {
+		this.insertReference = undefined;
+	}
 };
 
 nxt.CollectionRenderer.prototype.reset = function(evt) {
@@ -45,4 +59,10 @@ nxt.CollectionRenderer.prototype.reset = function(evt) {
 	var convItems = evt.items.map(this.conversion);
 	var manager = new nxt.ContentManager(this.element);
 	nxt.ContentManager.prototype.render.apply(manager, convItems);
+	this.visible.value = this.collection.items.length > 0;
+	if (this.collection.items.length > 0) {
+		this.insertReference = this.collection.items[0];
+	} else {
+		this.insertReference = undefined;
+	}
 };

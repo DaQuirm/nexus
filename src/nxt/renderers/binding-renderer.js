@@ -3,6 +3,7 @@ window.nxt = window.nxt || {};
 nxt.BindingRenderer = function(element) {
 	var _this = this;
 	this.element = element;
+
 	this.property = new nx.Property();
 	this.property.onvalue.add(function(data) {
 		if (typeof data !== 'undefined') {
@@ -14,6 +15,11 @@ nxt.BindingRenderer = function(element) {
 			_this.contentRenderer.insertReference = _this.insertReference;
 			_this.contentRenderer.render(data);
 		}
+	});
+
+	this.visible = new nx.Property();
+	this.visible.bind(this.property, '<-', function(value) {
+		return typeof value !== 'undefined';
 	});
 };
 

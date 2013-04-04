@@ -124,6 +124,34 @@ describe('nxt.ContentRegion', function() {
 		container.textContent.should.equal('rock & roll');
 	});
 
+	it('keeps track of visibility of all dynamic items that have a `visible` property', function () {
+		var container = document.createElement('div');
+		var region = new nxt.ContentRegion(container);
+		var property = new nx.Property();
+		var collection = new nx.Collection();
+		var between = new nx.Property();
+		var renderer;
+		var addRenderer = function(property) {
+			renderer = new nxt.BindingRenderer(container);
+			renderer.render(nxt.Binding(property, nxt.Text));
+			region.add(renderer);
+		}
+		addRenderer(property);
+		addRenderer(between);
+		renderer = new nxt.CollectionRenderer(container);
+		renderer.render(nxt.Collection(collection, nxt.Text));
+		region.add(renderer);
+		collection.append('r','o','l','l');
+		container.childNodes.length.should.equal(4);
+		container.textContent.should.equal('roll');
+		property.value = 'rock';
+		container.childNodes.length.should.equal(5);
+		container.textContent.should.equal('rockroll');
+		between.value = ' & ';
+		container.childNodes.length.should.equal(6);
+		container.textContent.should.equal('rock & roll');
+	});
+
 	it('uses an insert reference for prepending content instead of appending it to the element directly', function () {
 		var container = document.createElement('div');
 		var exclamationMark = document.createTextNode('!');

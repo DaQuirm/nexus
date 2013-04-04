@@ -19,6 +19,22 @@ describe('nxt.CollectionRenderer', function() {
 		});
 	});
 
+	describe('visible', function () {
+		it('is an nx.Property that indicates whether collection has any content items', function () {
+			var element = document.createElement('div');
+			var collection = new nx.Collection();
+			var renderer = new nxt.CollectionRenderer(element);
+			renderer.visible.should.be.an.instanceof(nx.Property);
+			renderer.render(
+				nxt.Collection(collection, nxt.Text)
+			);
+			collection.append('cellar door');
+			renderer.visible.value.should.equal(true);
+			collection.removeAll();
+			renderer.visible.value.should.equal(false);
+		});
+	});
+
 	describe('render', function() {
 		it('adds handlers to collection events', function() {
 			var element = document.createElement('div');

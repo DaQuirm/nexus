@@ -17,6 +17,26 @@ describe('nxt.BindingRenderer', function() {
 		});
 	});
 
+	describe('visible', function () {
+		it('is an nx.Property that indicates whether binding has rendered some content', function () {
+			var element = document.createElement('div');
+			var property = new nx.Property();
+			var renderer = new nxt.BindingRenderer(element);
+			renderer.visible.should.be.an.instanceof(nx.Property);
+			renderer.render(
+				nxt.Binding(property, function(value) {
+					if (value > 0) {
+						return nxt.Text(value);
+					}
+				})
+			);
+			property.value = 1;
+			renderer.visible.value.should.equal(true);
+			property.value = -1;
+			renderer.visible.value.should.equal(false);
+		});
+	});
+
 	describe('render', function() {
 		it('creates a data binding with specified parameters and saves it in the `binding` property', function() {
 			var element = document.createElement('div');

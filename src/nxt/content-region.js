@@ -13,11 +13,11 @@ nxt.ContentRegion.prototype.add = function(item) {
 	if (typeof this.insertReference !== 'undefined') {
 		item.insertReference = this.insertReference;
 	}
-	item.property.onvalue.add(function(value) {
+	item.visible.onvalue.add(function(visible) {
 		var wasVisible = _this.visibility[id];
-		if (typeof value !== 'undefined' && !wasVisible) {
+		if (visible && !wasVisible) {
 			_this.update(id, true);
-		} else if (typeof value === 'undefined' && wasVisible) {
+		} else if (!visible && wasVisible) {
 			_this.update(id, false);
 		}
 	});
@@ -27,7 +27,7 @@ nxt.ContentRegion.prototype.update = function(id, visible) {
 	this.visibility[id] = visible;
 	var insertReference;
 	if (visible) {
-		insertReference = this.items[id].contentRenderer.content;
+		insertReference = this.items[id].insertReference; //contentRenderer ? this.items[id].contentRenderer.content : this.items[id].collection.items[0];
 	} else if (this.insertReference) {
 		insertReference = this.insertReference;
 	} else {
