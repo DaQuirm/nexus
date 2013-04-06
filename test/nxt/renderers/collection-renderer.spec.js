@@ -134,4 +134,20 @@ describe('nxt.CollectionRenderer', function() {
 			container.lastChild.textContent.should.equal('f');
 		});
 	});
+
+	describe('contentReference', function () {
+		it('points to rendered content', function () {
+			var container = document.createElement('ul');
+			var collection = new nx.Collection();
+			var renderer = new nxt.CollectionRenderer(container);
+			renderer.render(
+				nxt.Collection(collection, function(value) {
+					return nxt.Element('li', nxt.Text(value));
+				})
+			);
+			renderer.append({items: ['a','b','c']});
+			renderer.contentReference.nodeName.toLowerCase().should.equal('li');
+			renderer.contentReference.textContent.should.equal('a');
+		});
+	});
 });

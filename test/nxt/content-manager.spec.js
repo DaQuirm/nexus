@@ -80,4 +80,21 @@ describe('nxt.ContentManager', function() {
 			manager.regions[0].insertReference.textContent.should.equal('cellar door');
 		});
 	});
+
+	describe('contentReference', function () {
+		it('points to rendered content', function () {
+			var element = document.createElement('div');
+			var manager = new nxt.ContentManager(element);
+			var property = new nx.Property();
+			manager.render(
+				nxt.Attr('class', 'container'),
+				nxt.Element('div', nxt.Text('cellar door')),
+				nxt.Binding(property, function(value) { return value; }),
+				nxt.Binding(property, function(value) { return value; }),
+				nxt.Element('div')
+			);
+			manager.contentReference.nodeName.toLowerCase().should.equal('div');
+			manager.contentReference.textContent.should.equal('cellar door');
+		});
+	});
 });

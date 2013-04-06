@@ -19,6 +19,11 @@ nxt.ContentManager.prototype.render = function() {
 				_this.renderers[item.type].replace = false;
 			}
 			_this.renderers[item.type].render(item);
+
+			if (typeof _this.contentReference  === 'undefined') {
+				_this.contentReference = _this.renderers[item.type].content;
+			}
+
 			if (typeof newRegion !== 'undefined' && newRegion.items.length > 0) { // dynamic content followed by static content
 				newRegion.insertReference = item.node;
 				_this.regions.push(newRegion);

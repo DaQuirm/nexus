@@ -21,22 +21,22 @@ nxt.CollectionRenderer.prototype.append = function(evt) {
 	var convItems = evt.items.map(this.conversion);
 	var manager = new nxt.ContentManager(this.element);
 	nxt.ContentManager.prototype.render.apply(manager, convItems);
+	this.contentReference = manager.contentReference;
 	this.visible.value = this.collection.items.length > 0;
-	if (this.collection.items.length > 0) {
-		this.insertReference = this.collection.items[0];
-	} else {
-		this.insertReference = undefined;
-	}
 };
 
 nxt.CollectionRenderer.prototype.insertBefore = function(evt) {
 	var _this = this;
+	var contentReference;
 	var convItems = evt.items.map(this.conversion).forEach(function(item){
 		var renderer = new nxt[item.type+'Renderer'](_this.element);
 		renderer.insertReference = _this.element.childNodes[evt.index];
 		renderer.render(item);
+		if (typeof contentReference === 'undefined') {
+			contentReference = renderer.content;
+		}
 	});
-	this.insertReference = this.collection.items[0];
+	this.contentReference = contentReference;
 };
 
 nxt.CollectionRenderer.prototype.remove = function(evt) {
@@ -44,12 +44,8 @@ nxt.CollectionRenderer.prototype.remove = function(evt) {
 	evt.indexes.forEach(function(index){
 		_this.element.removeChild(_this.element.childNodes[index]);
 	});
-	this.visible.value = this.collection.items.length > 0;
-	if (this.collection.items.length > 0) {
-		this.insertReference = this.collection.items[0];
-	} else {
-		this.insertReference = undefined;
-	}
+	this.visible.value = false;
+	this.contentReference = undefined;
 };
 
 nxt.CollectionRenderer.prototype.reset = function(evt) {
@@ -59,10 +55,6 @@ nxt.CollectionRenderer.prototype.reset = function(evt) {
 	var convItems = evt.items.map(this.conversion);
 	var manager = new nxt.ContentManager(this.element);
 	nxt.ContentManager.prototype.render.apply(manager, convItems);
+	this.contentReference = manager.contentReference;
 	this.visible.value = this.collection.items.length > 0;
-	if (this.collection.items.length > 0) {
-		this.insertReference = this.collection.items[0];
-	} else {
-		this.insertReference = undefined;
-	}
 };

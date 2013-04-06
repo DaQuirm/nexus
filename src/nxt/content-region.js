@@ -27,7 +27,7 @@ nxt.ContentRegion.prototype.update = function(id, visible) {
 	this.visibility[id] = visible;
 	var insertReference;
 	if (visible) {
-		insertReference = this.items[id].insertReference; //contentRenderer ? this.items[id].contentRenderer.content : this.items[id].collection.items[0];
+		insertReference = this.items[id].contentReference;
 	} else if (this.insertReference) {
 		insertReference = this.insertReference;
 	} else {
