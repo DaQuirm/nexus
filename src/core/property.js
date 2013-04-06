@@ -7,17 +7,17 @@ nx.Property = function(options) {
 		this._value = options.value;
 	}
 
-	Object.defineProperty(this, 'value', {
-		enumerable : true,
-		get: function() { return this._value; },
-		set: function(value) {
-			this._value = value;
-			this.onvalue.trigger(value);
-		}
-	});
-
 	this.onvalue = new nx.Event();
 };
+
+Object.defineProperty(nx.Property.prototype, 'value', {
+	enumerable : true,
+	get: function() { return this._value; },
+	set: function(value) {
+		this._value = value;
+		this.onvalue.trigger(value);
+	}
+});
 
 nx.Property.prototype.bind = function(target, mode, sourceConversion, targetConversion) {
 	return new nx.Binding(
