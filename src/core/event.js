@@ -14,6 +14,7 @@ nx.Event.prototype.trigger = function(argument) {
 nx.Event.prototype.add = function(handler, name) {
 	name = name || this._nameIndex++;
 	this.handlers[name] = handler;
+	return name;
 };
 
 nx.Event.prototype.remove = function(name) {

@@ -44,6 +44,17 @@ describe('nx.Event', function() {
 			triggerCount.should.equal(1);
 		});
 
+		it('returns handler name', function () {
+			var evt = new nx.Event();
+			var triggerCount = 0;
+			var name = evt.add(function(){
+				triggerCount++;
+			}, 'event-handler');
+			name.should.equal('event-handler');
+			name = evt.add(function(){ triggerCount++; });
+			should.exist(name);
+		});
+
 		it('throws an error if handler\'s name is alredy in list');
 	});
 
