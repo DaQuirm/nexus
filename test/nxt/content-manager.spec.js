@@ -71,13 +71,16 @@ describe('nxt.ContentManager', function() {
 			manager.render(
 				nxt.Attr('class', 'container'),
 				nxt.Element('div'),
-				nxt.Binding(property, function(value) { return value; }),
-				nxt.Binding(property, function(value) { return value; }),
+				nxt.Binding(property, nxt.Text),
+				nxt.Binding(property, nxt.Text),
 				nxt.Element('div', nxt.Text('cellar door'))
 			);
 			manager.regions[0].insertReference.nodeType.should.equal(Node.ELEMENT_NODE);
 			manager.regions[0].insertReference.nodeName.toLowerCase().should.equal('div');
 			manager.regions[0].insertReference.textContent.should.equal('cellar door');
+			property.value = 'a';
+			element.lastChild.nodeName.toLowerCase().should.equal('div');
+			element.lastChild.textContent.toLowerCase().should.equal('cellar door');
 		});
 	});
 

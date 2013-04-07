@@ -27,11 +27,11 @@ nxt.ContentRegion.prototype.update = function(id, visible) {
 	this.visibility[id] = visible;
 	var insertReference;
 	if (visible) {
-		insertReference = this.items[id].contentReference;
-	} else if (this.insertReference) {
-		insertReference = this.insertReference;
+		insertReference = this.items[id].contentReference; // item's content will serve as an insert reference
+	} else if (this.items[id].insertReference) {
+		insertReference = this.items[id].insertReference; // item's right visible neighbor will serve as an insert reference
 	} else {
-		insertReference = this.items[id].insertReference;
+		insertReference = this.insertReference; // a static element adjacent to the region (if any) will serve as an insert reference
 	}
 	for (var index = id-1; index >= 0; index--) {
 		this.items[index].insertReference = insertReference;

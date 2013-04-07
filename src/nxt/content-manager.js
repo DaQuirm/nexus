@@ -10,7 +10,8 @@ nxt.ContentManager.prototype.render = function() {
 	var args = Array.prototype.slice.call(arguments);
 	var _this = this;
 	var newRegion;
-	args.forEach(function(item){
+	var dynamicItems = [];
+	args.forEach(function(item, index){
 		if (!item.dynamic) {
 			if (typeof _this.renderers[item.type] === 'undefined') {
 				_this.renderers[item.type] = new nxt[item.type+'Renderer'](_this.element);
@@ -24,21 +25,26 @@ nxt.ContentManager.prototype.render = function() {
 				_this.contentReference = _this.renderers[item.type].content;
 			}
 
-			if (typeof newRegion !== 'undefined' && newRegion.items.length > 0) { // dynamic content followed by static content
-				newRegion.insertReference = item.node;
-				_this.regions.push(newRegion);
+			if (dynamicItems.length > 0) { // dynamic content followed by static content
 				newRegion = new nxt.ContentRegion(_this.element);
+				newRegion.insertReference = item.node;
+				for (var itemIndex = 0; itemIndex < dynamicItems.length; itemIndex++) {
+					newRegion.add(dynamicItems[itemIndex]);
+				}
+				_this.regions.push(newRegion);
+				dynamicItems = [];
 			}
 		} else {
 			var renderer = new nxt[item.type+'Renderer'](_this.element);
 			renderer.render(item);
-			if (typeof newRegion === 'undefined') { // dynamic content item is the first one
-				newRegion = new nxt.ContentRegion(_this.element);
-			}
-			newRegion.add(renderer);
+			dynamicItems.push(renderer);
 		}
 	});
-	if (newRegion && newRegion.items.length > 0) {
+	if (dynamicItems.length > 0) {
+		newRegion = new nxt.ContentRegion(_this.element);
+		for (var itemIndex = 0; itemIndex < dynamicItems.length; itemIndex++) {
+			newRegion.add(dynamicItems[itemIndex]);
+		}
 		this.regions.push(newRegion);
 	}
 };
