@@ -1,11 +1,11 @@
 window.nxt = window.nxt || {};
 
-nxt.ElementRenderer = function(element) {
+nxt.NodeRenderer = function(element) {
 	this.element = element;
 	this.replace = true;
 };
 
-nxt.ElementRenderer.prototype.render = function(element) {
+nxt.NodeRenderer.prototype.render = function(element) {
 	if (typeof element !== 'undefined') {
 		if (typeof this.insertReference !== 'undefined') {
 			this.element.insertBefore(element.node, this.insertReference);

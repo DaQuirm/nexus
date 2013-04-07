@@ -71,7 +71,7 @@ describe('nxt.BindingRenderer', function() {
 			nxt.Binding(property, function(value) { return nxt.Text(value); })
 		);
 		property.value = 'cellar door';
-		renderer.contentRenderer.should.be.an.instanceof(nxt.TextRenderer);
+		renderer.contentRenderer.should.be.an.instanceof(nxt.NodeRenderer);
 	});
 
 	it('renders content received from the bound property into its containing element', function() {

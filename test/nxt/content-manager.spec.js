@@ -14,9 +14,9 @@ describe('nxt.ContentManager', function() {
 			var element = document.createElement('div');
 			var manager = new nxt.ContentManager(element);
 			manager.render(nxt.Element('span'), nxt.Text('cellar door'), nxt.Attr('class', 'container'));
-			Object.keys(manager.renderers).length.should.equal(3);
+			Object.keys(manager.renderers).length.should.equal(2);
 			manager.render(nxt.Text('cellar door'));
-			Object.keys(manager.renderers).length.should.equal(3);
+			Object.keys(manager.renderers).length.should.equal(2);
 		});
 
 		it('uses content renderers to append static items to the container', function() {

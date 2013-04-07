@@ -12,7 +12,7 @@ nxt.Text = function(text) {
 	return {
 		text: text,
 		node: document.createTextNode(text),
-		type: 'Text'
+		type: 'Node'
 	};
 };
 
@@ -36,7 +36,7 @@ nxt.Element = function() {
 	return {
 		name: name,
 		node: node,
-		type: 'Element'
+		type: 'Node'
 	};
 };
 

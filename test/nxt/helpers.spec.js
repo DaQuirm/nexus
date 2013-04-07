@@ -16,7 +16,7 @@ describe('nxt helpers', function() {
 			obj.text.should.equal('cellar door');
 			obj.node.nodeType.should.equal(Node.TEXT_NODE);
 			obj.node.nodeValue.should.equal('cellar door');
-			obj.type.should.equal('Text');
+			obj.type.should.equal('Node');
 		});
 	});
 
@@ -37,7 +37,7 @@ describe('nxt helpers', function() {
 			obj.name.should.equal('div');
 			obj.node.nodeType.should.equal(Node.ELEMENT_NODE);
 			obj.node.nodeName.toLowerCase().should.equal('div');
-			obj.type.should.equal('Element');
+			obj.type.should.equal('Node');
 		});
 
 		it('renders inner content', function() {
