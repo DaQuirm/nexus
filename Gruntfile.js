@@ -49,10 +49,12 @@ module.exports = function(grunt) {
 					browser: true,
 					es5: true, // instanceof assertions
 					strict: true,
+					expr: true,
 					globals: {
 						chai: true,
 						describe: true,
 						it: true,
+						should: true,
 						nx: true,
 						nxt: true
 					}

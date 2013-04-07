@@ -109,7 +109,7 @@ describe('nxt.ContentRegion', function() {
 			renderer = new nxt.BindingRenderer(container);
 			renderer.render(nxt.Binding(property, nxt.Text));
 			region.add(renderer);
-		}
+		};
 		addRenderer(first);
 		addRenderer(between);
 		addRenderer(second);
@@ -135,7 +135,7 @@ describe('nxt.ContentRegion', function() {
 			renderer = new nxt.BindingRenderer(container);
 			renderer.render(nxt.Binding(property, nxt.Text));
 			region.add(renderer);
-		}
+		};
 		addRenderer(property);
 		addRenderer(between);
 		renderer = new nxt.CollectionRenderer(container);
@@ -167,7 +167,7 @@ describe('nxt.ContentRegion', function() {
 			renderer.insertReference = exclamationMark;
 			renderer.render(nxt.Binding(property, nxt.Text));
 			region.add(renderer);
-		}
+		};
 		addRenderer(first);
 		addRenderer(between);
 		addRenderer(second);
