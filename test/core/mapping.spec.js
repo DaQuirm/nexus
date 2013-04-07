@@ -36,6 +36,15 @@ describe('nx.Mapping', function() {
 			mapping.map(price, book);
 			book.price.should.equal(24.73);
 		});
+
+		it('maps multiple fields to other fields in an object literal', function () {
+			var symmetryMapping = new nx.Mapping({'x':'y', 'y':'x'});
+			var point1 = { x: 10, y: 5 };
+			var point2 = {};
+			symmetryMapping.map(point1, point2);
+			point2.x.should.equal(5);
+			point2.y.should.equal(10);
+		});
 	});
 
 	describe('inverse', function() {
