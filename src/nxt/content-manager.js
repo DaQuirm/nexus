@@ -11,6 +11,7 @@ nxt.ContentManager.prototype.render = function() {
 	var _this = this;
 	var newRegion;
 	var dynamicItems = [];
+	this.content = [];
 	args.forEach(function(item, index){
 		if (!item.dynamic) {
 			if (typeof _this.renderers[item.type] === 'undefined') {
@@ -21,8 +22,8 @@ nxt.ContentManager.prototype.render = function() {
 			}
 			_this.renderers[item.type].render(item);
 
-			if (typeof _this.contentReference  === 'undefined') {
-				_this.contentReference = _this.renderers[item.type].content;
+			if (typeof _this.renderers[item.type].content !== 'undefined') {
+				_this.content.push(_this.renderers[item.type].content);
 			}
 
 			if (dynamicItems.length > 0) { // dynamic content followed by static content

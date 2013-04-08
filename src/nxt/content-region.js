@@ -27,7 +27,7 @@ nxt.ContentRegion.prototype.update = function(id, visible) {
 	this.visibility[id] = visible;
 	var insertReference;
 	if (visible) {
-		insertReference = this.items[id].contentReference; // item's content will serve as an insert reference
+		insertReference = Array.isArray(this.items[id].content) ? this.items[id].content[0] : this.items[id].content; // item's content will serve as an insert reference
 	} else if (this.items[id].insertReference) {
 		insertReference = this.items[id].insertReference; // item's right visible neighbor will serve as an insert reference
 	} else {

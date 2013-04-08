@@ -135,8 +135,8 @@ describe('nxt.CollectionRenderer', function() {
 		});
 	});
 
-	describe('contentReference', function () {
-		it('points to rendered content', function () {
+	describe('content', function () {
+		it('stores rendered content items', function () {
 			var container = document.createElement('ul');
 			var collection = new nx.Collection();
 			var renderer = new nxt.CollectionRenderer(container);
@@ -146,8 +146,28 @@ describe('nxt.CollectionRenderer', function() {
 				})
 			);
 			renderer.append({items: ['a','b','c']});
-			renderer.contentReference.nodeName.toLowerCase().should.equal('li');
-			renderer.contentReference.textContent.should.equal('a');
+			renderer.content.length.should.equal(3);
+			renderer.content[0].nodeName.toLowerCase().should.equal('li');
+			renderer.content[0].textContent.should.equal('a');
 		});
+	});
+
+	it('doesn\'t remove all element\'s child nodes when all collection items are removed', function () {
+		var container = document.createElement('ul');
+		var listItem = document.createElement('li');
+		listItem.textContent = 'a';
+		container.appendChild(listItem);
+		var collection = new nx.Collection();
+		var renderer = new nxt.CollectionRenderer(container);
+		renderer.render(
+			nxt.Collection(collection, function(value) {
+				return nxt.Element('li', nxt.Text(value));
+			})
+		);
+		renderer.append({items: ['b','c','d']});
+		container.textContent.should.equal('abcd');
+		renderer.reset({items:[]});
+		container.textContent.should.equal('a');
+		container.childNodes.length.should.equal(1);
 	});
 });

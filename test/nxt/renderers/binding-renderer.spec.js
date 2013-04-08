@@ -50,7 +50,7 @@ describe('nxt.BindingRenderer', function() {
 		});
 	});
 
-	describe('contentReference', function () {
+	describe('content', function () {
 		it('points to rendered content', function () {
 			var element = document.createElement('div');
 			var property = new nx.Property();
@@ -59,7 +59,7 @@ describe('nxt.BindingRenderer', function() {
 				nxt.Binding(property, function(value) { return nxt.Text(value); })
 			);
 			property.value = 'cellar door';
-			renderer.contentReference.should.equal(renderer.contentRenderer.content);
+			renderer.content.should.equal(renderer.contentRenderer.content);
 		});
 	});
 

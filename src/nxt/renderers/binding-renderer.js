@@ -14,7 +14,7 @@ nxt.BindingRenderer = function(element) {
 		if (typeof _this.contentRenderer !== 'undefined') {
 			_this.contentRenderer.insertReference = _this.insertReference;
 			_this.contentRenderer.render(data);
-			_this.contentReference = _this.contentRenderer.content;
+			_this.content = _this.contentRenderer.content;
 		}
 	});
 
