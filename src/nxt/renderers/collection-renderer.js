@@ -48,8 +48,8 @@ nxt.CollectionRenderer.prototype.remove = function(evt) {
 };
 
 nxt.CollectionRenderer.prototype.reset = function(evt) {
-	while(this.element.firstChild) {
-		this.element.removeChild(this.element.firstChild);
+	for (var itemIndex = 0; itemIndex < this.content.length; itemIndex++) {
+		this.element.removeChild(this.content[itemIndex]);
 	}
 	var convItems = evt.items.map(this.conversion);
 	var manager = new nxt.ContentManager(this.element);
