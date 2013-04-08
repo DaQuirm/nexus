@@ -51,9 +51,6 @@ nxt.CollectionRenderer.prototype.reset = function(evt) {
 	for (var itemIndex = 0; itemIndex < this.content.length; itemIndex++) {
 		this.element.removeChild(this.content[itemIndex]);
 	}
-	var convItems = evt.items.map(this.conversion);
-	var manager = new nxt.ContentManager(this.element);
-	nxt.ContentManager.prototype.render.apply(manager, convItems);
-	this.content = this.content.concat(manager.content);
-	this.visible.value = this.collection.items.length > 0;
+	this.content = [];
+	this.append(evt);
 };
