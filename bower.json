@@ -1,0 +1,30 @@
+{
+  "name": "nexus",
+  "version": "0.1.1",
+  "homepage": "https://github.com/DaQuirm/nexus",
+  "authors": [
+    "DaQuirm <leo.daquirm@gmail.com>"
+  ],
+  "description": "A client-side Web application framework",
+  "keywords": [
+    "mvvm",
+    "framework",
+    "web",
+    "client",
+    "spa"
+  ],
+  "license": "LGPL",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "chai-spies": "https://github.com/chaijs/chai-spies.git#~0.5.1",
+    "mocha": "~1.13.0",
+    "chai": "~1.8.0"
+  }
+}
