@@ -51,6 +51,8 @@ describe('nxt helpers', function() {
 			elem.node.attributes.length.should.equal(1);
 			elem.node.getAttribute('class').should.equal('button-big-blue');
 		});
+
+		it('accepts both single content items and item arrays');
 	});
 
 	describe('nxt.Binding', function() {
