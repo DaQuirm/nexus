@@ -3,3 +3,4 @@ chai
 chai-spies
 node_modules
 build
+npm-debug.log
