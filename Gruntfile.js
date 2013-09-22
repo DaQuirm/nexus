@@ -2,18 +2,27 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-wrap');
 
 	grunt.initConfig({
+
+		paths: {
+			src_files:             'src/**/*.js',
+			test_files:            'test/**/*.js',
+			build_file:            'build/nexus.js',
+			build_file_compressed: 'build/nexus.min.js'
+		},
+
 		concat: {
 			source: {
-				src: 'src/**/*.js',
-				dest: 'build/nexus.js'
+				src: '<%= paths.src_files %>',
+				dest: '<%= paths.build_file %>'
 			}
 		},
 		wrap: {
 			build: {
-				src: 'build/nexus.js',
+				src: '<%= paths.build_file %>',
 				dest: '',
 				wrapper: ['(function() {\n\t\'use strict\';\n', '\n})();\n']
 			}
@@ -21,14 +30,14 @@ module.exports = function(grunt) {
 		uglify: {
 			build: {
 				files: {
-					'build/nexus.min.js': ['build/nexus.js']
+					'<%= paths.build_file_compressed %>': ['<%= paths.build_file %>']
 				}
 			}
 		},
 		jshint: {
 			build: {
 				files: {
-					src: 'build/nexus.js'
+					src: '<%= paths.build_file %>'
 				},
 				options: {
 					boss: true,
@@ -43,7 +52,7 @@ module.exports = function(grunt) {
 			},
 			test: {
 				files: {
-					src: 'test/**/*.js'
+					src: '<%= paths.test_files %>'
 				},
 				options: {
 					browser: true,
@@ -60,6 +69,15 @@ module.exports = function(grunt) {
 					}
 				}
 			}
+		},
+		watch: {
+			scripts: {
+				files: ['<%= paths.src_files %>'],
+				tasks: ['concat:source', 'wrap:build', 'jshint:build'],
+				options: {
+				  spawn: false,
+				},
+			},
 		}
 	});
 
