@@ -9,13 +9,17 @@
   <div id="mocha"></div>
   <script src="lib/mocha/mocha.js"></script>
   <script src="lib/chai/chai.js"></script>
-  <script src="lib/chai-spies/chai-spies.js"></script>
+  <script src="lib/sinon/lib/sinon.js"></script>
+  <script src="lib/sinon/lib/sinon/call.js"></script>
+  <script src="lib/sinon/lib/sinon/spy.js"></script>
+  <script src="lib/sinon-chai/lib/sinon-chai.js"></script>
   <script>mocha.setup('bdd')</script>
 
   <!-- Source -->
   <script src="build/nexus.js"></script>
 
   <!-- Core-->
+  <script src="test/core/ajax-model.spec.js"></script>
   <script src="test/core/binding.spec.js"></script>
   <script src="test/core/collection.spec.js"></script>
   <script src="test/core/event.spec.js"></script>

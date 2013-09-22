@@ -23,13 +23,13 @@ describe('nx.Event', function() {
 
 		it('triggers all registered handlers', function() {
 			var evt = new nx.Event();
-			var handler = chai.spy();
-			var anotherHandler = chai.spy();
+			var handler = sinon.spy();
+			var anotherHandler = sinon.spy();
 			evt.add(handler);
 			evt.add(anotherHandler);
 			evt.trigger('cellar door');
-			handler.should.have.been.called();
-			anotherHandler.should.have.been.called();
+			handler.should.have.been.called;
+			anotherHandler.should.have.been.called;
 		});
 	});
 
@@ -61,12 +61,12 @@ describe('nx.Event', function() {
 	describe('remove', function() {
 		it('removes a handler from the event handler list by its name', function() {
 			var evt = new nx.Event();
-			var handler = chai.spy();
+			var handler = sinon.spy();
 			evt.add(handler, 'event-handler');
 			evt.trigger();
 			evt.remove('event-handler');
 			evt.trigger();
-			handler.should.have.been.called.once();
+			handler.should.have.been.calledOnce;
 		});
 	});
 });
