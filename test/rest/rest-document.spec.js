@@ -1,6 +1,6 @@
 describe('nx.RestDocument', function() {
 
-	var url = 'http://localhost/users/1';
+	var url = 'http://localhost/users/37';
 
 	beforeEach(function() {
 		var model = new nx.RestDocument({ url: url });
@@ -9,6 +9,19 @@ describe('nx.RestDocument', function() {
 	describe('constructor', function() {
 		it('creates a new document model instance based on a URL', function() {
 			model.url.should.equal(url);
+		});
+
+		it('creates a new document model instance based on a data object', function() {
+			var data = {
+				firstname: 'Samuel',
+				lastname: 'Vimes'
+			};
+			model = new nx.RestDocument({
+				url: url,
+				data: data
+			});
+			model.url.should.equal(url);
+			model.data.value.should.deep.equal(data);
 		});
 	});
 
@@ -20,9 +33,11 @@ describe('nx.RestDocument', function() {
 
 	describe('retrieve', function() {
 		it('asynchronously gets document data with a GET request', function(done) {
+			var request_spy = sinon.spy(model.request);
 			model.retrieve(function(data) {
 				data.should.be.json;
 				model.data.value.shoul.deep.equal(data);
+				request_spy.should.have.been.caledWith({ url: url, method: 'get' });
 				done();
 			});
 		})
@@ -30,9 +45,14 @@ describe('nx.RestDocument', function() {
 
 	describe('save', function() {
 		it('asynchronously updates document data with a PUT request', function(done) {
-			model.retrieve(function(data) {
-				data.should.be.json;
-				model.data.value.shoul.deep.equal(data);
+			var request_spy = sinon.spy(model.request);
+			model.data.value = { name: 'Samuel' };
+			model.save(function() {
+				request_spy.should.have.been.caledWith({
+					url: url,
+					method: 'put',
+					data: { name: 'Samuel' }
+				});
 				done();
 			});
 		}
@@ -40,9 +60,9 @@ describe('nx.RestDocument', function() {
 
 	describe('delete', function() {
 		it('deletes document data with a DELETE request', function(done) {
-			model.retrieve(function(data) {
-				data.should.be.json;
-				model.data.value.shoul.deep.equal(data);
+			var request_spy = sinon.spy(model.request);
+			model.delete(function() {
+				request_spy.should.have.been.caledWith({ url: url, method: 'delete' });
 				done();
 			});
 		}
