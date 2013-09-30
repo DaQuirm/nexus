@@ -6,20 +6,14 @@ describe('nx.RestCollection', function() {
 			var model = new nx.RestCollection({ url: url });
 			model.url.should.equal(url);
 		});
+
+		it('accepts a rest document model constructor for collection item instantiation', function() {
+			var UserModel = Object.create(nx.RestDocument);
+			var model = new nx.RestCollection({ url: url, item:  });
+		});
 	});
 
-	describe('retrieve', function() {
-		it('gets collection data with a GET request', function() {
-			var model = new nx.RestCollection({ url: url })
-		})
-	});
-
-	describe('save', function() {
+	describe('create', function() {
 
 	});
-
-	describe('delete', function() {
-
-	});
-
 });
