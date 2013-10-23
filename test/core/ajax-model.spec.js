@@ -10,6 +10,23 @@ describe('nx.AjaxModel', function() {
 		it('creates a new model instance', function() {
 			should.exist(model);
 		});
+
+		it('initializes the data property using the first constructor parameter', function() {
+			model = new nx.AjaxModel({cellar: 'door'});
+			model.data.value.should.deep.equal({cellar: 'door'});
+		});
+	});
+
+	describe('data', function() {
+		it('is an nx.Property instance that stores model data', function() {
+			model.data.should.be.an.instanceof(nx.Property);
+		});
+	});
+
+	describe('status', function() {
+		it('is an nx.Property instance that stores model\'s status' , function() {
+			model.data.should.be.an.instanceof(nx.Property);
+		});
 	});
 
 	describe('request', function() {
@@ -38,15 +55,16 @@ describe('nx.AjaxModel', function() {
 			request.method.should.equal('get');
 		});
 
-		it('sends http requests with data when specified', function() {
+		it('sends http requests using the data property', function() {
+			model.data.value = { 'name': 'Samuel' };
 			model.request({
 				url: url,
-				method: 'post',
-				data: { 'name': 'Samuel' }
+				method: 'post'
 			});
 			requests.length.should.equal(1);
 			requests[0].url.should.equal(url);
 			request.method.should.equal('post');
+			request.requestBody.should.deep.equal(model.data.value);
 		});
 
 		it('interpolates the url using placeholders in curly braces and substitute values from model data', function() {
@@ -56,7 +74,7 @@ describe('nx.AjaxModel', function() {
 				data: { 'name': 'Samuel', '_id':1337 }
 			});
 			requests.length.should.equal(1);
-			requests[0].url.should.equal(url);
+			requests[0].url.should.equal('http://localhost/users/1337');
 		});
 
 		it('calls a success handler if request succeeds and passes received data as the first parameter', function() {
