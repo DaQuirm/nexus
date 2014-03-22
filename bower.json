@@ -1,6 +1,7 @@
 {
   "name": "nexus",
   "version": "0.1.1",
+  "main": "build/nexus.js",
   "homepage": "https://github.com/DaQuirm/nexus",
   "authors": [
     "DaQuirm <leo.daquirm@gmail.com>"
@@ -16,13 +17,14 @@
   "license": "LGPL",
   "private": true,
   "ignore": [
-    "**/.*",
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "demos",
+    "test.html"
   ],
-  "dependencies": {
+  "devDependencies": {
     "mocha": "~1.13.0",
     "chai": "~1.8.0",
     "sinon-chai": "~2.4.0",
