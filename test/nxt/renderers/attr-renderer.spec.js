@@ -16,5 +16,16 @@ describe('nxt.AttrRenderer', function() {
 			renderer.render(nxt.Attr('class', 'large-text'));
 			link.getAttribute('class').should.equal('large-text');
 		});
+
+		it('sets an array of attributes of a DOM element passed as an object literal', function() {
+			var link = document.createElement('a');
+			var renderer = new nxt.AttrRenderer(link);
+			renderer.render(nxt.Attr({
+				'class': 'large-text',
+				'id': 'awesomest-link-ever'
+			}));
+			link.getAttribute('class').should.equal('large-text');
+			link.getAttribute('id').should.equal('awesomest-link-ever');
+		});
 	});
 });

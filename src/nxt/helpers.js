@@ -1,11 +1,16 @@
 window.nxt = window.nxt || {};
 
 nxt.Attr = function(name, value) {
-	return {
-		name: name,
-		value: value,
-		type: 'Attr'
-	};
+	return (typeof name === 'string') ?
+		{
+			name: name,
+			value: value,
+			type: 'Attr'
+		}
+		: {
+			items: name,
+			type: 'Attr'
+		};
 };
 
 nxt.Text = function(text) {

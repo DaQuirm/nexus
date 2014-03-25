@@ -8,6 +8,18 @@ describe('nxt helpers', function() {
 			obj.value.should.equal('button-big-red');
 			obj.type.should.equal('Attr');
 		});
+
+		it('creates an attribute collection object', function() {
+			var obj = nxt.Attr({
+				'class': 'button-big-red',
+				'data-label': 'Hit me!'
+			});
+			obj.items.should.deep.equal({
+				'class': 'button-big-red',
+				'data-label': 'Hit me!'
+			})
+			obj.type.should.equal('Attr');
+		});
 	});
 
 	describe('nxt.Text', function() {
