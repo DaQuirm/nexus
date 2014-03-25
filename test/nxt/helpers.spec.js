@@ -18,6 +18,11 @@ describe('nxt helpers', function() {
 			obj.node.nodeValue.should.equal('cellar door');
 			obj.type.should.equal('Node');
 		});
+
+		it('returns undefined if text value is undefined', function() {
+			var result = nxt.Text();
+			should.not.exist(result);
+		});
 	});
 
 	describe('nxt.Event', function() {

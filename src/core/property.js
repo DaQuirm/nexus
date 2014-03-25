@@ -20,13 +20,19 @@ Object.defineProperty(nx.Property.prototype, 'value', {
 });
 
 nx.Property.prototype.bind = function(target, mode, sourceConversion, targetConversion) {
-	return new nx.Binding(
+	var binding = new nx.Binding(
 		this,
 		target,
 		mode,
 		sourceConversion,
 		targetConversion
 	);
+	if (mode === '<-') {
+		binding.sync(this, target.value, sourceConversion);
+	} else {
+		binding.sync(target, this.value, sourceConversion);
+	}
+	return binding;
 };
 
 nx.Property.prototype.set = function(value) {

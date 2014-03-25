@@ -9,7 +9,7 @@ nxt.Attr = function(name, value) {
 };
 
 nxt.Text = function(text) {
-	return {
+	return text && {
 		text: text,
 		node: document.createTextNode(text),
 		type: 'Node'

@@ -61,6 +61,25 @@ describe('nx.Property', function() {
 			var binding = p.bind(q, '->');
 			binding.should.be.an.instanceof(nx.Binding);
 		});
+
+		it('syncs property values from source to target for one-way bindings', function() {
+			var p = new nx.Property({value:'cellar door'});
+			var q = new nx.Property();
+			p.bind(q, '->');
+			q.value.should.equal('cellar door');
+			p = new nx.Property();
+			q = new nx.Property({value:'cellar door'});
+			var binding = p.bind(q, '<-');
+			p.value.should.equal('cellar door');
+		})
+
+		it('syncs property values from source to target for two-way bindings', function() {
+			var p = new nx.Property({value:'cellar door'});
+			var q = new nx.Property({value:'test'});
+			p.bind(q, '<->');
+			q.value.should.equal('cellar door');
+			p.value.should.equal('cellar door');
+		})
 	});
 
 	describe('onvalue', function() {
