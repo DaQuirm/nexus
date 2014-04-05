@@ -40,7 +40,7 @@ describe('nx.RestDocument', function() {
 				request_spy.should.have.been.caledWith({ url: url, method: 'get' });
 				done();
 			});
-		})
+		});
 	});
 
 	describe('save', function() {
@@ -48,14 +48,14 @@ describe('nx.RestDocument', function() {
 			var request_spy = sinon.spy(model.request);
 			model.data.value = { name: 'Samuel' };
 			model.save(function() {
-				request_spy.should.have.been.caledWith({
+				request_spy.should.have.been.calledWith({
 					url: url,
 					method: 'put',
 					data: { name: 'Samuel' }
 				});
 				done();
 			});
-		}
+		});
 	});
 
 	describe('delete', function() {
@@ -65,7 +65,6 @@ describe('nx.RestDocument', function() {
 				request_spy.should.have.been.caledWith({ url: url, method: 'delete' });
 				done();
 			});
-		}
+		});
 	});
-
 });

@@ -30,7 +30,7 @@ describe('nx.AjaxModel', function() {
 	});
 
 	describe('request', function() {
-		var xhr, requests;
+		var xhr, requests, server;
 		var url = 'http://localhost/users';
 
 		beforeEach(function () {
