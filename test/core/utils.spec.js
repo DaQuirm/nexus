@@ -1,9 +1,9 @@
 describe('Utils', function() {
-	describe('interpolate_string', function() {
+	describe('interpolateString', function() {
 		it('substitutes paramaters in curly braces with the object literal\'s field values converting them to strings', function() {
-			nx.Utils.interpolate_string('{a}{b}{c}', { a:1, b:2, c:3 })
+			nx.Utils.interpolateString('{a}{b}{c}', { a:1, b:2, c:3 })
 				.should.equal('123');
-			nx.Utils.interpolate_string('rock {amp} roll', { amp: '&' })
+			nx.Utils.interpolateString('rock {amp} roll', { amp: '&' })
 				.should.equal('rock & roll');
 		});
 	});
