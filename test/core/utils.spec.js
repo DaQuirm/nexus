@@ -6,5 +6,11 @@ describe('Utils', function() {
 			nx.Utils.interpolateString('rock {amp} roll', { amp: '&' })
 				.should.equal('rock & roll');
 		});
+
+		it('doesn\'t fail when the string contains no curly-braced placeholders', function() {
+			var string = 'cellar door';
+			nx.Utils.interpolateString(string, { a:1, b:2, c:3 })
+				.should.equal(string);
+		})
 	});
 });
