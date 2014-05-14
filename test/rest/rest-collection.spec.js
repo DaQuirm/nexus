@@ -25,7 +25,7 @@ describe('nx.RestCollection', function() {
 			};
 			var item = new nx.RestDocument({ data: data });
 			collection.create(item, function() {
-				request_spy.should.have.been.caledWith({
+				request_spy.should.have.been.calledWith({
 					url: url,
 					method: 'post',
 					data: data
@@ -56,7 +56,7 @@ describe('nx.RestCollection', function() {
 			collection.retrieve(function(data) {
 				data.should.be.json;
 				collection.data.value.shoul.deep.equal(data);
-				request_spy.should.have.been.caledWith({ url: url, method: 'get' });
+				request_spy.should.have.been.calledWith({ url: url, method: 'get' });
 				done();
 			});
 		});

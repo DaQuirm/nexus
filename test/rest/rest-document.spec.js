@@ -1,9 +1,17 @@
 describe('nx.RestDocument', function() {
 
+	var model, xhr, server;
 	var url = 'http://localhost/users/37';
 
 	beforeEach(function() {
-		var model = new nx.RestDocument({ url: url });
+		xhr = sinon.useFakeXMLHttpRequest();
+		model = new nx.RestDocument({ url: url });
+		server = sinon.fakeServer.create();
+	});
+
+	afterEach(function() {
+		xhr.restore && xhr.restore();
+		server.restore();
 	});
 
 	describe('constructor', function() {
@@ -31,40 +39,71 @@ describe('nx.RestDocument', function() {
 		});
 	});
 
-	describe('retrieve', function() {
+	describe.skip('retrieve', function() {
 		it('asynchronously gets document data with a GET request', function(done) {
-			var request_spy = sinon.spy(model.request);
+			var response = { 'response': 'cellar door' };
+			server.respondWith([
+				200,
+				{ "Content-Type": "application/json" },
+				JSON.stringify(response)
+			]);
 			model.retrieve(function(data) {
 				data.should.be.json;
-				model.data.value.shoul.deep.equal(data);
-				request_spy.should.have.been.caledWith({ url: url, method: 'get' });
+				model.data.value.should.deep.equal(data);
+				server.requests.length.should.equal(1);
+				server.requests[0].url.should.equal(url);
+				server.requests[0].method.should.equal('get');
 				done();
 			});
+			server.respond();
+		});
+
+		it('updates the `data` property with response data', function(done) {
+			var response = { 'response': 'cellar door' };
+			server.respondWith([
+				200,
+				{ "Content-Type": "application/json" },
+				JSON.stringify(response)
+			]);
+			model.retrieve(function(data) {
+				model.data.value.should.deep.equal(response);
+				done();
+			});
+			server.respond();
 		});
 	});
 
 	describe('save', function() {
 		it('asynchronously updates document data with a PUT request', function(done) {
-			var request_spy = sinon.spy(model.request);
+			var request_spy = sinon.spy(model, 'request');
 			model.data.value = { name: 'Samuel' };
+			server.respondWith([
+				200,
+				{ "Content-Type": "application/json" },
+				JSON.stringify({ name: 'Samuel' })
+			]);
 			model.save(function() {
-				request_spy.should.have.been.calledWith({
-					url: url,
-					method: 'put',
-					data: { name: 'Samuel' }
-				});
+				request_spy.should.have.been.calledOnce;
+				request_spy.lastCall.should.have.property('url', url);
+				request_spy.lastCall.should.have.property('method', 'put');
+				request_spy.lastCall.should.have.property('data', { name: 'Samuel' });
+				model.request.restore();
 				done();
 			});
+			server.respond();
 		});
 	});
 
-	describe('delete', function() {
+	describe('remove', function() {
 		it('deletes document data with a DELETE request', function(done) {
 			var request_spy = sinon.spy(model.request);
-			model.delete(function() {
-				request_spy.should.have.been.caledWith({ url: url, method: 'delete' });
+			server.respondWith([204, '', '']);
+			model.remove(function() {
+				request_spy.should.have.been.calledWith({ url: url, method: 'delete' });
+				model.request.restore();
 				done();
 			});
+			server.respond();
 		});
 	});
 });
