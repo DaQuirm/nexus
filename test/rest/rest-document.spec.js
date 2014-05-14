@@ -39,7 +39,7 @@ describe('nx.RestDocument', function() {
 		});
 	});
 
-	describe.skip('retrieve', function() {
+	describe('retrieve', function() {
 		it('asynchronously gets document data with a GET request', function(done) {
 			var response = { 'response': 'cellar door' };
 			server.respondWith([
@@ -84,9 +84,10 @@ describe('nx.RestDocument', function() {
 			]);
 			model.save(function() {
 				request_spy.should.have.been.calledOnce;
-				request_spy.lastCall.should.have.property('url', url);
-				request_spy.lastCall.should.have.property('method', 'put');
-				request_spy.lastCall.should.have.property('data', { name: 'Samuel' });
+				var requestOptions = request_spy.lastCall.args[0];
+				requestOptions.should.have.property('url', url);
+				requestOptions.should.have.property('method', 'put');
+				requestOptions.data.should.deep.equal({ name:'Samuel' });
 				model.request.restore();
 				done();
 			});
@@ -96,10 +97,13 @@ describe('nx.RestDocument', function() {
 
 	describe('remove', function() {
 		it('deletes document data with a DELETE request', function(done) {
-			var request_spy = sinon.spy(model.request);
+			var request_spy = sinon.spy(model, 'request');
 			server.respondWith([204, '', '']);
 			model.remove(function() {
-				request_spy.should.have.been.calledWith({ url: url, method: 'delete' });
+				request_spy.should.have.been.calledOnce;
+				var requestOptions = request_spy.lastCall.args[0];
+				requestOptions.should.have.property('url', url);
+				requestOptions.should.have.property('method', 'delete');
 				model.request.restore();
 				done();
 			});
