@@ -11,7 +11,15 @@ describe('nx.RestCollection', function() {
 
 		it('accepts a rest document model constructor for collection item instantiation', function() {
 			var collection = new nx.RestCollection({ url: url, item: UserModel });
-			collection.item.should.equal(UserModel);
+			collection.itemConstructor.should.equal(UserModel);
+		});
+	});
+
+	describe('items', function() {
+		it('is an nx.Collection instance', function() {
+			var collection = new nx.RestCollection({ url: url });
+			collection.items.should.be.an.instanceOf(nx.Collection);
+			collection.items.items.should.be.empty;
 		});
 	});
 
@@ -25,11 +33,10 @@ describe('nx.RestCollection', function() {
 			};
 			var item = new nx.RestDocument({ data: data });
 			collection.create(item, function() {
-				request_spy.should.have.been.calledWith({
-					url: url,
-					method: 'post',
-					data: data
-				});
+				var requestOptions = request_spy.lastCall.args[0];
+				requestOptions.should.have.property('url', url);
+				requestOptions.should.have.property('method', 'post');
+				requestOptions.data.should.deep.equal(data);
 				done();
 			});
 		});
@@ -55,8 +62,10 @@ describe('nx.RestCollection', function() {
 			var request_spy = sinon.spy(model.request);
 			collection.retrieve(function(data) {
 				data.should.be.json;
-				collection.data.value.shoul.deep.equal(data);
-				request_spy.should.have.been.calledWith({ url: url, method: 'get' });
+				collection.data.value.should.deep.equal(data);
+				var requestOptions = request_spy.lastCall.args[0];
+				requestOptions.should.have.property('url', url);
+				requestOptions.should.have.property('method', 'get');
 				done();
 			});
 		});
@@ -68,8 +77,8 @@ describe('nx.RestCollection', function() {
 				{ firstname: 'Fred', lastname: 'Colon' }
 			];
 			collection.retrieve(function() {
-				collection.items.should.have.length(2);
-				collection.items[1].data.value.should.deep.equal(response[1]);
+				collection.items.items.should.have.length(2);
+				collection.items.items[1].data.value.should.deep.equal(response[1]);
 				done();
 			});
 			server.requests[0].respond(
