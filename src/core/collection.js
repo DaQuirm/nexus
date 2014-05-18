@@ -52,3 +52,8 @@ nx.Collection.prototype.removeAll = function() {
 	this.items = [];
 	this.onreset.trigger({items:[]});
 };
+
+nx.Collection.prototype.set = function(array) {
+	this.items = array;
+	this.onreset.trigger({items:array});
+};

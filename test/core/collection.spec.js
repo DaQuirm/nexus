@@ -90,13 +90,28 @@ describe('nx.Collection', function() {
 
 		it('fires the `onreset` event', function() {
 			var collection = new nx.Collection({items: [1,2,3,4]});
-			var handler = sinon.spy(function(event){
-				event.items.should.deep.equal([]);
-			});
+			var handler = sinon.spy();
 			collection.onreset.add(handler);
 			collection.removeAll();
 			collection.items.should.deep.equal([]);
-			handler.should.have.been.called;
+			handler.should.have.been.calledWith({items:[]});
+		});
+	});
+
+	describe('set', function () {
+		it('populates the collection from an array discarding all existing items', function() {
+			var collection = new nx.Collection({items: [1,2,3]});
+			collection.set([4,5]);
+			collection.items.should.deep.equal([4,5]);
+		});
+
+		it('fires the `onreset` event', function() {
+			var collection = new nx.Collection({items: [1,2,3]});
+			var handler = sinon.spy();
+			collection.onreset.add(handler);
+			collection.set([4,5]);
+			collection.items.should.deep.equal([4,5]);
+			handler.should.have.been.calledWith({items:[4,5]});
 		});
 	});
 

@@ -3,15 +3,26 @@ describe('nx.RestCollection', function() {
 	var url = 'http://localhost/users/';
 	var UserModel = nx.RestDocument;
 
+	beforeEach(function() {
+		xhr = sinon.useFakeXMLHttpRequest();
+		model = new nx.RestDocument({ url: url });
+		server = sinon.fakeServer.create();
+	});
+
+	afterEach(function() {
+		xhr.restore && xhr.restore();
+		server.restore();
+	});
+
 	describe('constructor', function() {
 		it('creates a new collection model instance based on a URL', function() {
 			var collection = new nx.RestCollection({ url: url });
-			collection.url.should.equal(url);
+			collection.options.url.should.equal(url);
 		});
 
 		it('accepts a rest document model constructor for collection item instantiation', function() {
 			var collection = new nx.RestCollection({ url: url, item: UserModel });
-			collection.itemConstructor.should.equal(UserModel);
+			collection.options.item.should.equal(UserModel);
 		});
 	});
 
@@ -26,48 +37,58 @@ describe('nx.RestCollection', function() {
 	describe('create', function() {
 		it('adds a model instance to the collection model with a POST request', function(done) {
 			var collection = new nx.RestCollection({ url: url, item: UserModel });
-			var request_spy = sinon.spy(collection.request);
-			var data = {
+			var request_spy = sinon.spy(collection, 'request');
+			var itemData = {
 				firstname: 'Samuel',
 				lastname: 'Vimes'
 			};
-			var item = new nx.RestDocument({ data: data });
-			collection.create(item, function() {
+			var item = new nx.RestDocument({ data: itemData });
+			var response = {
+				id: 0,
+				firstname: 'Samuel',
+				lastname: 'Vimes'
+			};
+			server.respondWith([
+				200,
+				{ "Content-Type": "application/json" },
+				JSON.stringify(response)
+			]);
+			collection.create(item, function(data) {
 				var requestOptions = request_spy.lastCall.args[0];
 				requestOptions.should.have.property('url', url);
 				requestOptions.should.have.property('method', 'post');
-				requestOptions.data.should.deep.equal(data);
+				requestOptions.data.should.deep.equal(itemData);
+				data.should.deep.equal(response);
+				item.data.value.should.deep.equal(data);
 				done();
 			});
+			server.respond();
 		});
 	});
 
 	describe('retrieve', function() {
-		var xhr, requests;
-
-		beforeEach(function () {
-			server = sinon.fakeServer.create();
-			xhr = sinon.useFakeXMLHttpRequest();
-			requests = [];
-			xhr.onCreate = function (req) { requests.push(req); };
-		});
-
-		afterEach(function () {
-			xhr.restore();
-			server.restore();
-		});
 
 		it('asynchronously gets collection data with a GET request', function(done) {
 			var collection = new nx.RestCollection({ url: url, item: UserModel });
-			var request_spy = sinon.spy(model.request);
-			collection.retrieve(function(data) {
-				data.should.be.json;
-				collection.data.value.should.deep.equal(data);
+			var request_spy = sinon.spy(collection, 'request');
+			var response = [
+				{ firstname: 'Samuel', lastname: 'Vimes' },
+				{ firstname: 'Fred', lastname: 'Colon' }
+			];
+			server.respondWith([
+				200,
+				{ "Content-Type": "application/json" },
+				JSON.stringify(response)
+			]);
+			collection.retrieve(function(items) {
+				items.items.should.have.length(2);
+				collection.items.should.deep.equal(items);
 				var requestOptions = request_spy.lastCall.args[0];
 				requestOptions.should.have.property('url', url);
 				requestOptions.should.have.property('method', 'get');
 				done();
 			});
+			server.respond();
 		});
 
 		it('converts collection data into an items array using item constructor', function(done) {
@@ -76,35 +97,36 @@ describe('nx.RestCollection', function() {
 				{ firstname: 'Samuel', lastname: 'Vimes' },
 				{ firstname: 'Fred', lastname: 'Colon' }
 			];
-			collection.retrieve(function() {
+			server.respondWith([
+				200,
+				{ "Content-Type": "application/json" },
+				JSON.stringify(response)
+			]);
+			collection.retrieve(function(items) {
 				collection.items.items.should.have.length(2);
 				collection.items.items[1].data.value.should.deep.equal(response[1]);
 				done();
 			});
-			server.requests[0].respond(
-				200,
-				{ "Content-Type": "application/json" },
-				JSON.stringify(response)
-			);
+			server.respond();
 		});
 
-		it('passes the retrieved data into the callback ', function (done) {
+		it('appends itemUrl option to the collection url to form document urls', function (done) {
+			var itemUrl = '{firstname}_{lastname}';
+			var collection = new nx.RestCollection({ url: url, itemUrl: itemUrl, item: UserModel });
 			var response = [
 				{ firstname: 'Samuel', lastname: 'Vimes' },
 				{ firstname: 'Fred', lastname: 'Colon' }
 			];
-			var handler = function() {
-				handler_spy.should.have.been.calledWith(response);
-				done();
-			};
-			var handler_spy = sinon.spy(handler);
-			var collection = new nx.RestCollection({ url: url, item: UserModel });
-			collection.retrieve(handler);
-			server.requests[0].respond(
+			server.respondWith([
 				200,
 				{ "Content-Type": "application/json" },
 				JSON.stringify(response)
-			);
+			]);
+			collection.retrieve(function(items) {
+				items.items[0].options.url.should.equal(url + itemUrl);
+				done();
+			});
+			server.respond();
 		});
 	});
 });

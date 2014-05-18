@@ -16,7 +16,7 @@ describe('nx.RestDocument', function() {
 
 	describe('constructor', function() {
 		it('creates a new document model instance based on a URL', function() {
-			model.url.should.equal(url);
+			model.options.url.should.equal(url);
 		});
 
 		it('creates a new document model instance based on a data object', function() {
@@ -28,7 +28,7 @@ describe('nx.RestDocument', function() {
 				url: url,
 				data: data
 			});
-			model.url.should.equal(url);
+			model.options.url.should.equal(url);
 			model.data.value.should.deep.equal(data);
 		});
 	});
