@@ -1,7 +1,7 @@
 class PickerModel extends nxc.DatePicker.models.Model
 
 	constructor: ->
-		DateHelpers = nxc.DatePicker.DateHelpers
+		@helpers = DateHelpers = nxc.DatePicker.DateHelpers
 		@current_date = new nx.Property value:new Date
 
 		@weeks = new nx.Collection

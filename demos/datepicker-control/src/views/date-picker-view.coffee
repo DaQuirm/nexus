@@ -1,105 +1,60 @@
 window.nxc.Datepicker.views.PickerView = (datepicker) ->
   WeekView = window.nxc.Datepicker.views.WeekView
-  nxt.Element \
-    'div',
+  nxt.Element 'div',
     nxt.Attr('class','datepicker-control'),
-    nxt.Binding(datepicker.visible, (visible) ->
-      if not visible then nxt.Attr 'style', 'display:none' else nxt.Attr 'style',''),
-    nxt.Element \
-      'div',
+
+    nxt.Binding datepicker.visible, (visible) ->
+      if not visible
+        nxt.Attr 'style', 'display:none'
+      else nxt.Attr 'style', ''
+
+    nxt.Element 'div',
       nxt.Attr('class','controls'),
-    	nxt.Element \
-        'button',
+      nxt.Element 'button',
         nxt.Attr('class','year-prev-button'),
         nxt.Text('<<'),
-        Event('click', datepicker.PrevYear),
-      nxt.Element \
-        'button',
+        nxt.Event('click', datepicker.prev_year)
+      nxt.Element 'button'
         nxt.Attr('class','month-prev-button'),
         nxt.Text('<'),
-        Event('click', datepicker.PrevMonth),
-      nxt.Element \
-        'span',
+        nxt.Event('click', datepicker.prev_month)
+      nxt.Element 'span',
         nxt.Attr('class','datepicker-month'),
-        nxt.Binding(datepicker.CurrentDate, (date) -> nxt.Text "#{datepicker.MonthNames[date.getMonth()]} #{date.getFullYear()}"),
-      ),
-      nxt.Element(
-        'button',
+        nxt.Binding datepicker.current_date, (date) ->
+          nxt.Text "#{datepicker.MonthNames[date.getMonth()]} #{date.getFullYear()}"
+      nxt.Element 'button',
         nxt.Attr('class','year-next-button'),
         nxt.Text('>>'),
-        Event('click', datepicker.NextYear)
-      )
-      nxt.Element(
-        'button',
+        nxt.Event('click', datepicker.next_year)
+      nxt.Element 'button',
         nxt.Attr('class','month-next-button'),
         nxt.Text('>'),
-        Event('click', datepicker.NextMonth)
-      ),
-    ),
-    nxt.Element(
-    	'table',
-    	nxt.Element(
-    	  'tr',
-    	  ForEach(
-    	  	datepicker.DaysOfWeek,
-    	  	(day) -> nxt.Element 'th', nxt.Text(day)
-    	  )
-    	),
-      ForEach(
-        datepicker.Weeks,
-        (week) ->
-          nxt.Element(
-            'tr',
-            if week.prevMonth?
-              ForEach(
-                [week.prevMonth.start..week.prevMonth.end],
-                (day) -> nxt.Element(
-                  'td',
-                  nxt.Attr('class','datepicker-prev-month'),
-                  nxt.Text(day)
-                )
-              )
-            if week.thisMonth?
-              ForEach(
-                [week.thisMonth.start..week.thisMonth.end],
-                (day) -> nxt.Element(
-                  'td',
-                  if day is datepicker.CurrentDate.Value().getDate()
-                    nxt.Attr('class','datepicker-today')
-                  nxt.Text(day)
-                )
-              )
-            if week.nextMonth?
-              ForEach(
-                [week.nextMonth.start..week.nextMonth.end],
-                (day) -> nxt.Element(
-                  'td',
-                  nxt.Attr('class','datepicker-next-month'),
-                  nxt.Text(day)
-                )
-              )
-          )
-      ),
-      Event('click', (evt) ->
+        nxt.Event('click', datepicker.next_month)
+
+    nxt.Element 'table',
+      nxt.Element('tr',
+        datepicker.helpers.days_of_week.map (day) ->
+          nxt.Element 'th', nxt.Text day),
+
+      datepicker.weeks.map(WeekView.bind null, datepicker.current_date),
+
+      nxt.Event 'click', (evt) ->
         target = evt.target
         if target.nodeName.toLowerCase() is 'td'
-          currentDate = datepicker.CurrentDate.Value()
+          current_date = datepicker.current_date.value
           if target.classList.contains 'datepicker-prev-month'
-            datepicker.PrevMonth()
+            do datepicker.prev_month
           else if target.classList.contains 'datepicker-next-month'
-            datepicker.NextMonth()
+            do datepicker.next_month
           else
-            datepicker.SelectedDate.Value new Date(currentDate.getFullYear(), currentDate.getMonth(), target.nxt.textContent)
-      )
-    ),
-    nxt.Element(
-      'div',
+            datepicker.selected_date.value = new Date \
+              do current_date.getFullYear,
+              do current_date.getMonth,
+              target.textContent
+
+    nxt.Element 'div',
       nxt.Attr('class','aux-controls'),
-      nxt.Element(
-        'button',
+      nxt.Element 'button',
         nxt.Attr('class','today-pick-button'),
         nxt.Text('Today'),
-        Event('click', (evt) -> datepicker.SelectedDate.Value new Date())
-      )
-    )
-  )
+        nxt.Event('click', (evt) -> datepicker.selected_date.value = new Date)
