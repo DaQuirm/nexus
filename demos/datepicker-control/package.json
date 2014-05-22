@@ -1,0 +1,21 @@
+{
+  "name": "datepicker-control",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DaQuirm <leo.daquirm@gmail.com>",
+  "license": "LGPL",
+  "dependencies": {
+    "gulp-coffee": "~1.4.3",
+    "gulp": "~3.6.2",
+    "gulp-util": "~2.2.14",
+    "gulp-concat": "~2.2.0",
+    "gulp-stylus": "~1.0.1"
+  }
+}
