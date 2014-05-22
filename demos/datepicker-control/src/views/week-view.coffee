@@ -1,4 +1,4 @@
-window.nxc.Datepicker.views.WeekView = (weel, current_date) ->
+window.nxc.DatePicker.views.WeekView = (weel, current_date) ->
 	nxt.Element 'tr',
 		if week.prev_month?
 			[week.prev_month.start..week.prev_month.end].map \

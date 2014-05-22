@@ -18,4 +18,4 @@ class Model
 				if date > @max_date.value then throw new RangeError 'Date is out of range'
 			minDate
 
-window.nxc.Datepicker.models.Model = Model
+window.nxc.DatePicker.models.Model = Model

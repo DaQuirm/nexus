@@ -5,4 +5,5 @@ nxc.DatePicker =
 	viewmodels: {}
 	views: {}
 	create: ->
+		new @viewmodels.PickerModel
 

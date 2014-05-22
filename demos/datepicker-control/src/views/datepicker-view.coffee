@@ -1,4 +1,4 @@
-window.nxc.Datepicker.views.PickerView = (datepicker) ->
+window.nxc.DatePicker.views.PickerView = (datepicker) ->
   WeekView = window.nxc.Datepicker.views.WeekView
   nxt.Element 'div',
     nxt.Attr('class','datepicker-control'),

@@ -71,6 +71,6 @@ class PickerModel extends nxc.DatePicker.models.Model
 
 		@visible = new nx.Property value:no
 
-window.nxc.Datepicker.viewmodels.PickerModel = PickerModel
+window.nxc.DatePicker.viewmodels.PickerModel = PickerModel
 
 

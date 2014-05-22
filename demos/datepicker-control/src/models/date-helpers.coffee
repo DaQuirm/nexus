@@ -1,4 +1,4 @@
-window.nxc.Datepicker.DateHelpers =
+window.nxc.DatePicker.DateHelpers =
 
 	MONTH_NAMES: [
 		'January', 'February', 'March', 'April',
