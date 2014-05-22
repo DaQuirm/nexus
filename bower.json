@@ -1,6 +1,7 @@
 {
   "name": "nexus",
   "version": "0.1.1",
+  "main": "build/nexus.js",
   "homepage": "https://github.com/DaQuirm/nexus",
   "authors": [
     "DaQuirm <leo.daquirm@gmail.com>"
@@ -20,7 +21,9 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "demos",
+    "test.html"
   ],
   "dependencies": {
     "mocha": ">=1.18.2",

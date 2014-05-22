@@ -5,5 +5,11 @@ nxt.AttrRenderer = function(element) {
 };
 
 nxt.AttrRenderer.prototype.render = function(attr) {
-	this.element.setAttribute(attr.name, attr.value);
+	if (typeof attr.items !== 'undefined') {
+		for (var key in attr.items) {
+			this.element.setAttribute(key, attr.items[key]);
+		}
+	} else {
+		this.element.setAttribute(attr.name, attr.value);
+	}
 };

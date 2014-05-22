@@ -1,7 +1,11 @@
 {
   "name": "nexus",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "DaQuirm <leo.daquirm@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DaQuirm/nexus.git"
+  },
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.0",

@@ -13,6 +13,13 @@ nx.Collection = function (options) {
 	this.onremove = new nx.Event();
 	this.oninsertbefore = new nx.Event();
 	this.onreset = new nx.Event();
+
+	this.property = new nx.Property({ value: this.items });
+	var _this = this;
+	this.property.onvalue.add(function(items) {
+		_this.items = items;
+		_this.onreset.trigger({ items:items });
+	});
 };
 
 nx.Collection.prototype.append = function() {
@@ -56,4 +63,8 @@ nx.Collection.prototype.removeAll = function() {
 nx.Collection.prototype.set = function(array) {
 	this.items = array;
 	this.onreset.trigger({items:array});
+};
+
+nx.Collection.prototype.bind = function(property, converter) {
+	return this.property.bind(property, '<-', converter);
 };

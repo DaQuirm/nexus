@@ -115,4 +115,35 @@ describe('nx.Collection', function() {
 		});
 	});
 
+	describe('bind', function() {
+		var fib = function(value) {
+			var items = [];
+			for (var i = 0; i < value; i ++) {
+				if (i < 2) {
+					items.push(1);
+				} else {
+					items.push(items[i-2] + items[i-1]);
+				}
+			}
+			return items;
+		};
+
+		it('binds a property with an nx.Collection instance by generating collection items based on property value', function () {
+			var p = new nx.Property();
+			var collection = new nx.Collection();
+			collection.bind(p, fib);
+			p.value = 9;
+			collection.items.should.deep.equal([1, 1, 2, 3, 5, 8, 13, 21, 34]);
+		});
+
+		it('triggers collection reset event', function () {
+			var p = new nx.Property();
+			var collection = new nx.Collection();
+			collection.bind(p, fib);
+			var trigger_spy = sinon.spy(collection.onreset, 'trigger');
+			p.value = 2;
+			trigger_spy.should.have.been.calledWith({ items: [1, 1] });
+		});
+	});
+
 });
