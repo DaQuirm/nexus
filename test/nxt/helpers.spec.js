@@ -69,7 +69,21 @@ describe('nxt helpers', function() {
 			elem.node.getAttribute('class').should.equal('button-big-blue');
 		});
 
-		it('accepts both single content items and item arrays');
+		it('accepts both single content items and item arrays', function() {
+			var elem = nxt.Element('div',
+				nxt.Attr('class', 'button-big-blue'),
+				nxt.Text('ce'),
+				[
+					nxt.Text('ll'),
+					nxt.Text('ar'),
+					nxt.Text(' '),
+					nxt.Text('do')
+				],
+				nxt.Text('or')
+			);
+			elem.node.childNodes.length.should.equal(6);
+			elem.node.textContent.should.equal('cellar door');
+		});
 	});
 
 	describe('nxt.Binding', function() {

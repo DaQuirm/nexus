@@ -31,6 +31,9 @@ nxt.Event = function(name, handler) {
 
 nxt.Element = function() {
 	var args = Array.prototype.slice.call(arguments);
+	args = args.reduce(function(acc, item) {
+		return acc.concat(item);
+	}, []);
 	var name = args[0];
 	var node = document.createElement(name);
 	if (args.length > 1) {
