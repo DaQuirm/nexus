@@ -1,6 +1,7 @@
 class PickerModel extends nxc.DatePicker.models.Model
 
 	constructor: ->
+		super
 		@helpers = DateHelpers = nxc.DatePicker.DateHelpers
 		@current_date = new nx.Property value:new Date
 
@@ -9,7 +10,7 @@ class PickerModel extends nxc.DatePicker.models.Model
 			days_in_current_month = DateHelpers.days_in_month date
 			days_in_prev_month = DateHelpers.days_in_month DateHelpers.get_prev_month(date)
 			first_month_day = DateHelpers.first_month_day date
-			first_week_length = 7 - DateHelpers.get_week_day first_day
+			first_week_length = 7 - DateHelpers.get_week_day first_month_day
 			week_lengths = DateHelpers.week_lengths first_week_length, days_in_current_month
 			weeks = week_lengths
 				.reduce ((acc, length) ->

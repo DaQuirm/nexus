@@ -1,5 +1,5 @@
 window.nxc.DatePicker.views.PickerView = (datepicker) ->
-  WeekView = window.nxc.Datepicker.views.WeekView
+  WeekView = window.nxc.DatePicker.views.WeekView
   nxt.Element 'div',
     nxt.Attr('class','datepicker-control'),
 
@@ -21,7 +21,7 @@ window.nxc.DatePicker.views.PickerView = (datepicker) ->
       nxt.Element 'span',
         nxt.Attr('class','datepicker-month'),
         nxt.Binding datepicker.current_date, (date) ->
-          nxt.Text "#{datepicker.MonthNames[date.getMonth()]} #{date.getFullYear()}"
+          nxt.Text "#{datepicker.helpers.MONTH_NAMES[date.getMonth()]} #{date.getFullYear()}"
       nxt.Element 'button',
         nxt.Attr('class','year-next-button'),
         nxt.Text('>>'),
@@ -33,10 +33,10 @@ window.nxc.DatePicker.views.PickerView = (datepicker) ->
 
     nxt.Element 'table',
       nxt.Element('tr',
-        datepicker.helpers.days_of_week.map (day) ->
+        datepicker.helpers.DAYS_OF_WEEK.map (day) ->
           nxt.Element 'th', nxt.Text day),
 
-      datepicker.weeks.map(WeekView.bind null, datepicker.current_date),
+      datepicker.weeks.items.map(WeekView.bind null, datepicker.current_date),
 
       nxt.Event 'click', (evt) ->
         target = evt.target
