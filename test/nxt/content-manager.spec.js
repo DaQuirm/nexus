@@ -82,6 +82,27 @@ describe('nxt.ContentManager', function() {
 			element.lastChild.nodeName.toLowerCase().should.equal('div');
 			element.lastChild.textContent.toLowerCase().should.equal('cellar door');
 		});
+
+		it('skips undefined items', function () {
+			var element = document.createElement('div');
+			var manager = new nxt.ContentManager(element);
+			var property = new nx.Property();
+			manager.render(
+				void 0,
+				nxt.Attr('class', 'container'),
+				void 0,
+				nxt.Element('span'),
+				void 0,
+				void 0,
+				nxt.Element('div', nxt.Text('cellar door'))
+			);
+			element.childNodes.length.should.equal(2);
+			element.childNodes[0].nodeType.should.equal(Node.ELEMENT_NODE);
+			element.childNodes[0].nodeName.toLowerCase().should.equal('span');
+			element.childNodes[1].nodeName.toLowerCase().should.equal('div');
+			element.childNodes[1].textContent.should.equal('cellar door');
+			element.getAttribute('class').should.equal('container');
+		});
 	});
 
 	describe('content', function () {
