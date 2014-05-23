@@ -14,7 +14,7 @@ window.nxc.DatePicker.views.PickerView = (datepicker) ->
         nxt.Attr('class','year-prev-button'),
         nxt.Text('<<'),
         nxt.Event('click', datepicker.prev_year)
-      nxt.Element 'button'
+      nxt.Element 'button',
         nxt.Attr('class','month-prev-button'),
         nxt.Text('<'),
         nxt.Event('click', datepicker.prev_month)
@@ -36,7 +36,9 @@ window.nxc.DatePicker.views.PickerView = (datepicker) ->
         datepicker.helpers.DAYS_OF_WEEK.map (day) ->
           nxt.Element 'th', nxt.Text day),
 
-      datepicker.weeks.items.map(WeekView.bind null, datepicker.current_date),
+      nxt.Collection \
+        datepicker.weeks,
+        WeekView.bind null, datepicker.current_date
 
       nxt.Event 'click', (evt) ->
         target = evt.target
