@@ -1,0 +1,195 @@
+@color-taskitem: rgb(255, 56, 112);
+@color-bg: #111;
+
+body {
+	background-color: @color-bg;
+	font-family: Tahoma;
+}
+
+#container {
+	margin: 0px auto;
+	width: 500px;
+
+	header {
+		display: inline;
+		font-size: 80pt;
+		color: white;
+	}
+
+	.hourglass() {
+		&:before {
+			content: "\231B";
+			font-size: 36pt;
+			vertical-align: -8%;
+			padding-right: 3px;
+		}
+	}
+
+	.app-loading {
+		display: inline;
+		font-size: 18pt;
+		color: white;
+		margin-left: 60px;
+		vertical-align: 60%;
+		.hourglass()
+	}
+
+	#add {
+		background-color: white;
+		padding: 2px 6px;
+
+		.task-input {
+			width: 100%;
+			font-size: 22pt;
+			outline: none;
+			padding:0;
+			border-width:0;
+			color: #666;
+		}
+	}
+
+	.todo-list {
+		list-style: none;
+		padding: 0;
+
+		.link-icon (@content) {
+			content: @content;
+			font-size: 36pt;
+			padding-right: 3px;
+			position: absolute;
+			top: 50%;
+			margin-top: -0.65em;
+			left: -35px;
+		}
+
+		.side-link (@_, @icon-symbol, @_) {
+			display: inline;
+			position: absolute;
+			top: 50%;
+			margin-top: -16px;
+			text-decoration: none;
+			font-size: 18pt;
+			color: #666;
+
+			&::before {
+				.link-icon(@icon-symbol);
+			}
+
+			&:hover {
+				color: #ccc;
+			}
+		}
+
+		.side-link (left, @_, @offset) {
+			left: @offset;
+		}
+
+		.side-link (right, @_, @offset) {
+			right: @offset;
+		}
+
+		li {
+			position: relative;
+			background-color: fade(@color-taskitem, 40%);
+			min-height: 70px;
+			color: white;
+			margin: 14px 0;
+			border: 1px solid transparent;
+
+			&:hover {
+				background-color: fade(@color-taskitem, 60%);
+			}
+
+			time, input[type=date] {
+				float: right;
+				font-size: 10pt;
+				padding: 4px 6px;
+			}
+
+			input[type=date] {
+				width: 100px;
+				border: none;
+				background-color: transparent;
+				text-align: left;
+				color: inherit;
+				outline: none;
+			}
+
+			.task {
+				padding: 26px 24px;
+				text-align: justify;
+				outline: none;
+			}
+
+			.delete-link, .status-link {
+				display: none;
+			}
+		}
+
+		li.done {
+			border: 1px solid fade(@color-taskitem, 40%);
+			background-color: transparent;
+			color: #666;
+			text-decoration: line-through;
+
+			&:hover {
+				border: 1px solid fade(@color-taskitem, 60%);
+			}
+		}
+
+		li.selected {
+			background-color: fade(@color-taskitem, 70%);
+			border: 1px solid white;
+
+			.delete-link {
+				.side-link(right, "\00D7", -120px);
+			}
+
+			.status-link {
+				.side-link(left, "\2611", -85px);
+			}
+		}
+
+		li.done.selected {
+			background-color: transparent;
+			border: 1px solid white;
+
+			&:hover {
+				border: 1px solid white;
+			}
+
+			.status-link {
+				.side-link(left, "\2610", -110px);
+			}
+		}
+
+		li.updating {
+			color: transparent;
+			text-shadow: white 0 0 4px;
+			background-color: fade(@color-taskitem, 20%);
+
+			.updating-cover {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-top: -32px;
+				margin-left: -61px;
+				font-size: 18pt;
+				color: white;
+				text-shadow: none;
+
+				.hourglass()
+			}
+		}
+	}
+
+	.datepicker-layer {
+		position: absolute;
+
+		.datepicker-control {
+			background-color: fade(@color-bg, 90%);
+			border: 1px solid white;
+			padding: 4px;
+		}
+	}
+}

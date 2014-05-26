@@ -1,0 +1,27 @@
+
+Architecture
+
+todos-app
+
+todos-model /todos/ NGCollection
+
+todos-view
+todoitem-view
+
+Selected: NGProperty
+
+
+ForEach(
+	booksViewModel.Books,
+	function (item) {
+		return Template(Templates.BookListItem, item);
+	}
+)
+
+
+ListView({
+	collection: booksViewModel.Books,
+	template: Templates.BookListItem
+})
+
+Try again

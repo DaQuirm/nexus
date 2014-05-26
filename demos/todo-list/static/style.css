@@ -1,0 +1,191 @@
+body {
+  background-color: #111111;
+  font-family: Tahoma;
+}
+#container {
+  margin: 0px auto;
+  width: 500px;
+}
+#container header {
+  display: inline;
+  font-size: 80pt;
+  color: white;
+}
+#container .app-loading {
+  display: inline;
+  font-size: 18pt;
+  color: white;
+  margin-left: 60px;
+  vertical-align: 60%;
+}
+#container .app-loading:before {
+  content: "\231B";
+  font-size: 36pt;
+  vertical-align: -8%;
+  padding-right: 3px;
+}
+#container #add {
+  background-color: white;
+  padding: 2px 6px;
+}
+#container #add .task-input {
+  width: 100%;
+  font-size: 22pt;
+  outline: none;
+  padding: 0;
+  border-width: 0;
+  color: #666;
+}
+#container .todo-list {
+  list-style: none;
+  padding: 0;
+}
+#container .todo-list li {
+  position: relative;
+  background-color: rgba(255, 56, 112, 0.4);
+  min-height: 70px;
+  color: white;
+  margin: 14px 0;
+  border: 1px solid transparent;
+}
+#container .todo-list li:hover {
+  background-color: rgba(255, 56, 112, 0.6);
+}
+#container .todo-list li time,
+#container .todo-list li input[type=date] {
+  float: right;
+  font-size: 10pt;
+  padding: 4px 6px;
+}
+#container .todo-list li input[type=date] {
+  width: 100px;
+  border: none;
+  background-color: transparent;
+  text-align: left;
+  color: inherit;
+  outline: none;
+}
+#container .todo-list li .task {
+  padding: 26px 24px;
+  text-align: justify;
+  outline: none;
+}
+#container .todo-list li .delete-link,
+#container .todo-list li .status-link {
+  display: none;
+}
+#container .todo-list li.done {
+  border: 1px solid rgba(255, 56, 112, 0.4);
+  background-color: transparent;
+  color: #666;
+  text-decoration: line-through;
+}
+#container .todo-list li.done:hover {
+  border: 1px solid rgba(255, 56, 112, 0.6);
+}
+#container .todo-list li.selected {
+  background-color: rgba(255, 56, 112, 0.7);
+  border: 1px solid white;
+}
+#container .todo-list li.selected .delete-link {
+  display: inline;
+  position: absolute;
+  top: 50%;
+  margin-top: -16px;
+  text-decoration: none;
+  font-size: 18pt;
+  color: #666;
+  right: -120px;
+}
+#container .todo-list li.selected .delete-link::before {
+  content: "\00D7";
+  font-size: 36pt;
+  padding-right: 3px;
+  position: absolute;
+  top: 50%;
+  margin-top: -0.65em;
+  left: -35px;
+}
+#container .todo-list li.selected .delete-link:hover {
+  color: #ccc;
+}
+#container .todo-list li.selected .status-link {
+  display: inline;
+  position: absolute;
+  top: 50%;
+  margin-top: -16px;
+  text-decoration: none;
+  font-size: 18pt;
+  color: #666;
+  left: -85px;
+}
+#container .todo-list li.selected .status-link::before {
+  content: "\2611";
+  font-size: 36pt;
+  padding-right: 3px;
+  position: absolute;
+  top: 50%;
+  margin-top: -0.65em;
+  left: -35px;
+}
+#container .todo-list li.selected .status-link:hover {
+  color: #ccc;
+}
+#container .todo-list li.done.selected {
+  background-color: transparent;
+  border: 1px solid white;
+}
+#container .todo-list li.done.selected:hover {
+  border: 1px solid white;
+}
+#container .todo-list li.done.selected .status-link {
+  display: inline;
+  position: absolute;
+  top: 50%;
+  margin-top: -16px;
+  text-decoration: none;
+  font-size: 18pt;
+  color: #666;
+  left: -110px;
+}
+#container .todo-list li.done.selected .status-link::before {
+  content: "\2610";
+  font-size: 36pt;
+  padding-right: 3px;
+  position: absolute;
+  top: 50%;
+  margin-top: -0.65em;
+  left: -35px;
+}
+#container .todo-list li.done.selected .status-link:hover {
+  color: #ccc;
+}
+#container .todo-list li.updating {
+  color: transparent;
+  text-shadow: white 0 0 4px;
+  background-color: rgba(255, 56, 112, 0.2);
+}
+#container .todo-list li.updating .updating-cover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -32px;
+  margin-left: -61px;
+  font-size: 18pt;
+  color: white;
+  text-shadow: none;
+}
+#container .todo-list li.updating .updating-cover:before {
+  content: "\231B";
+  font-size: 36pt;
+  vertical-align: -8%;
+  padding-right: 3px;
+}
+#container .datepicker-layer {
+  position: absolute;
+}
+#container .datepicker-layer .datepicker-control {
+  background-color: rgba(17, 17, 17, 0.9);
+  border: 1px solid white;
+  padding: 4px;
+}

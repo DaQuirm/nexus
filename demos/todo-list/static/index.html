@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Todo list</title>
+		<link href="style.css" rel="stylesheet" />
+		<link href="datepicker-control/datepicker-style.css" rel="stylesheet" />
+
+		<script type="text/javascript" src="ng/ngsvg.js"></script>
+		<script type="text/javascript" src="ng/ngui.js"></script>
+		<script type="text/javascript" src="datepicker-control/datepicker-control.js"></script>
+
+		<script type="text/javascript" src="todos-app.js"></script>
+
+		<script type="text/javascript">
+			window.onload = function() {
+                TodosApp.Templates.AppTemplate(new TodosApp.ViewModels.AppViewModel()).AppendTo(document.body);
+			}
+		</script>
+	</head>
+	<body>
+
+	<body>
+</html>
