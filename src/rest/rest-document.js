@@ -6,6 +6,7 @@ nx.RestDocument = function(options) {
 };
 
 nx.RestDocument.prototype = Object.create(nx.AjaxModel.prototype);
+nx.RestDocument.prototype.constructor = nx.RestDocument;
 
 nx.RestDocument.prototype.retrieve = function(done) {
 	var _this = this;

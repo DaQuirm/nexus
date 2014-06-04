@@ -7,6 +7,7 @@ nx.RestCollection = function(options) {
 };
 
 nx.RestCollection.prototype = Object.create(nx.AjaxModel.prototype);
+nx.RestCollection.prototype.constructor = nx.RestCollection;
 
 nx.RestCollection.prototype.create = function(doc, done) {
 	this.request({
