@@ -2,8 +2,8 @@ $color-taskitem = rgb(255, 56, 112)
 $color-bg = #111
 
 body
-	background-color: $color-bg
-	font-family: Tahoma
+	background-color $color-bg
+	font-family Tahoma
 
 #container
 	margin 0px auto
@@ -14,9 +14,9 @@ body
 		font-size 80pt
 		color white
 
-	.hourglass()
+	hourglass()
 		&before
-			content "\231B"
+			content '\231B'
 			font-size 36pt
 			vertical-align -8%
 			padding-right 3px
@@ -27,7 +27,7 @@ body
 		color white
 		margin-left 60px
 		vertical-align 60%
-		.hourglass()
+		hourglass()
 
 	#add
 		background-color white
@@ -38,15 +38,15 @@ body
 			font-size 22pt
 			outline none
 			padding0
-			border-width0
+			border-width 0
 			color #666
 
 	.todo-list
 		list-style none
 		padding 0
 
-		.link-icon (@content)
-			content @content
+		link-icon (content)
+			content content
 			font-size 36pt
 			padding-right 3px
 			position absolute
@@ -54,7 +54,7 @@ body
 			margin-top -0.65em
 			left -35px
 
-		.side-link (@_, @icon-symbol, @_)
+		side-link(side, icon-symbol, offset)
 			display inline
 			position absolute
 			top 50%
@@ -63,28 +63,27 @@ body
 			font-size 18pt
 			color #666
 
+			if side is 'right'
+				right offset
+			else if side is 'left'
+				left offset
+
 			&::before
-				.link-icon(@icon-symbol)
+				link-icon(icon-symbol)
 
 			&:hover
 				color #ccc
 
-		.side-link (left, @_, @offset)
-			left @offset
-
-		.side-link (right, @_, @offset)
-			right @offset
-
 		li
 			position relative
-			background-color fade($color-taskitem, 40%)
+			background-color fade-in($color-taskitem, .4)
 			min-height 70px
 			color white
 			margin 14px 0
 			border 1px solid transparent
 
 			&:hover
-				background-color fade($color-taskitem, 60%)
+				background-color fade-in($color-taskitem, .6)
 
 			time, input[type=date]
 				float right
@@ -108,23 +107,23 @@ body
 				display none
 
 		li.done
-			border 1px solid fade($color-taskitem, 40%)
+			border 1px solid fade-in($color-taskitem, .4)
 			background-color transparent
 			color #666
 			text-decoration line-through
 
 			&:hover
-				border 1px solid fade($color-taskitem, 60%)
+				border 1px solid fade-in($color-taskitem, .6)
 
 		li.selected
-			background-color fade($color-taskitem, 70%)
+			background-color fade-in($color-taskitem, .7)
 			border 1px solid white
 
 			.delete-link
-				.side-link(right, "\00D7", -120px)
+				side-link(right, '\00D7', -120px)
 
 			.status-link
-				.side-link(left, "\2611", -85px)
+				side-link(left, '\2611', -85px)
 
 		li.done.selected
 			background-color transparent
@@ -134,12 +133,12 @@ body
 				border 1px solid white
 
 			.status-link
-				.side-link(left, "\2610", -110px)
+				side-link(left, '\2610', -110px)
 
 		li.updating
 			color transparent
 			text-shadow white 0 0 4px
-			background-color fade($color-taskitem, 20%)
+			background-color fade-in($color-taskitem, .2)
 
 			.updating-cover
 				position absolute
@@ -151,13 +150,13 @@ body
 				color white
 				text-shadow none
 
-				.hourglass()
+				hourglass()
 
 	.datepicker-layer
 		position absolute
 
 		.datepicker-control
-			background-color fade($color-bg = 90%)
+			background-color fade-in($color-bg, .9)
 			border 1px solid white
 			padding 4px
 
