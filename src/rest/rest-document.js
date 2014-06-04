@@ -14,7 +14,9 @@ nx.RestDocument.prototype.retrieve = function(done) {
 		method: 'get',
 		success: function(data) {
 			_this.data.value = data;
-			done.call(null, data);
+			if (typeof done === 'function') {
+				done.call(null, data);
+			}
 		}
 	});
 };
@@ -27,7 +29,9 @@ nx.RestDocument.prototype.save = function(done) {
 		method: 'put',
 		success: function(data) {
 			_this.data.value = data;
-			done.call(null, data);
+			if (typeof done === 'function') {
+				done.call(null, data);
+			}
 		}
 	});
 };
@@ -38,7 +42,9 @@ nx.RestDocument.prototype.remove = function(done) {
 		url: this.options.url,
 		method: 'delete',
 		success: function(data) {
-			done.call(null, data);
+			if (typeof done === 'function') {
+				done.call(null, data);
+			}
 		}
 	});
 };

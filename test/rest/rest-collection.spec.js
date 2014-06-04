@@ -109,24 +109,5 @@ describe('nx.RestCollection', function() {
 			});
 			server.respond();
 		});
-
-		it('appends itemUrl option to the collection url to form document urls', function (done) {
-			var itemUrl = '{firstname}_{lastname}';
-			var collection = new nx.RestCollection({ url: url, itemUrl: itemUrl, item: UserModel });
-			var response = [
-				{ firstname: 'Samuel', lastname: 'Vimes' },
-				{ firstname: 'Fred', lastname: 'Colon' }
-			];
-			server.respondWith([
-				200,
-				{ "Content-Type": "application/json" },
-				JSON.stringify(response)
-			]);
-			collection.retrieve(function(items) {
-				items.items[0].options.url.should.equal(url + itemUrl);
-				done();
-			});
-			server.respond();
-		});
 	});
 });

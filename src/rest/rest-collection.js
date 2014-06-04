@@ -15,23 +15,26 @@ nx.RestCollection.prototype.create = function(doc, done) {
 		data: doc.data.value,
 		success: function(response) {
 			doc.data.value = response;
-			done.call(null, response);
+			if (typeof done === 'function') {
+				done.call(null, response);
+			}
 		}
 	});
 };
 
 nx.RestCollection.prototype.retrieve = function(done) {
 	var _this = this;
-	var docUrl = this.options.url + this.options.itemUrl;
 	this.request({
 		url: this.options.url,
 		method: 'get',
 		success: function(items) {
 			_this.items.set(items.map(function(item) {
-				var doc = new _this.options.item({ data: item, url: docUrl });
+				var doc = new _this.options.item({ data: item, url: _this.options.url });
 				return doc;
 			}));
-			done.call(null, _this.items);
+			if (typeof done === 'function') {
+				done.call(null, _this.items);
+			}
 		}
 	});
 };
