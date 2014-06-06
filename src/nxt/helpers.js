@@ -58,10 +58,22 @@ nxt.Binding = function(property, conversion, mode) {
 	};
 };
 
-nxt.Collection = function (collection, conversion) {
+nxt.DelegatedEvent = function(name, handlers) {
+	return {
+		name: name,
+		handlers: handlers,
+		type: 'DelegatedEvent'
+	};
+};
+
+nxt.Collection = function () {
+	var collection = arguments[0];
+	var conversion = arguments[1];
+	var events = [].slice.call(arguments, 2);
 	return {
 		collection: collection,
 		conversion: conversion,
+		events: events,
 		type: 'Collection',
 		dynamic: true
 	};

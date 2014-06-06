@@ -59,6 +59,32 @@ describe('nxt.CollectionRenderer', function() {
 			container.firstChild.textContent.should.equal('a');
 			container.lastChild.textContent.should.equal('c');
 		});
+
+		it('attaches delegated event handlers if there are any', function(done) {
+			var container = document.createElement('div');
+			var collection = new nx.Collection({items: ['a','b','c']});
+			var renderer = new nxt.CollectionRenderer(container);
+			renderer.render(
+				nxt.Collection(collection, function(item) {
+						return nxt.Element('li', nxt.Text(item))
+					},
+					nxt.DelegatedEvent(
+						'click', {
+							'li': function(evt, item) {
+								item.should.equal('c');
+								done();
+							}
+						}
+					)
+				)
+			);
+			var event = new MouseEvent('click', {
+				canBubble: true,
+				cancelable: true,
+				view: window,
+			});
+			container.childNodes[2].dispatchEvent(event);
+		});
 	});
 
 	describe('append', function () {

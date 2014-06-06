@@ -105,6 +105,19 @@ describe('nxt helpers', function() {
 		});
 	});
 
+	describe('nxt.DelegatedEvent', function() {
+		it('creates a delegated event object', function() {
+			var handlerMap = {
+				'li': function(evt, item) {} ,
+				'a': function(evt, item) {}
+			};
+			var obj = nxt.DelegatedEvent('click', handlerMap);
+			obj.handlers.should.deep.equal(handlerMap);
+			obj.type.should.equal('DelegatedEvent');
+			obj.name.should.equal('click');
+		});
+	});
+
 	describe('nxt.Collection', function() {
 		it('creates a collection object', function () {
 			var collection = new nx.Collection();
@@ -113,6 +126,24 @@ describe('nxt helpers', function() {
 			obj.collection.should.equal(collection);
 			obj.conversion.should.equal(converter);
 			obj.type.should.equal('Collection');
+			obj.dynamic.should.equal(true);
+		});
+
+		it('allows an arbitrary number of delegate event handlers to be passed', function() {
+			var collection = new nx.Collection();
+			var converter = function(item) { return nxt.Element('li', nxt.Element('a', nxt.Text(item))); };
+			var linkEvent = nxt.DelegatedEvent('mouseover', { 'a': function(evt, item) {} });
+			var obj = new nxt.Collection(
+				collection,
+				converter,
+				nxt.DelegatedEvent('click', { 'li': function(evt, item) {} }),
+				linkEvent
+			);
+			obj.collection.should.equal(collection);
+			obj.conversion.should.equal(converter);
+			obj.type.should.equal('Collection');
+			obj.events.length.should.equal(2);
+			obj.events[1].should.deep.equal(linkEvent);
 			obj.dynamic.should.equal(true);
 		});
 	});
