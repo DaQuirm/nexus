@@ -2,18 +2,23 @@
 <html>
 	<head>
 		<title>Todo list</title>
-		<link href="style.css" rel="stylesheet" />
-		<link href="datepicker-control/datepicker-style.css" rel="stylesheet" />
+		<link href="stylesheets/todo-list.css" rel="stylesheet" />
+		<link href="./lib/datepicker-control/datepicker-control.css" rel="stylesheet" />
 
-		<script type="text/javascript" src="ng/ngsvg.js"></script>
-		<script type="text/javascript" src="ng/ngui.js"></script>
-		<script type="text/javascript" src="datepicker-control/datepicker-control.js"></script>
+		<script type="text/javascript" src="./lib/nexus.js"></script>
+		<script type="text/javascript" src="./lib/datepicker-control/datepicker-control.js"></script>
 
-		<script type="text/javascript" src="todos-app.js"></script>
+		<script type="text/javascript" src="./src/app.js"></script>
+		<script type="text/javascript" src="./src/models/todo-item.js"></script>
+		<script type="text/javascript" src="./src/models/todo-collection.js"></script>
+		<script type="text/javascript" src="./src/view-models/app-viewmodel.js"></script>
+		<script type="text/javascript" src="./src/views/app-view.js"></script>
+		<script type="text/javascript" src="./src/views/todoitem-view.js"></script>
 
 		<script type="text/javascript">
 			window.onload = function() {
-                TodosApp.Templates.AppTemplate(new TodosApp.ViewModels.AppViewModel()).AppendTo(document.body);
+				window.app = TodoList.create();
+				app.render(document.body);
 			}
 		</script>
 	</head>
