@@ -15,11 +15,31 @@ nxt.CollectionRenderer.prototype.render = function(data) {
 	this.collection.oninsertbefore.add(function(evt){ _this.insertBefore(evt); });
 	this.collection.onremove.add(function(evt){	_this.remove(evt); });
 	this.collection.onreset.add(function(evt){ _this.reset(evt); });
+
 	data.events.forEach(function(event) {
-		this.element.addEventListener(event.name, function(evt) {
-			var target = evt.target
-		})
+		_this.element.addEventListener(event.name, function(evt) {
+			var target = evt.target;
+			var contentIndex;
+			_this.content.some(function(item, index) {
+				var found = item.isEqualNode(target) || item.contains(target);
+				if (found) {
+					contentIndex = index;
+				}
+				return found;
+			});
+			var selectors = Object.keys(event.handlers);
+			selectors.forEach(function(selector) {
+				if (target.matches(selector)) {
+					event.handlers[selector].call(
+						null,
+						evt,
+						_this.collection.items[contentIndex]
+					);
+				}
+			});
+		});
 	});
+
 	this.append({items: this.collection.items});
 };
 
@@ -33,7 +53,7 @@ nxt.CollectionRenderer.prototype.append = function(evt) {
 
 nxt.CollectionRenderer.prototype.insertBefore = function(evt) {
 	var _this = this;
-	var convItems = evt.items.map(this.conversion).forEach(function(item){
+	var convItems = evt.items.map(this.conversion).forEach(function(item) {
 		var renderer = new nxt[item.type+'Renderer'](_this.element);
 		renderer.insertReference = _this.element.childNodes[evt.index];
 		renderer.render(item);

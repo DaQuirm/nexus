@@ -61,29 +61,28 @@ describe('nxt.CollectionRenderer', function() {
 		});
 
 		it('attaches delegated event handlers if there are any', function(done) {
-			var container = document.createElement('div');
+			var container = document.createElement('ul');
+			document.body.appendChild(container);
 			var collection = new nx.Collection({items: ['a','b','c']});
 			var renderer = new nxt.CollectionRenderer(container);
 			renderer.render(
 				nxt.Collection(collection, function(item) {
-						return nxt.Element('li', nxt.Text(item))
+						return nxt.Element('li',
+							nxt.Element('span',
+								nxt.Text(item)
+							)
+						)
 					},
-					nxt.DelegatedEvent(
-						'click', {
-							'li': function(evt, item) {
-								item.should.equal('c');
-								done();
-							}
+					nxt.DelegatedEvent('click', {
+						'span': function(evt, item) {
+							item.should.equal('c');
+							document.body.removeChild(container);
+							done();
 						}
-					)
+					})
 				)
 			);
-			var event = new MouseEvent('click', {
-				canBubble: true,
-				cancelable: true,
-				view: window,
-			});
-			container.childNodes[2].dispatchEvent(event);
+			container.childNodes[2].childNodes[0].click();
 		});
 	});
 
