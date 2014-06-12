@@ -25,22 +25,18 @@ TodoList.views.AppView = (app) ->
 	      # )
 	  nxt.Element 'ul',
 	    nxt.Attr('class','todo-list')
-	    nxt.Collection(app.todos.items, (item) -> TodoList.views.TodoItemView item),
-	    nxt.Event('click', (evt) ->
-	      target = evt.target
-	      if target.parentNode.nodeName.toLowerCase() is 'li'
-	        if target.nodeName.toLowerCase() is 'a' and target.classList.contains 'status-link'
-	          app.ToggleTodoState()
-	        else if target.nodeName.toLowerCase() is 'a' and target.classList.contains 'delete-link'
-	          app.Delete()
-	        else
-	          app.Select target.parentNode.getAttribute('data-id')
-	          if target.nodeName.toLowerCase() is 'time'
-	            clientRect = target.getBoundingClientRect()
-	            app.ShowDatepicker
-	              top: target.offsetTop + target.offsetParent.offsetTop  + Constants.DatepickerVerticalOffset
-	              left: target.offsetLeft + target.offsetParent.offsetLeft - (Constants.DatepickerWidth - clientRect.width)/2
-	        evt.preventDefault()
+	    nxt.Collection(app.todos.items, ((item) -> TodoList.views.TodoItemView item),
+	    	nxt.DelegatedEvent('click',
+	    		'li': (event, item) ->
+	    			alert 'item!'
+	    			# app.Select target.parentNode.getAttribute('data-id')
+	    		'a.status-link': (event, item) ->
+	    			alert 'status!'
+	    			# app.ToggleTodoState()
+	    		'a.delete-link': (event, item) ->
+	    			alert 'delete!'
+	    			# app.Delete()
+	    	)
 	    )
 	#   nxt.Element(
 	#     'div',
