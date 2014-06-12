@@ -22,6 +22,15 @@ describe('nxt helpers', function() {
 		});
 	});
 
+	describe('nxt.Class', function() {
+		it('creates a class-toggling object based on class name and a boolean value', function () {
+			var obj = nxt.Class('cellar-door', true);
+			obj.name.should.equal('cellar-door');
+			obj.set.should.equal(true);
+			obj.type.should.equal('Class');
+		});
+	});
+
 	describe('nxt.Text', function() {
 		it('creates a text object containing a text node', function() {
 			var obj = nxt.Text('cellar door');

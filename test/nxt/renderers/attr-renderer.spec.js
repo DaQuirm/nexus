@@ -2,7 +2,7 @@ describe('nxt.AttrRenderer', function() {
 	'use strict';
 
 	describe('constructor', function() {
-		it('creates a DOM atribute rendering instance by attribute name and value', function() {
+		it('creates a DOM attribute rendering instance', function() {
 			var element = document.createElement('a');
 			var renderer = new nxt.AttrRenderer(element);
 			renderer.element.should.equal(element);

@@ -13,6 +13,14 @@ nxt.Attr = function(name, value) {
 		};
 };
 
+nxt.Class = function(name, set) {
+	return {
+		name: name,
+		set: set,
+		type: 'Class'
+	};
+};
+
 nxt.Text = function(text) {
 	return text && {
 		text: text,
