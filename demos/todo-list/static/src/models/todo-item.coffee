@@ -9,12 +9,7 @@ class TodoItem extends nx.RestDocument
 		@task.bind @data, '<-', new nx.Mapping 'task':'_'
 
 		@date = new nx.Property value:new Date
-
-		  # @Date = new NGProperty()
-		  # @Data.Bind @Date, '<->',
-		  # 	SourceMapping: { "date":"@" },
-		  # 	SourceConverter: (milliseconds) -> new Date milliseconds
-		  # 	TargetConverter: (date) -> date?.getTime()
+		@date.bind @data, '<-', new nx.Mapping 'date':'_'
 
 		@done = new nx.Property
 		@done.bind @data, '<-', new nx.Mapping 'done':'_'

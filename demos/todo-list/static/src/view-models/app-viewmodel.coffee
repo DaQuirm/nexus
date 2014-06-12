@@ -10,6 +10,4 @@ class AppViewModel
 	render: (node) ->
 		node.appendChild (TodoList.views.AppView @).node
 
-
-
 TodoList.viewmodels.AppViewModel = AppViewModel

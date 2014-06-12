@@ -28,14 +28,12 @@ TodoList.views.AppView = (app) ->
 	    nxt.Collection(app.todos.items, ((item) -> TodoList.views.TodoItemView item),
 	    	nxt.DelegatedEvent('click',
 	    		'li': (event, item) ->
-	    			alert 'item!'
-	    			# app.Select target.parentNode.getAttribute('data-id')
+	    			app.todos.select item
 	    		'a.status-link': (event, item) ->
 	    			alert 'status!'
 	    			# app.ToggleTodoState()
 	    		'a.delete-link': (event, item) ->
-	    			alert 'delete!'
-	    			# app.Delete()
+	    			do item.delete
 	    	)
 	    )
 	#   nxt.Element(
