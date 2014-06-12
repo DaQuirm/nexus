@@ -19,16 +19,17 @@ nxt.CollectionRenderer.prototype.render = function(data) {
 	data.events.forEach(function(event) {
 		_this.element.addEventListener(event.name, function(evt) {
 			var target = evt.target;
-			var contentIndex;
+			var contentIndex, contentItem;
 			_this.content.some(function(item, index) {
 				var found = item.isEqualNode(target) || item.contains(target);
 				if (found) {
 					contentIndex = index;
+					contentItem = item;
 				}
 				return found;
 			});
 			var selectors = Object.keys(event.handlers);
-			selectors.forEach(function(selector) {
+			var callMatchingHandlers = function(selector) {
 				if (target.matches(selector)) {
 					event.handlers[selector].call(
 						null,
@@ -36,7 +37,12 @@ nxt.CollectionRenderer.prototype.render = function(data) {
 						_this.collection.items[contentIndex]
 					);
 				}
-			});
+			};
+			while (!contentItem.isEqualNode(target)) {
+				selectors.forEach(callMatchingHandlers);
+				target = target.parentNode;
+			}
+			selectors.forEach(callMatchingHandlers);
 		});
 	});
 
