@@ -33,7 +33,8 @@ TodoList.views.AppView = (app) ->
 	    			item.done.value = not item.done.value
 	    			do item.save
 	    		'a.delete-link': (event, item) ->
-	    			do item.remove
+	    			item.remove ->
+	    				app.todos.items.remove item
 	    	),
 	    	nxt.DelegatedEvent('blur',
 	    		'li': (event, item) ->

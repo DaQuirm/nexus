@@ -41,6 +41,7 @@ nx.RestDocument.prototype.remove = function(done) {
 	var _this = this;
 	this.request({
 		url: this.options.url,
+		data: this.data.value, // for url interpolation
 		method: 'delete',
 		success: function(data) {
 			if (typeof done === 'function') {
