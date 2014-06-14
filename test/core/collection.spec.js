@@ -62,7 +62,7 @@ describe('nx.Collection', function() {
 	});
 
 	describe('insertBefore', function() {
-		it('inserts an item before an item in collection', function () {
+		it('inserts item(s) before an item in collection', function () {
 			var collection = new nx.Collection({items: [1,2,4]});
 			collection.insertBefore(4,3);
 			collection.items.should.deep.equal([1,2,3,4]);
@@ -71,13 +71,13 @@ describe('nx.Collection', function() {
 		it('fires the `oninsertbefore` event', function() {
 			var collection = new nx.Collection({items: [1,2,4]});
 			var handler = sinon.spy(function(event) {
-				event.item.should.deep.equal(3);
+				event.items.should.deep.equal([3]);
 				event.index.should.equal(2);
 			});
 			collection.oninsertbefore.add(handler);
 			collection.insertBefore(4,3);
 			collection.items.should.deep.equal([1,2,3,4]);
-			handler.should.have.been.called;
+			handler.should.have.been.calledWith({ items: [3], index: 2 });
 		});
 	});
 

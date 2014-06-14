@@ -49,10 +49,11 @@ nx.Collection.prototype.remove = function() {
 	this.onremove.trigger({items: _slice.call(arguments), indexes: indexes});
 };
 
-nx.Collection.prototype.insertBefore = function(beforeItem, item) {
+nx.Collection.prototype.insertBefore = function(beforeItem, items) {
+	items = Array.isArray(items) ? items : [items];
 	var insertIndex = this.items.indexOf(beforeItem);
-	this.items.splice(insertIndex, 0, item);
-	this.oninsertbefore.trigger({item: item, index: insertIndex});
+	[].splice.apply(this.items, [insertIndex, 0].concat(items));
+	this.oninsertbefore.trigger({items: items, index: insertIndex});
 };
 
 nx.Collection.prototype.removeAll = function() {
