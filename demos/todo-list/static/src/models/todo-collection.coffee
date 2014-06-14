@@ -9,7 +9,8 @@ class TodoCollection extends nx.RestCollection
 			item: TodoItem
 
 	select: (item) ->
-		@selected_item.value item
+		@selected_item.value?.selected.value = no
+		@selected_item.value = item
 		item.selected.value = yes
 
 	create: ->

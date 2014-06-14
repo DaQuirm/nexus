@@ -15,7 +15,7 @@ body
 		color white
 
 	hourglass()
-		&before
+		&::before
 			content '\231B'
 			font-size 36pt
 			vertical-align -8%
@@ -45,14 +45,14 @@ body
 		list-style none
 		padding 0
 
-		link-icon (content)
+		link-icon(content)
 			content content
 			font-size 36pt
 			padding-right 3px
 			position absolute
-			top 50%
+			top 0.4em
 			margin-top -0.65em
-			left -35px
+			left -1em
 
 		side-link(side, icon-symbol, offset)
 			display inline
@@ -120,10 +120,10 @@ body
 			border 1px solid white
 
 			.delete-link
-				side-link(right, '\00D7', -120px)
+				side-link('right', '\00D7', -120px)
 
 			.status-link
-				side-link(left, '\2611', -85px)
+				side-link('left', '\2610', -85px)
 
 		li.done.selected
 			background-color transparent
@@ -133,7 +133,7 @@ body
 				border 1px solid white
 
 			.status-link
-				side-link(left, '\2610', -110px)
+				side-link('left', '\2611', -110px)
 
 		li.updating
 			color transparent

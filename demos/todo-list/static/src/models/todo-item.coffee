@@ -1,18 +1,18 @@
 class TodoItem extends nx.RestDocument
-	constructor: ({data}) ->
+	constructor: (options) ->
 		super
 			url: '/todos/{_id}'
 
-		@data.value = data
+		@data.value = options?.data or {}
 
 		@task = new nx.Property
-		@task.bind @data, '<-', new nx.Mapping 'task':'_'
+		@data.bind @task, '<->', new nx.Mapping 'task':'_'
 
 		@date = new nx.Property value:new Date
-		@date.bind @data, '<-', new nx.Mapping 'date':'_'
+		@data.bind @date, '<->', new nx.Mapping 'date':'_'
 
 		@done = new nx.Property
-		@done.bind @data, '<-', new nx.Mapping 'done':'_'
+		@data.bind @done, '<->', new nx.Mapping 'done':'_'
 
 		@selected = new nx.Property value:no
 

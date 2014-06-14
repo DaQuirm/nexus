@@ -30,10 +30,14 @@ TodoList.views.AppView = (app) ->
 	    		'li': (event, item) ->
 	    			app.todos.select item
 	    		'a.status-link': (event, item) ->
-	    			alert 'status!'
-	    			# app.ToggleTodoState()
+	    			item.done.value = not item.done.value
+	    			do item.save
 	    		'a.delete-link': (event, item) ->
-	    			do item.delete
+	    			do item.remove
+	    	),
+	    	nxt.DelegatedEvent('blur',
+	    		'li': (event, item) ->
+	    			do item.save
 	    	)
 	    )
 	#   nxt.Element(

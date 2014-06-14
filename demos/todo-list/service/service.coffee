@@ -29,9 +29,10 @@ server.put '/todos/:id', (req, res, next) ->
   data = req.body
   delete data._id
   db.todos.update { _id: mongojs.ObjectId req.params.id }, { $set: data }, (err, doc) ->
-    #countdown = (num for num in [60000000..1])
-    res.charSet = 'utf8'
-    res.send 200, '{}'
+    db.todos.findOne { _id: mongojs.ObjectId req.params.id }, (err, doc) ->
+      countdown = (num for num in [60000000..1])
+      res.charSet = 'utf8'
+      res.send 200, doc
   do next
 
 server.del '/todos/:id', (req, res, next) ->
