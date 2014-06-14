@@ -73,9 +73,9 @@ nxt.CollectionRenderer.prototype.remove = function(evt) {
 	var _this = this;
 	evt.indexes.forEach(function(index){
 		_this.element.removeChild(_this.element.childNodes[index]);
+		_this.content.splice(index, 1);
 	});
-	this.content = [];
-	this.visible.value = false;
+	this.visible.value = this.content.length > 0;
 };
 
 nxt.CollectionRenderer.prototype.reset = function(evt) {

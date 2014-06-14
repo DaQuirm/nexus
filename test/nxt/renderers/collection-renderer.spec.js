@@ -120,6 +120,8 @@ describe('nxt.CollectionRenderer', function() {
 			container.childNodes.length.should.equal(2);
 			container.firstChild.textContent.should.equal('a');
 			container.lastChild.textContent.should.equal('c');
+			renderer.content[0].should.deep.equal(container.firstChild);
+			renderer.content[1].should.deep.equal(container.lastChild);
 		});
 	});
 
