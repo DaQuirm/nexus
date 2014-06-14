@@ -14,8 +14,10 @@ class TodoCollection extends nx.RestCollection
 		item.selected.value = yes
 
 	create: ->
+		@new_item.date.value = do (new Date).getTime
+		@new_item.done.value = false
 		super @new_item, (item) =>
-			first = @todos.items[0]
-			@todos.insertBefore first, item
+			first = @items.items[0]
+			@items.insertBefore first, new TodoItem data:item
 
 TodoList.models.TodoCollection = TodoCollection

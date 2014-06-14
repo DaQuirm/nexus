@@ -14,9 +14,9 @@ server.get '/todos', (req, res, next) ->
   do next
 
 server.post '/todos', (req, res, next) ->
-  db.todos.insert req.body, (err, docs) ->
+  db.todos.insert req.body, (err, doc) ->
     res.charSet = 'utf8'
-    res.send 201, docs[0]
+    res.send 201, doc
   do next
 
 server.get '/todos/:id', (req, res, next) ->
