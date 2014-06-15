@@ -56,9 +56,9 @@ nxt.Element = function() {
 	};
 };
 
-nxt.Binding = function(property, conversion, mode) {
+nxt.Binding = function(cell, conversion, mode) {
 	return {
-		property: property,
+		cell: cell,
 		conversion: conversion,
 		mode: mode || '->',
 		type: 'Binding',

@@ -20,11 +20,11 @@ describe('nxt.CollectionRenderer', function() {
 	});
 
 	describe('visible', function () {
-		it('is an nx.Property that indicates whether collection has any content items', function () {
+		it('is an nx.Cell that indicates whether collection has any content items', function () {
 			var element = document.createElement('div');
 			var collection = new nx.Collection();
 			var renderer = new nxt.CollectionRenderer(element);
-			renderer.visible.should.be.an.instanceof(nx.Property);
+			renderer.visible.should.be.an.instanceof(nx.Cell);
 			renderer.render(
 				nxt.Collection(collection, nxt.Text)
 			);

@@ -97,19 +97,19 @@ describe('nxt helpers', function() {
 
 	describe('nxt.Binding', function() {
 		it('creates a binding object', function () {
-			var property = new nx.Property();
+			var cell = new nx.Cell();
 			var converter = function(value) { return -value; };
-			var obj = nxt.Binding(property, converter);
-			obj.property.should.equal(property);
+			var obj = nxt.Binding(cell, converter);
+			obj.cell.should.equal(cell);
 			obj.conversion.should.equal(converter);
 			obj.type.should.equal('Binding');
 			obj.dynamic.should.equal(true);
 		});
 
 		it('has `mode` set to `->` by default', function() {
-			var property = new nx.Property();
+			var cell = new nx.Cell();
 			var converter = function(value) { return -value; };
-			var obj = nxt.Binding(property, converter);
+			var obj = nxt.Binding(cell, converter);
 			obj.mode.should.equal('->');
 		});
 	});

@@ -11,21 +11,21 @@ describe('nx.AjaxModel', function() {
 			should.exist(model);
 		});
 
-		it('initializes the data property using the options parameter', function() {
+		it('initializes the data cell using the options parameter', function() {
 			model = new nx.AjaxModel({ data: { cellar: 'door' }});
 			model.data.value.should.deep.equal({ cellar: 'door' });
 		});
 	});
 
 	describe('data', function() {
-		it('is an nx.Property instance that stores model data', function() {
-			model.data.should.be.an.instanceof(nx.Property);
+		it('is an nx.Cell instance that stores model data', function() {
+			model.data.should.be.an.instanceof(nx.Cell);
 		});
 	});
 
 	describe('status', function() {
-		it('is an nx.Property instance that stores model\'s status' , function() {
-			model.data.should.be.an.instanceof(nx.Property);
+		it('is an nx.Cell instance that stores model\'s status' , function() {
+			model.data.should.be.an.instanceof(nx.Cell);
 		});
 	});
 

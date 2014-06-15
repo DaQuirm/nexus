@@ -128,8 +128,8 @@ describe('nx.Collection', function() {
 			return items;
 		};
 
-		it('binds a property with an nx.Collection instance by generating collection items based on property value', function () {
-			var p = new nx.Property();
+		it('binds a cell with an nx.Collection instance by generating collection items based on cell value', function () {
+			var p = new nx.Cell();
 			var collection = new nx.Collection();
 			collection.bind(p, '<-', fib);
 			p.value = 9;
@@ -137,7 +137,7 @@ describe('nx.Collection', function() {
 		});
 
 		it('triggers collection reset event', function () {
-			var p = new nx.Property();
+			var p = new nx.Cell();
 			var collection = new nx.Collection();
 			collection.bind(p, '<-', fib);
 			var trigger_spy = sinon.spy(collection.onreset, 'trigger');
@@ -145,8 +145,8 @@ describe('nx.Collection', function() {
 			trigger_spy.should.have.been.calledWith({ items: [1, 1] });
 		});
 
-		it('binds a property and a collection with a two-way binding', function () {
-			var p = new nx.Property();
+		it('binds a cell and a collection with a two-way binding', function () {
+			var p = new nx.Cell();
 			var collection = new nx.Collection();
 			collection.bind(p, '<->');
 			p.value = ['a', 'b', 'c'];

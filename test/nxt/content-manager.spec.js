@@ -34,19 +34,19 @@ describe('nxt.ContentManager', function() {
 		it('creates content regions for all consecutive series of dynamic content items', function () {
 			var element = document.createElement('div');
 			var manager = new nxt.ContentManager(element);
-			var property = new nx.Property();
+			var cell = new nx.Cell();
 			manager.render(
 				nxt.Attr('class', 'container'),
 				nxt.Element('div'),
-				nxt.Binding(property, function(value) { return value; }),
-				nxt.Binding(property, function(value) { return value; }),
+				nxt.Binding(cell, function(value) { return value; }),
+				nxt.Binding(cell, function(value) { return value; }),
 				nxt.Element('div'),
-				nxt.Binding(property, function(value) { return value; }),
+				nxt.Binding(cell, function(value) { return value; }),
 				nxt.Element('div'),
 				nxt.Element('div'),
-				nxt.Binding(property, function(value) { return value; }),
-				nxt.Binding(property, function(value) { return value; }),
-				nxt.Binding(property, function(value) { return value; })
+				nxt.Binding(cell, function(value) { return value; }),
+				nxt.Binding(cell, function(value) { return value; }),
+				nxt.Binding(cell, function(value) { return value; })
 			);
 			manager.regions.length.should.equal(3);
 			manager.regions[0].should.be.an.instanceof(nxt.ContentRegion);
@@ -55,11 +55,11 @@ describe('nxt.ContentManager', function() {
 		it('passes container element reference to content regions', function () {
 			var element = document.createElement('div');
 			var manager = new nxt.ContentManager(element);
-			var property = new nx.Property();
+			var cell = new nx.Cell();
 			manager.render(
 				nxt.Element('div'),
-				nxt.Binding(property, function(value) { return value; }),
-				nxt.Binding(property, function(value) { return value; })
+				nxt.Binding(cell, function(value) { return value; }),
+				nxt.Binding(cell, function(value) { return value; })
 			);
 			manager.regions[0].element.should.equal(element);
 		});
@@ -67,18 +67,18 @@ describe('nxt.ContentManager', function() {
 		it('passes insert reference if a content region is followed by a static item', function () {
 			var element = document.createElement('div');
 			var manager = new nxt.ContentManager(element);
-			var property = new nx.Property();
+			var cell = new nx.Cell();
 			manager.render(
 				nxt.Attr('class', 'container'),
 				nxt.Element('div'),
-				nxt.Binding(property, nxt.Text),
-				nxt.Binding(property, nxt.Text),
+				nxt.Binding(cell, nxt.Text),
+				nxt.Binding(cell, nxt.Text),
 				nxt.Element('div', nxt.Text('cellar door'))
 			);
 			manager.regions[0].insertReference.nodeType.should.equal(Node.ELEMENT_NODE);
 			manager.regions[0].insertReference.nodeName.toLowerCase().should.equal('div');
 			manager.regions[0].insertReference.textContent.should.equal('cellar door');
-			property.value = 'a';
+			cell.value = 'a';
 			element.lastChild.nodeName.toLowerCase().should.equal('div');
 			element.lastChild.textContent.toLowerCase().should.equal('cellar door');
 		});
@@ -86,7 +86,7 @@ describe('nxt.ContentManager', function() {
 		it('skips undefined items', function () {
 			var element = document.createElement('div');
 			var manager = new nxt.ContentManager(element);
-			var property = new nx.Property();
+			var cell = new nx.Cell();
 			manager.render(
 				void 0,
 				nxt.Attr('class', 'container'),
@@ -109,12 +109,12 @@ describe('nxt.ContentManager', function() {
 		it('points to rendered content', function () {
 			var element = document.createElement('div');
 			var manager = new nxt.ContentManager(element);
-			var property = new nx.Property();
+			var cell = new nx.Cell();
 			manager.render(
 				nxt.Attr('class', 'container'),
 				nxt.Element('div', nxt.Text('cellar door')),
-				nxt.Binding(property, function(value) { return value; }),
-				nxt.Binding(property, function(value) { return value; }),
+				nxt.Binding(cell, function(value) { return value; }),
+				nxt.Binding(cell, function(value) { return value; }),
 				nxt.Element('div')
 			);
 			manager.content.length.should.equal(2);

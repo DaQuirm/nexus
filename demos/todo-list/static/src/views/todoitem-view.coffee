@@ -16,12 +16,7 @@ TodoList.views.TodoItemView = (item) ->
 	    nxt.Binding(item.selected, (selected) ->
 	      nxt.Attr 'contenteditable', "#{selected}"
 	    ),
-	    nxt.Binding(item.task, nxt.Text),
-	    # Event('blur', (evt) ->
-	    #   unless item.Task.Value() is evt.target.textContent
-	    #     item.Task.Value evt.target.textContent
-	    #     item.Save()
-	    # )
+	    nxt.Binding(item.task, nxt.Text)
 	  ),
 	  nxt.Element('a',
 	    nxt.Attr('class','status-link'),
@@ -30,7 +25,6 @@ TodoList.views.TodoItemView = (item) ->
 	    ),
 	  ),
 	  nxt.Element('a',
-	    nxt.Attr('href','#'),
 	    nxt.Attr('class','delete-link'),
 	    nxt.Text('Delete')
 	  )
@@ -41,4 +35,3 @@ TodoList.views.TodoItemView = (item) ->
 	        nxt.Text('Updating')
 	      )
 	  )
-

@@ -14,7 +14,7 @@ nx.Collection = function (options) {
 	this.oninsertbefore = new nx.Event();
 	this.onreset = new nx.Event();
 
-	this.property = new nx.Property({ value: this.items });
+	this.property = new nx.Cell({ value: this.items });
 	var _this = this;
 	this.property.onsync.add(function(items) {
 		_this.items = items;

@@ -9,8 +9,8 @@ nx.AsyncStatus = {
 nx.AjaxModel = function(options) {
 	options = options || {};
 
-	this.data = new nx.Property();
-	this.status = new nx.Property();
+	this.data = new nx.Cell();
+	this.status = new nx.Cell();
 
 	if (typeof options.data !== 'undefined') {
 		this.data.value = options.data;

@@ -3,7 +3,7 @@ class TodoItem extends nx.RestDocument
 		super
 			url: '/todos/{_id}'
 
-		@data.value = options?.data or {}
+		@data.value = options?.data
 
 		@task = new nx.Property
 		@data.bind @task, '<->', new nx.Mapping 'task':'_'

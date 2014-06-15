@@ -34,8 +34,8 @@ describe('nx.RestDocument', function() {
 	});
 
 	describe('data', function() {
-		it('is an nx.Property that holds document data', function() {
-			model.data.should.be.an.instanceOf(nx.Property);
+		it('is an nx.Cell that holds document data', function() {
+			model.data.should.be.an.instanceOf(nx.Cell);
 		});
 	});
 

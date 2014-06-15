@@ -4,7 +4,7 @@ nxt.CollectionRenderer = function(element) {
 	var _this = this;
 	this.element = element;
 	this.content = [];
-	this.visible = new nx.Property();
+	this.visible = new nx.Cell();
 };
 
 nxt.CollectionRenderer.prototype.render = function(data) {

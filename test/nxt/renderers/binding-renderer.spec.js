@@ -9,41 +9,41 @@ describe('nxt.BindingRenderer', function() {
 		});
 	});
 
-	describe('property', function() {
-		it('is an instance of nx.Property that is bound to the specified property', function () {
+	describe('cell', function() {
+		it('is an instance of nx.Cell that is bound to the specified cell', function () {
 			var element = document.createElement('div');
 			var renderer = new nxt.BindingRenderer(element);
-			renderer.property.should.be.an.instanceof(nx.Property);
+			renderer.cell.should.be.an.instanceof(nx.Cell);
 		});
 	});
 
 	describe('visible', function () {
-		it('is an nx.Property that indicates whether binding has rendered some content', function () {
+		it('is an nx.Cell that indicates whether binding has rendered some content', function () {
 			var element = document.createElement('div');
-			var property = new nx.Property();
+			var cell = new nx.Cell();
 			var renderer = new nxt.BindingRenderer(element);
-			renderer.visible.should.be.an.instanceof(nx.Property);
+			renderer.visible.should.be.an.instanceof(nx.Cell);
 			renderer.render(
-				nxt.Binding(property, function(value) {
+				nxt.Binding(cell, function(value) {
 					if (value > 0) {
 						return nxt.Text(value);
 					}
 				})
 			);
-			property.value = 1;
+			cell.value = 1;
 			renderer.visible.value.should.equal(true);
-			property.value = -1;
+			cell.value = -1;
 			renderer.visible.value.should.equal(false);
 		});
 	});
 
 	describe('render', function() {
-		it('creates a data binding with specified parameters and saves it in the `binding` property', function() {
+		it('creates a data binding with specified parameters and saves it in the `binding` cell', function() {
 			var element = document.createElement('div');
-			var property = new nx.Property();
+			var cell = new nx.Cell();
 			var renderer = new nxt.BindingRenderer(element);
 			renderer.render(
-				nxt.Binding(property, function(value) { return nxt.Text(value); })
+				nxt.Binding(cell, function(value) { return nxt.Text(value); })
 			);
 			renderer.binding.should.be.an.instanceof(nx.Binding);
 			renderer.binding.mode.should.equal('->');
@@ -53,35 +53,35 @@ describe('nxt.BindingRenderer', function() {
 	describe('content', function () {
 		it('points to rendered content', function () {
 			var element = document.createElement('div');
-			var property = new nx.Property();
+			var cell = new nx.Cell();
 			var renderer = new nxt.BindingRenderer(element);
 			renderer.render(
-				nxt.Binding(property, function(value) { return nxt.Text(value); })
+				nxt.Binding(cell, function(value) { return nxt.Text(value); })
 			);
-			property.value = 'cellar door';
+			cell.value = 'cellar door';
 			renderer.content.should.equal(renderer.contentRenderer.content);
 		});
 	});
 
-	it('creates renderers based on content type received from the bound property', function() {
+	it('creates renderers based on content type received from the bound cell', function() {
 		var element = document.createElement('div');
-		var property = new nx.Property();
+		var cell = new nx.Cell();
 		var renderer = new nxt.BindingRenderer(element);
 		renderer.render(
-			nxt.Binding(property, function(value) { return nxt.Text(value); })
+			nxt.Binding(cell, function(value) { return nxt.Text(value); })
 		);
-		property.value = 'cellar door';
+		cell.value = 'cellar door';
 		renderer.contentRenderer.should.be.an.instanceof(nxt.NodeRenderer);
 	});
 
-	it('renders content received from the bound property into its containing element', function() {
+	it('renders content received from the bound cell into its containing element', function() {
 		var element = document.createElement('div');
-		var property = new nx.Property();
+		var cell = new nx.Cell();
 		var renderer = new nxt.BindingRenderer(element);
 		renderer.render(
-			nxt.Binding(property, function(value) { return nxt.Text(value); })
+			nxt.Binding(cell, function(value) { return nxt.Text(value); })
 		);
-		property.value = 'cellar door';
+		cell.value = 'cellar door';
 		element.textContent.should.equal('cellar door');
 	});
 
@@ -89,13 +89,13 @@ describe('nxt.BindingRenderer', function() {
 		var element = document.createElement('div');
 		var movieNode = document.createTextNode('Lethal Weapon II');
 		element.appendChild(movieNode);
-		var property = new nx.Property();
+		var cell = new nx.Cell();
 		var renderer = new nxt.BindingRenderer(element);
 		renderer.insertReference = movieNode;
 		renderer.render(
-			nxt.Binding(property, function(value) { return nxt.Text(value); })
+			nxt.Binding(cell, function(value) { return nxt.Text(value); })
 		);
-		property.value = 'Lethal Weapon I';
+		cell.value = 'Lethal Weapon I';
 		renderer.contentRenderer.insertReference.should.equal(renderer.insertReference);
 		element.childNodes.length.should.equal(2);
 		element.childNodes[0].textContent.should.equal('Lethal Weapon I');
@@ -106,12 +106,12 @@ describe('nxt.BindingRenderer', function() {
 
 	it('doesn\'t fail on undefined values', function () {
 		var element = document.createElement('div');
-		var property = new nx.Property();
+		var cell = new nx.Cell();
 		var renderer = new nxt.BindingRenderer(element);
 		renderer.render(
-			nxt.Binding(property, function(value) { })
+			nxt.Binding(cell, function(value) { })
 		);
-		property.value = 'cellar door';
+		cell.value = 'cellar door';
 		element.textContent.should.be.empty;
 	});
 });
