@@ -6,7 +6,7 @@ nx.Collection = function (options) {
 	if (typeof options.items !== 'undefined') {
 		this.items = options.items;
 	} else {
-		this.items =  [];
+		this.items = [];
 	}
 
 	this.onappend = new nx.Event();
@@ -23,7 +23,7 @@ nx.Collection = function (options) {
 };
 
 nx.Collection.prototype.append = function() {
-	var args = Array.prototype.slice.call(arguments);
+	var args = [].slice.call(arguments);
 	var _this = this;
 	args.forEach(function(item) {
 		_this.items.push(item);
@@ -32,10 +32,9 @@ nx.Collection.prototype.append = function() {
 };
 
 nx.Collection.prototype.remove = function() {
-	var _slice = Array.prototype.slice;
+	var _slice = [].slice;
 	var args = _slice.call(arguments);
 	var indexes = [];
-	var _this = this;
 
 	this.items = this.items.filter(function(item, index) {
 		var argIndex = args.indexOf(item);

@@ -7,7 +7,7 @@ nxt.ContentManager = function(element) {
 };
 
 nxt.ContentManager.prototype.render = function() {
-	var args = Array.prototype.slice.call(arguments);
+	var args = [].slice.call(arguments);
 	var _this = this;
 	var newRegion;
 	var dynamicItems = [];
