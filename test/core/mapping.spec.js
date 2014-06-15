@@ -45,6 +45,15 @@ describe('nx.Mapping', function() {
 			point2.x.should.equal(5);
 			point2.y.should.equal(10);
 		});
+
+		it('ignores getting and setting undefined objects\' fields', function() {
+			var obj = undefined;
+			var mapping = new nx.Mapping({ 'code': '_' });
+			(function(){ mapping.map(obj); }).should.not.throw(TypeError);
+			should.not.exist(mapping.map(obj));
+			mapping = new nx.Mapping({ '_':'code' });
+			(function(){ mapping.map(obj, 1337); }).should.not.throw(TypeError);
+		})
 	});
 
 	describe('inverse', function() {

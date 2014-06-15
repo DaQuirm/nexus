@@ -7,11 +7,11 @@ nx.Mapping = function(pattern) {
 nx.Mapping.prototype.map = function(source, target) {
 	if (typeof this.pattern !== 'undefined') {
 		for (var item in this.pattern) {
-			if (item === '_') {
+			if (item === '_' && typeof target !== 'undefined') {
 				target[this.pattern[item]] = source;
-			} else if (this.pattern[item] === '_') {
+			} else if (this.pattern[item] === '_' && typeof source !== 'undefined') {
 				return target = source[item];
-			} else {
+			} else if (typeof source !== 'undefined' && typeof target !== 'undefined') {
 				target[this.pattern[item]] = source[item];
 			}
 		}
