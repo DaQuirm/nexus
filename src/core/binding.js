@@ -42,4 +42,5 @@ nx.Binding.prototype.sync = function(recipient, value, conversion) {
 		value = value;
 	}
 	recipient.value = value;
+	recipient.onsync.trigger(value);
 };

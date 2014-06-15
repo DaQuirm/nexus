@@ -8,6 +8,7 @@ nx.Property = function(options) {
 	}
 
 	this.onvalue = new nx.Event();
+	this.onsync = new nx.Event();
 };
 
 Object.defineProperty(nx.Property.prototype, 'value', {

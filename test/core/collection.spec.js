@@ -131,7 +131,7 @@ describe('nx.Collection', function() {
 		it('binds a property with an nx.Collection instance by generating collection items based on property value', function () {
 			var p = new nx.Property();
 			var collection = new nx.Collection();
-			collection.bind(p, fib);
+			collection.bind(p, '<-', fib);
 			p.value = 9;
 			collection.items.should.deep.equal([1, 1, 2, 3, 5, 8, 13, 21, 34]);
 		});
@@ -139,10 +139,28 @@ describe('nx.Collection', function() {
 		it('triggers collection reset event', function () {
 			var p = new nx.Property();
 			var collection = new nx.Collection();
-			collection.bind(p, fib);
+			collection.bind(p, '<-', fib);
 			var trigger_spy = sinon.spy(collection.onreset, 'trigger');
 			p.value = 2;
 			trigger_spy.should.have.been.calledWith({ items: [1, 1] });
+		});
+
+		it('binds a property and a collection with a two-way binding', function () {
+			var p = new nx.Property();
+			var collection = new nx.Collection();
+			collection.bind(p, '<->');
+			p.value = ['a', 'b', 'c'];
+			collection.items.should.deep.equal(['a', 'b', 'c']);
+			collection.append('d');
+			p.value.should.deep.equal(['a', 'b', 'c', 'd']);
+			collection.remove('a', 'c');
+			p.value.should.deep.equal(['b', 'd']);
+			collection.insertBefore('b', 'e');
+			p.value.should.deep.equal(['e', 'b', 'd']);
+			collection.removeAll();
+			p.value.should.deep.equal([]);
+			collection.set(['a', 'b', 'c']);
+			p.value.should.deep.equal(['a', 'b', 'c']);
 		});
 	});
 

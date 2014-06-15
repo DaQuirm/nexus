@@ -98,4 +98,25 @@ describe('nx.Property', function() {
 			handler.should.have.been.called;
 		});
 	});
+
+	describe('onsync', function () {
+		it('is triggered when property is synced with another property', function () {
+			var p = new nx.Property();
+			var q = new nx.Property();
+			p.bind(q, '->');
+			var handler = sinon.spy();
+			q.onsync.add(handler);
+			p.value = 'cellar door';
+			handler.should.have.been.calledWith('cellar door');
+
+		});
+
+		it('is not triggered when property value is set', function () {
+			var p = new nx.Property();
+			var handler = sinon.spy();
+			p.onsync.add(handler);
+			p.value = 'cellar door';
+			handler.should.not.have.been.called;
+		});
+	});
 });
