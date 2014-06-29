@@ -60,6 +60,19 @@ describe('nxt.CollectionRenderer', function() {
 			container.lastChild.textContent.should.equal('c');
 		});
 
+		it('doesn\'t call append if there are no items to append', function () {
+			var container = document.createElement('div');
+			var collection = new nx.Collection({items: ['a','b','c']});
+			var p = new nx.Cell();
+			collection.bind(p, '<->');
+			p.value = undefined;
+			var renderer = new nxt.CollectionRenderer(container);
+			renderer.render(
+				nxt.Collection(collection, nxt.Text)
+			);
+			container.childNodes.length.should.equal(0);
+		});
+
 		it('attaches delegated event handlers if there are any', function(done) {
 			var container = document.createElement('ul');
 			document.body.appendChild(container);

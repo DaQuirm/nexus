@@ -45,8 +45,9 @@ nxt.CollectionRenderer.prototype.render = function(data) {
 			selectors.forEach(callMatchingHandlers);
 		});
 	});
-
-	this.append({items: this.collection.items});
+	if (typeof this.collection.items !== 'undefined') {
+		this.append({items: this.collection.items});
+	}
 };
 
 nxt.CollectionRenderer.prototype.append = function(evt) {
