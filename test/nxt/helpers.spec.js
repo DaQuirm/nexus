@@ -43,6 +43,11 @@ describe('nxt helpers', function() {
 		it('returns undefined if text value is undefined', function() {
 			var result = nxt.Text();
 			should.not.exist(result);
+			var obj = nxt.Text('');
+			obj.text.should.equal('');
+			obj.node.nodeType.should.equal(Node.TEXT_NODE);
+			obj.node.nodeValue.should.equal('');
+			obj.type.should.equal('Node');
 		});
 	});
 

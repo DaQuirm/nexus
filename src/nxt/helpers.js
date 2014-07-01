@@ -22,7 +22,10 @@ nxt.Class = function(name, set) {
 };
 
 nxt.Text = function(text) {
-	return text && {
+	if (typeof text === 'undefined') {
+		return undefined;
+	}
+	return {
 		text: text,
 		node: document.createTextNode(text),
 		type: 'Node'
