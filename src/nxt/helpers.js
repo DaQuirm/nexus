@@ -4,7 +4,7 @@ nxt.Attr = function(name, value) {
 	return (typeof name === 'string') ?
 		{
 			name: name,
-			value: value,
+			value: typeof value === 'undefined' ? '' : value,
 			type: 'Attr'
 		}
 		: {

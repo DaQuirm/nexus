@@ -20,6 +20,11 @@ describe('nxt helpers', function() {
 			})
 			obj.type.should.equal('Attr');
 		});
+
+		it('sets attribute value to an empty string by default', function() {
+			var obj = nxt.Attr('selected');
+			obj.value.should.equal('');
+		});
 	});
 
 	describe('nxt.Class', function() {
