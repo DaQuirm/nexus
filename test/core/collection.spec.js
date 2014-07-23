@@ -29,15 +29,11 @@ describe('nx.Collection', function() {
 			collection.items.should.deep.equal([1,2,3,4]);
 		});
 
-		it('fires the `onappend` event', function() {
+		it('assigns the `append` event to the event cell', function() {
 			var collection = new nx.Collection({items: [1,2]});
-			var handler = sinon.spy(function(event){
-				event.items.should.deep.equal([3,4]);
-			});
-			collection.onappend.add(handler);
 			collection.append(3,4);
+            collection.event.value.items.should.deep.equal([3,4])
 			collection.items.should.deep.equal([1,2,3,4]);
-			handler.should.have.been.called;
 		});
 	});
 

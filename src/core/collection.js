@@ -1,35 +1,30 @@
 window.nx = window.nx || {};
 
 nx.Collection = function (options) {
-	options = options || {};
+    options = options || {};
+    nx.Cell.call(this, options);
 
-	if (typeof options.items !== 'undefined') {
-		this.items = options.items;
-	} else {
-		this.items = [];
-	}
+    this.event = new nx.Cell();
 
-	this.onappend = new nx.Event();
-	this.onremove = new nx.Event();
-	this.oninsertbefore = new nx.Event();
-	this.onreset = new nx.Event();
-
-	this.cell = new nx.Cell({ value: this.items });
-	var _this = this;
-	this.cell.onsync.add(function(items) {
-		_this.items = items;
-		_this.onreset.trigger({ items:items });
+    var _this = this;
+	this.onsync.add(function() {
+		_this.event = nxt.Command('collection', 'reset');
 	});
 };
 
+nx.Collection.prototype = Object.create(nx.Cell.prototype);
+nx.Collection.prototype.constructor = nx.Collection;
+
+Object.defineProperty(nx.Collection.prototype, 'items', {
+    enumerable : true,
+    get: function() { return this.value; },
+    set: function(value) { this.value = value; }
+});
+
 nx.Collection.prototype.append = function() {
 	var args = [].slice.call(arguments);
-	var _this = this;
-	args.forEach(function(item) {
-		_this.items.push(item);
-	});
-	this.onappend.trigger({items: args});
-	this.cell.value = this.items;
+	this.value = this.value.concat(args);
+	this.event.value = nxt.Command('collection', 'append', { items: args });
 };
 
 nx.Collection.prototype.remove = function() {
@@ -46,30 +41,28 @@ nx.Collection.prototype.remove = function() {
 		}
 		return true;
 	});
-	this.onremove.trigger({items: _slice.call(arguments), indexes: indexes});
-	this.cell.value = this.items;
+    this.event.value = nxt.Command('collection', 'remove', {
+        items: _slice.call(arguments),
+        indexes: indexes
+    });
 };
 
 nx.Collection.prototype.insertBefore = function(beforeItem, items) {
 	items = Array.isArray(items) ? items : [items];
 	var insertIndex = this.items.indexOf(beforeItem);
 	[].splice.apply(this.items, [insertIndex, 0].concat(items));
-	this.oninsertbefore.trigger({items: items, index: insertIndex});
-	this.cell.value = this.items;
+    this.event.value = nxt.Command('collection', 'insertbefore', {
+        items: items,
+        index: insertIndex
+    });
 };
 
 nx.Collection.prototype.removeAll = function() {
 	this.items = [];
-	this.onreset.trigger({items:[]});
-	this.cell.value = this.items;
+    this.event.value = nxt.Command('collection', 'reset');
 };
 
 nx.Collection.prototype.set = function(array) {
 	this.items = array;
-	this.onreset.trigger({items:array});
-	this.cell.value = this.items;
-};
-
-nx.Collection.prototype.bind = function(cell, mode, converter) {
-	return this.cell.bind(cell, mode, converter);
+    this.event.value = nxt.Command('collection', 'reset', { items: array });
 };
