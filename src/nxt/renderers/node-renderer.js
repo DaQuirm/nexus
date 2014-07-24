@@ -1,26 +1,23 @@
 window.nxt = window.nxt || {};
 
-nxt.NodeRenderer = function(element) {
-	this.element = element;
-	this.replace = true;
-};
+nxt.NodeRenderer = function() {};
 
-nxt.NodeRenderer.prototype.render = function(element) {
-	if (typeof element !== 'undefined') {
-		if (typeof this.insertReference !== 'undefined') {
-			this.element.insertBefore(element.node, this.insertReference);
+nxt.NodeRenderer.prototype.render = function(domContext, element) {
+	if (!domContext.remove) {
+		if (typeof domContext.insertReference !== 'undefined') {
+			domContext.container.insertBefore(element.node, domContext.insertReference);
 		} else {
 			if (typeof this.content !== 'undefined' && this.replace) {
-				this.element.replaceChild(element.node, this.content);
+				domContext.container.replaceChild(element.node, this.content);
 			} else {
-				this.element.appendChild(element.node);
+				domContext.container.appendChild(element.node);
 			}
 		}
 		this.content = element.node;
-	} else {
-		this.element.removeChild(this.content);
+
+		domContext.container.removeChild(this.content);
 		this.content = undefined;
-	}
+
 
 	return this.content;
 };
