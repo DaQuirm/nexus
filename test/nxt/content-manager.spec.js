@@ -1,34 +1,39 @@
 describe('nxt.ContentManager', function() {
 	'use strict';
 
-	describe('constructor', function() {
-		it('creates a content managing istance for a container element', function() {
-			var element = document.createElement('div');
-			var manager = new nxt.ContentManager(element);
-			manager.element.should.equal(element);
-		});
+	var element;
+	var domContext;
+	var manager;
+
+	beforeEach(function () {
+		var element = document.createElement('div');
+		var domContext = { container: element };
+		var manager = new nxt.ContentManager();
 	});
 
 	describe('render', function() {
 		it('creates appropriate static renderers for content items or reuses existing ones', function () {
-			var element = document.createElement('div');
-			var manager = new nxt.ContentManager(element);
-			manager.render(nxt.Element('span'), nxt.Text('cellar door'), nxt.Attr('class', 'container'));
+			manager.render(domContext, nxt.Element('span'), nxt.Text('cellar door'), nxt.Attr('class', 'container'));
 			Object.keys(manager.renderers).length.should.equal(2);
-			manager.render(nxt.Text('cellar door'));
+			manager.render(domContext, nxt.Text('cellar door'));
 			Object.keys(manager.renderers).length.should.equal(2);
 		});
 
 		it('uses content renderers to append static items to the container', function() {
-			var element = document.createElement('div');
-			var manager = new nxt.ContentManager(element);
-			manager.render(nxt.Element('span'), nxt.Text('cellar door'), nxt.Attr('class', 'container'));
+			manager.render(domContext, nxt.Element('span'), nxt.Text('cellar door'), nxt.Attr('class', 'container'));
 			element.childNodes.length.should.equal(2);
 			element.childNodes[0].nodeType.should.equal(Node.ELEMENT_NODE);
 			element.childNodes[0].nodeName.toLowerCase().should.equal('span');
 			element.childNodes[1].nodeType.should.equal(Node.TEXT_NODE);
 			element.childNodes[1].nodeValue.should.equal('cellar door');
 			element.getAttribute('class').should.equal('container');
+		});
+
+		it('passes its domContext to the renderers', function() {
+			var span = document.createElement('span');
+			element.appendChild(span)
+			domContext = { container: element, insertReference: span };
+
 		});
 
 		it('creates content regions for all consecutive series of dynamic content items', function () {

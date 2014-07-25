@@ -1,16 +1,15 @@
 describe('nxt.NodeRenderer', function() {
 	'use strict';
 
+	var renderer;
+	var domContext;
+
+	beforeEach(function () {
+		renderer = new nxt.NodeRenderer();
+		domContext = { container: document.createElement('div') };
+	});
+
 	describe('render', function() {
-
-		var renderer;
-		var domContext;
-
-		beforeEach(function () {
-			renderer = new nxt.NodeRenderer();
-			domContext = { container: document.createElement('div') };
-		});
-
 		it('appends an element to the container if there is no insert reference and replace flag is not set', function() {
 			var data = nxt.Element('span', nxt.Text('cellar door'));
 			renderer.render(domContext, data);
@@ -33,13 +32,16 @@ describe('nxt.NodeRenderer', function() {
 		});
 
 		it('replaces previously rendered content if replace flag is set to true', function() {
-			domContext.replace = true;
-			renderer.render(domContext, nxt.Element('span', nxt.Text('before')));
+			var content;
+			content = renderer.render(domContext, nxt.Element('span', nxt.Text('before')));
 			domContext.container.textContent.should.equal('before');
-			renderer.render(nxt.Element('span', nxt.Text('after')));
+			domContext.replace = true;
+			domContext.content = content;
+			content = renderer.render(domContext, nxt.Element('span', nxt.Text('after')));
 			domContext.container.textContent.should.equal('after');
+			domContext.content = content;
 			domContext.replace = false;
-			renderer.render(nxt.Element('span', nxt.Text('party')));
+			renderer.render(domContext, nxt.Element('span', nxt.Text('party')));
 			domContext.container.textContent.should.equal('afterparty');
 		});
 
