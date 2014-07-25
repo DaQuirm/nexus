@@ -33,12 +33,13 @@ describe('nxt.ContentManager', function() {
 			var span = document.createElement('span');
 			element.appendChild(span)
 			domContext = { container: element, insertReference: span };
-
+			var spy = sinon.spy(nxt.NodeRenderer.prototype, 'render');
+			manager.render(domContext, nxt.Element('span'));
+			spy.should.have.been.calledWith(domContext);
+			nxt.NodeRenderer.prototype.render.restore();
 		});
 
 		it('creates content regions for all consecutive series of dynamic content items', function () {
-			var element = document.createElement('div');
-			var manager = new nxt.ContentManager(element);
 			var cell = new nx.Cell();
 			manager.render(
 				nxt.Attr('class', 'container'),
