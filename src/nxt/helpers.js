@@ -1,13 +1,5 @@
 window.nxt = window.nxt || {};
 
-nxt.Command = function(type, method, data) {
-    return {
-        type: type,
-        method: method,
-        data: data
-    };
-};
-
 nxt.Attr = function(name, value) {
 	return (typeof name === 'string') ?
 		{

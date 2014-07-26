@@ -1,17 +1,6 @@
 describe('nxt helpers', function() {
 	'use strict';
 
-    describe('nxt.Command', function () {
-        it('creates a command object with a certain type, method corresponding to a renderer method and arguments', function () {
-            var command = nxt.Command('renderer', 'method', { cellar: 'door' });
-            command.should.deep.equal({
-                type: 'renderer',
-                method: 'method',
-                data: { cellar: 'door' }
-            });
-        });
-    });
-
 	describe('nxt.Attr', function() {
 		it('creates an attribute name-value object', function() {
 			var obj = nxt.Attr('class', 'button-big-red');
