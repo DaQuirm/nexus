@@ -13,6 +13,17 @@ describe('nx.Cell', function() {
 			cell.value.should.equal('cellar door');
 		});
 
+		it('accepts a side-effect action function', function () {
+			var spy = sinon.spy();
+			var cell = new nx.Cell({ action: spy });
+			cell.value = 'cellar door';
+			spy.should.have.been.calledWith('cellar door');
+			var anotherCell = new nx.Cell();
+			cell.bind(anotherCell, '<->');
+			anotherCell.value = '^__^';
+			spy.should.have.been.calledWith('^__^');
+		});
+
 		it('accepts a compare function for comparing values');
 	});
 

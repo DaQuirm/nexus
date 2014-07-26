@@ -9,6 +9,10 @@ nx.Cell = function(options) {
 
 	this.onvalue = new nx.Event();
 	this.onsync = new nx.Event();
+
+	if (typeof options.action !== 'undefined') {
+		this.onvalue.add(options.action);
+	}
 };
 
 Object.defineProperty(nx.Cell.prototype, 'value', {
