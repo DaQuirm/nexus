@@ -9,12 +9,6 @@ nxt.CollectionRenderer = function(element) {
 
 nxt.CollectionRenderer.prototype.render = function(data) {
 	var _this = this;
-	this.collection = data.collection;
-	this.conversion = data.conversion;
-	this.collection.onappend.add(function(evt){	_this.append(evt); });
-	this.collection.oninsertbefore.add(function(evt){ _this.insertBefore(evt); });
-	this.collection.onremove.add(function(evt){	_this.remove(evt); });
-	this.collection.onreset.add(function(evt){ _this.reset(evt); });
 
 	data.events.forEach(function(event) {
 		_this.element.addEventListener(event.name, function(evt) {
@@ -50,7 +44,7 @@ nxt.CollectionRenderer.prototype.render = function(data) {
 	}
 };
 
-nxt.CollectionRenderer.prototype.append = function(evt) {
+nxt.CollectionRenderer.prototype.append = function(data, domContext) {
 	var convItems = evt.items.map(this.conversion);
 	var manager = new nxt.ContentManager(this.element);
 	nxt.ContentManager.prototype.render.apply(manager, convItems);
@@ -58,7 +52,7 @@ nxt.CollectionRenderer.prototype.append = function(evt) {
 	this.visible.value = this.content.length > 0;
 };
 
-nxt.CollectionRenderer.prototype.insertBefore = function(evt) {
+nxt.CollectionRenderer.prototype.insertBefore = function(data, domContext) {
 	var _this = this;
 	var convItems = evt.items.map(this.conversion).forEach(function(item) {
 		var renderer = new nxt[item.type+'Renderer'](_this.element);
@@ -70,7 +64,7 @@ nxt.CollectionRenderer.prototype.insertBefore = function(evt) {
 	});
 };
 
-nxt.CollectionRenderer.prototype.remove = function(evt) {
+nxt.CollectionRenderer.prototype.remove = function(data, domContext) {
 	var _this = this;
 	evt.indexes.forEach(function(index){
 		_this.element.removeChild(_this.element.childNodes[index]);
@@ -79,7 +73,7 @@ nxt.CollectionRenderer.prototype.remove = function(evt) {
 	this.visible.value = this.content.length > 0;
 };
 
-nxt.CollectionRenderer.prototype.reset = function(evt) {
+nxt.CollectionRenderer.prototype.reset = function(data, domContext) {
 	for (var itemIndex = 0; itemIndex < this.content.length; itemIndex++) {
 		this.element.removeChild(this.content[itemIndex]);
 	}

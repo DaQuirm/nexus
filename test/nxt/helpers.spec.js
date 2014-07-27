@@ -5,7 +5,7 @@ describe('nxt helpers', function() {
 		it('creates an attribute name-value command', function() {
 			var command = nxt.Attr('class', 'button-big-red');
 			command.type.should.equal('Attr');
-			command.method.should.equal('set');
+			command.method.should.equal('render');
 			command.data.should.deep.equal({ name: 'class', value: 'button-big-red' });
 		});
 
@@ -15,7 +15,7 @@ describe('nxt helpers', function() {
 				'data-label': 'Hit me!'
 			});
 			command.type.should.equal('Attr');
-			command.method.should.equal('set');
+			command.method.should.equal('render');
 			command.data.items.should.deep.equal({
 				'class': 'button-big-red',
 				'data-label': 'Hit me!'

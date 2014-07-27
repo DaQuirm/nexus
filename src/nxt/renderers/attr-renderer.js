@@ -1,15 +1,13 @@
 window.nxt = window.nxt || {};
 
-nxt.AttrRenderer = function(element) {
-	this.element = element;
-};
+nxt.AttrRenderer = function() {};
 
-nxt.AttrRenderer.prototype.render = function(attr) {
-	if (typeof attr.items !== 'undefined') {
-		for (var key in attr.items) {
-			this.element.setAttribute(key, attr.items[key]);
+nxt.AttrRenderer.prototype.render = function(data, domContext) {
+	if (typeof data.items !== 'undefined') {
+		for (var key in data.items) {
+			domContext.container.setAttribute(key, data.items[key]);
 		}
 	} else {
-		this.element.setAttribute(attr.name, attr.value);
+		domContext.container.setAttribute(data.name, data.value);
 	}
 };

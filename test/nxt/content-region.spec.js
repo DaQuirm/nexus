@@ -8,11 +8,12 @@ describe('nxt.ContentRegion', function() {
 	beforeEach(function () {
 		element = document.createElement('div');
 		domContext = { container: element };
-		region = new nxt.ContentRegion(container);
+		region = new nxt.ContentRegion(domContext);
 	});
 
 	describe('constructor', function() {
 		it('creates a new content region based on a DOM context', function() {
+			region.domContext.should.deep.equal(domContext);
 			region.cells.should.be.an.instanceof(Array);
 			region.cells.should.be.empty;
 		});
@@ -26,25 +27,23 @@ describe('nxt.ContentRegion', function() {
 				region.add(cell);
 			}
 			region.cells.length.should.equal(3);
-			var command = new nxt.Command('Node', 'render', nxt.Text('cellar door'));
+			var command = new nxt.Command('Node', 'render', nxt.Text('cellar door').data);
 			cell.value = command;
 			region.cells[2].value.command.should.deep.equal(command);
 		});
 
 		it('assigns an index to the newly added cell', function () {
-
+			var cell = new nx.Cell();
+			region.add(cell);
+			region.cells[0].value.index.should.equal(0);
 		});
 	});
 
 	describe('update', function () {
-		it('runs cell\'s command', function () {
-			var data = node: document.createElement('div');
+		it('runs cell\'s command and updates the renderer field', function () {
+			var data = { node: document.createElement('div') };
 			var command = new nxt.Command('Node', 'render', data);
-			var domContext = {
-				container: element,
-				insertReference: null,
-				content: null
-			};
+			var domContext = { container: element };
 			var runSpy = sinon.spy(command, 'run');
 			var cell = new nx.Cell({
 				value: {
@@ -52,20 +51,19 @@ describe('nxt.ContentRegion', function() {
 					command: command,
 					domContext: domContext,
 					visible: false
-				};
+				}
 			});
-			region.update(cell);
-			runSpy.should.have.been.calledWith(data, domContext);
+			region.update(cell.value);
+			runSpy.should.have.been.calledWith(domContext);
 			element.childNodes.length.should.equal(1);
+			cell.value.renderer.should.be.an.instanceof(nxt.NodeRenderer);
 		});
 
 		it('updates cell\'s DOM context with rendered content', function () {
-			var data = node: document.createElement('div');
+			var data = { node: document.createElement('div') };
 			var command = new nxt.Command('Node', 'render', data);
 			var domContext = {
-				container: element,
-				insertReference: null,
-				content: null
+				container: element
 			};
 			var cell = new nx.Cell({
 				value: {
@@ -73,20 +71,17 @@ describe('nxt.ContentRegion', function() {
 					command: command,
 					domContext: domContext,
 					visible: false
-				};
+				}
 			});
-			region.update(cell);
+			region.update(cell.value);
 			cell.value.domContext.content.should.equal(data.node);
 		});
 
-
 		it('updates cell\'s visibility', function () {
-			var data = node: document.createElement('div');
+			var data = { node: document.createElement('div') };
 			var command = new nxt.Command('Node', 'render', data);
 			var domContext = {
-				container: element,
-				insertReference: null,
-				content: null
+				container: element
 			};
 			var cell = new nx.Cell({
 				value: {
@@ -94,95 +89,127 @@ describe('nxt.ContentRegion', function() {
 					command: command,
 					domContext: domContext,
 					visible: false
-				};
+				}
 			});
-			region.update(cell);
+			region.update(cell.value);
 			cell.value.visible.should.equal(true);
+			cell.value = {
+				index: 0,
+				command: undefined,
+				domContext: domContext,
+				visible: false
+			};
+			cell.value.visible.should.equal(false);
+		});
+
+		it('considers content invisible if the renderer has no `visible` method', function() {
+			var data = { name: 'class', value: 'cellar-door' };
+			var command = new nxt.Command('Attr', 'render', data);
+			var domContext = {
+				container: element
+			};
+			var cell = new nx.Cell({
+				value: {
+					index: 0,
+					command: command,
+					domContext: domContext,
+					visible: false
+				}
+			});
+			region.update(cell.value);
+			cell.value.visible.should.equal(false);
+		});
+
+		it('calls the unrender method of the previous renderer if command calls a different renderer', function() {
+			var cell = new nx.Cell();
+			region.add(cell);
+			var data = { node: document.createElement('div') };
+			cell.value = new nxt.Command('Node', 'render', data);
+			region.cells[0].value.renderer.should.be.an.instanceof(nxt.NodeRenderer);
+			var spy = sinon.spy(region.cells[0].value.renderer, 'unrender');
+			data = { name: 'class', value: 'cellar door' };
+			cell.value = new nxt.Command('Attr', 'render', data);
+			region.cells[0].value.renderer.should.be.an.instanceof(nxt.AttrRenderer);
+			spy.should.have.been.calledWith(domContext);
+		});
+
+		it('calls the unrender method of the previous renderer if command is undefined', function() {
+			var cell = new nx.Cell();
+			region.add(cell);
+			var data = { node: document.createElement('div') };
+			cell.value = new nxt.Command('Node', 'render', data);
+			region.cells[0].value.renderer.should.be.an.instanceof(nxt.NodeRenderer);
+			var spy = sinon.spy(region.cells[0].value.renderer, 'unrender');
+			data = { name: 'class', value: 'cellar door' };
+			cell.value = undefined;
+			spy.should.have.been.calledWith(domContext);
+			region.cells[0].value.renderer.unrender.restore();
 		});
 	});
 
 	it('keeps track of items\' visibility and updates insert references so that items are rendered in the correct order', function () {
-		var container = document.createElement('div');
-		var region = new nxt.ContentRegion(container);
 		var first = new nx.Cell();
 		var second = new nx.Cell();
 		var between = new nx.Cell();
 		var renderer;
-		var addRenderer = function(cell) {
-			renderer = new nxt.BindingRenderer(container);
-			renderer.render(nxt.Binding(cell, nxt.Text));
-			region.add(renderer);
+		var addCell = function(cell) {
+			region.add(nxt.Binding(cell, nxt.Text));
 		};
-		addRenderer(first);
-		addRenderer(between);
-		addRenderer(second);
+		addCell(first);
+		addCell(between);
+		addCell(second);
 		second.value = 'roll';
-		container.childNodes.length.should.equal(1);
-		container.textContent.should.equal('roll');
+		element.childNodes.length.should.equal(1);
+		element.textContent.should.equal('roll');
 		first.value = 'rock';
-		container.childNodes.length.should.equal(2);
-		container.textContent.should.equal('rockroll');
+		element.childNodes.length.should.equal(2);
+		element.textContent.should.equal('rockroll');
 		between.value = ' & ';
-		container.childNodes.length.should.equal(3);
-		container.textContent.should.equal('rock & roll');
+		element.childNodes.length.should.equal(3);
+		element.textContent.should.equal('rock & roll');
 	});
 
 	it('keeps track of visibility of all dynamic items that have a `visible` cell', function () {
-		var container = document.createElement('div');
-		var region = new nxt.ContentRegion(container);
 		var cell = new nx.Cell();
 		var collection = new nx.Collection();
 		var between = new nx.Cell();
-		var renderer;
-		var addRenderer = function(cell) {
-			renderer = new nxt.BindingRenderer(container);
-			renderer.render(nxt.Binding(cell, nxt.Text));
-			region.add(renderer);
-		};
-		addRenderer(cell);
-		addRenderer(between);
-		renderer = new nxt.CollectionRenderer(container);
-		renderer.render(nxt.Collection(collection, nxt.Text));
-		region.add(renderer);
-		collection.append('r','o','l','l');
-		container.childNodes.length.should.equal(4);
-		container.textContent.should.equal('roll');
-		cell.value = 'rock';
-		container.childNodes.length.should.equal(5);
-		container.textContent.should.equal('rockroll');
+		region.add(nxt.Collection(collection, nxt.Text));
+		region.add(nxt.Binding(between, nxt.Text));
+		region.add(nxt.Binding(cell, nxt.Text));
+		cell.value = 'roll';
+		element.childNodes.length.should.equal(1);
+		element.textContent.should.equal('roll');
+		collection.append('r','o','c','k');
+		element.childNodes.length.should.equal(5);
+		element.textContent.should.equal('rockroll');
 		between.value = ' & ';
-		container.childNodes.length.should.equal(6);
-		container.textContent.should.equal('rock & roll');
+		element.childNodes.length.should.equal(6);
+		element.textContent.should.equal('rock & roll');
 	});
 
 	it('uses an insert reference for prepending content instead of appending it to the element directly', function () {
-		var container = document.createElement('div');
 		var exclamationMark = document.createTextNode('!');
-		container.appendChild(exclamationMark);
-		var region = new nxt.ContentRegion(container);
-		var first = new nx.Cell();
-		var second = new nx.Cell();
-		var between = new nx.Cell();
-		var renderer;
-		var addRenderer = function(cell) {
-			renderer = new nxt.BindingRenderer(container);
-			renderer.insertReference = exclamationMark;
-			renderer.render(nxt.Binding(cell, nxt.Text));
-			region.add(renderer);
+		element.appendChild(exclamationMark);
+		region = new nxt.ContentRegion({
+			container: element,
+			insertReference: exclamationMark
+		});
+		var addCell = function(cell) {
+			region.add(nxt.Binding(cell, nxt.Text));
 		};
-		addRenderer(first);
-		addRenderer(between);
-		addRenderer(second);
+		addCell(first);
+		addCell(between);
+		addCell(second);
 		region.insertReference = exclamationMark;
 		second.value = 'roll';
-		container.childNodes.length.should.equal(2);
-		container.textContent.should.equal('roll!');
+		element.childNodes.length.should.equal(2);
+		element.textContent.should.equal('roll!');
 		first.value = 'rock';
-		container.childNodes.length.should.equal(3);
-		container.textContent.should.equal('rockroll!');
+		element.childNodes.length.should.equal(3);
+		element.textContent.should.equal('rockroll!');
 		between.value = ' & ';
-		container.childNodes.length.should.equal(4);
-		container.textContent.should.equal('rock & roll!');
+		element.childNodes.length.should.equal(4);
+		element.textContent.should.equal('rock & roll!');
 	});
 
 	it('updates cells\' domContexts based on content and visibility changes of a certain element', function () {
@@ -199,58 +226,58 @@ describe('nxt.ContentRegion', function() {
 			region.add(commandCell);
 		}
 
-		container.textContent.should.be.empty;
+		element.textContent.should.be.empty;
 		cells[1].value = 'b';
-		region.items[0].insertReference.should.equal(region.items[1].contentRenderer.content);
-		should.not.exist(region.items[1].insertReference);
-		container.textContent.should.equal('b');
+		region.cells[0].value.domContext.insertReference.should.equal(region.cells[1].value.domContext.content);
+		should.not.exist(region.cells[1].value.domContext.insertReference);
+		element.textContent.should.equal('b');
 		cells[3].value = 'd';
-		region.items[0].insertReference.should.equal(region.items[1].contentRenderer.content);
-		region.items[1].insertReference.should.equal(region.items[3].contentRenderer.content);
-		region.items[2].insertReference.should.equal(region.items[3].contentRenderer.content);
-		should.not.exist(region.items[3].insertReference);
-		container.textContent.should.equal('bd');
+		region.cells[0].value.domContext.insertReference.should.equal(region.cells[1].value.domContext.content);
+		region.cells[1].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
+		region.cells[2].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
+		should.not.exist(region.cells[3].value.domContext.insertReference);
+		element.textContent.should.equal('bd');
 		cells[2].value = 'c';
-		region.items[0].insertReference.should.equal(region.items[1].contentRenderer.content);
-		region.items[1].insertReference.should.equal(region.items[2].contentRenderer.content);
-		region.items[2].insertReference.should.equal(region.items[3].contentRenderer.content);
-		should.not.exist(region.items[3].insertReference);
-		container.textContent.should.equal('bcd');
+		region.cells[0].value.domContext.insertReference.should.equal(region.cells[1].value.domContext.content);
+		region.cells[1].value.domContext.insertReference.should.equal(region.cells[2].value.domContext.content);
+		region.cells[2].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
+		should.not.exist(region.cells[3].value.domContext.insertReference);
+		element.textContent.should.equal('bcd');
 		cells[2].value = 'off';
-		region.items[0].insertReference.should.equal(region.items[1].contentRenderer.content);
-		region.items[1].insertReference.should.equal(region.items[3].contentRenderer.content);
-		region.items[2].insertReference.should.equal(region.items[3].contentRenderer.content);
-		should.not.exist(region.items[3].insertReference);
-		container.textContent.should.equal('bd');
+		region.cells[0].value.domContext.insertReference.should.equal(region.cells[1].value.domContext.content);
+		region.cells[1].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
+		region.cells[2].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
+		should.not.exist(region.cells[3].value.domContext.insertReference);
+		element.textContent.should.equal('bd');
 		cells[1].value = 'off';
-		region.items[0].insertReference.should.equal(region.items[3].contentRenderer.content);
-		region.items[1].insertReference.should.equal(region.items[3].contentRenderer.content);
-		region.items[2].insertReference.should.equal(region.items[3].contentRenderer.content);
-		should.not.exist(region.items[3].insertReference);
-		container.textContent.should.equal('d');
+		region.cells[0].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
+		region.cells[1].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
+		region.cells[2].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
+		should.not.exist(region.cells[3].value.domContext.insertReference);
+		element.textContent.should.equal('d');
 		cells[3].value = 'off';
-		should.not.exist(region.items[0].insertReference);
-		should.not.exist(region.items[1].insertReference);
-		should.not.exist(region.items[2].insertReference);
-		should.not.exist(region.items[3].insertReference);
-		container.textContent.should.be.empty;
+		should.not.exist(region.cells[0].value.domContext.insertReference);
+		should.not.exist(region.cells[1].value.domContext.insertReference);
+		should.not.exist(region.cells[2].value.domContext.insertReference);
+		should.not.exist(region.cells[3].value.domContext.insertReference);
+		element.textContent.should.be.empty;
 		cells[3].value = 'd';
-		region.items[0].insertReference.should.equal(region.items[3].contentRenderer.content);
-		region.items[1].insertReference.should.equal(region.items[3].contentRenderer.content);
-		region.items[2].insertReference.should.equal(region.items[3].contentRenderer.content);
-		should.not.exist(region.items[3].insertReference);
-		container.textContent.should.equal('d');
+		region.cells[0].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
+		region.cells[1].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
+		region.cells[2].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
+		should.not.exist(region.cells[3].value.domContext.insertReference);
+		element.textContent.should.equal('d');
 		cells[0].value = 'a';
-		region.items[0].insertReference.should.equal(region.items[3].contentRenderer.content);
-		region.items[1].insertReference.should.equal(region.items[3].contentRenderer.content);
-		region.items[2].insertReference.should.equal(region.items[3].contentRenderer.content);
-		should.not.exist(region.items[3].insertReference);
-		container.textContent.should.equal('ad');
+		region.cells[0].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
+		region.cells[1].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
+		region.cells[2].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
+		should.not.exist(region.cells[3].value.domContext.insertReference);
+		element.textContent.should.equal('ad');
 		cells[2].value = 'c';
-		region.items[0].insertReference.should.equal(region.items[2].contentRenderer.content);
-		region.items[1].insertReference.should.equal(region.items[2].contentRenderer.content);
-		region.items[2].insertReference.should.equal(region.items[3].contentRenderer.content);
-		should.not.exist(region.items[3].insertReference);
-		container.textContent.should.equal('acd');
+		region.cells[0].value.domContext.insertReference.should.equal(region.cells[2].value.domContext.contentRenderer.content);
+		region.cells[1].value.domContext.insertReference.should.equal(region.cells[2].value.domContext.contentRenderer.content);
+		region.cells[2].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.contentRenderer.content);
+		should.not.exist(region.cells[3].value.domContext.insertReference);
+		element.textContent.should.equal('acd');
 	});
 });

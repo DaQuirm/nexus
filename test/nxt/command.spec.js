@@ -29,5 +29,14 @@ describe('nxt.Command', function () {
 			var content = command.run(domContext);
 			content.should.equal('door');
 		});
+
+		it('stores the renderer instance', function(){
+			nxt.FakeRenderer = function() { this.method = function(data) { return data.cellar; } };
+			var data = { cellar: 'door' };
+			var command = new nxt.Command('Fake', 'method', data);
+			var domContext = { container: document.createElement('div') };
+			command.run(domContext);
+			command.renderer.should.be.an.instanceof(nxt.FakeRenderer);
+		});
 	});
 });

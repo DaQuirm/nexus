@@ -4,7 +4,7 @@ nxt.Attr = function(name, value) {
 	var data = (typeof name === 'string')
 		? { name: name, value: typeof value === 'undefined' ? '' : value }
 		: { items: name };
-	return new nxt.Command('Attr', 'set', data);
+	return new nxt.Command('Attr', 'render', data);
 };
 
 nxt.Class = function(name, set) {
