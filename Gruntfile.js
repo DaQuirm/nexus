@@ -44,6 +44,7 @@ module.exports = function(grunt) {
 					browser: true,
 					forin: false,
 					strict: true,
+					laxbreak: true,
 					globals: {
 						nx: true,
 						nxt: true
