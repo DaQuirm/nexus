@@ -2,94 +2,111 @@ describe('nxt helpers', function() {
 	'use strict';
 
 	describe('nxt.Attr', function() {
-		it('creates an attribute name-value object', function() {
-			var obj = nxt.Attr('class', 'button-big-red');
-			obj.name.should.equal('class');
-			obj.value.should.equal('button-big-red');
-			obj.type.should.equal('Attr');
+		it('creates an attribute name-value command', function() {
+			var command = nxt.Attr('class', 'button-big-red');
+			command.type.should.equal('Attr');
+			command.method.should.equal('set');
+			command.data.should.deep.equal({ name: 'class', value: 'button-big-red' });
 		});
 
-		it('creates an attribute collection object', function() {
-			var obj = nxt.Attr({
+		it('creates an attribute collection command', function() {
+			var command = nxt.Attr({
 				'class': 'button-big-red',
 				'data-label': 'Hit me!'
 			});
-			obj.items.should.deep.equal({
+			command.type.should.equal('Attr');
+			command.method.should.equal('set');
+			command.data.items.should.deep.equal({
 				'class': 'button-big-red',
 				'data-label': 'Hit me!'
-			})
-			obj.type.should.equal('Attr');
+			});
 		});
 
 		it('sets attribute value to an empty string by default', function() {
-			var obj = nxt.Attr('selected');
-			obj.value.should.equal('');
+			var command = nxt.Attr('selected');
+			command.data.should.deep.equal({ name: 'selected', value: '' });
 		});
 	});
 
 	describe('nxt.Class', function() {
-		it('creates a class-toggling object based on class name and a boolean value', function () {
-			var obj = nxt.Class('cellar-door', true);
-			obj.name.should.equal('cellar-door');
-			obj.set.should.equal(true);
-			obj.type.should.equal('Class');
+		it('creates a class-toggling command based on class name and a boolean value', function () {
+			var command = nxt.Class('cellar-door', true);
+			command.type.should.equal('Class');
+			command.method.should.equal('add');
+			command.data.should.deep.equal({ name: 'cellar-door' });
+
+			command = nxt.Class('cellar-door', false);
+			command.type.should.equal('Class');
+			command.method.should.equal('remove');
+			command.data.should.deep.equal({ name: 'cellar-door' });
+		});
+
+		it('adds a class to the class list by default', function () {
+			var command = nxt.Class('cellar-door');
+			command.type.should.equal('Class');
+			command.method.should.equal('add');
+			command.data.should.deep.equal({ name: 'cellar-door' });
 		});
 	});
 
 	describe('nxt.Text', function() {
-		it('creates a text object containing a text node', function() {
-			var obj = nxt.Text('cellar door');
-			obj.text.should.equal('cellar door');
-			obj.node.nodeType.should.equal(Node.TEXT_NODE);
-			obj.node.nodeValue.should.equal('cellar door');
-			obj.type.should.equal('Node');
+		it('creates a text command containing a text node', function() {
+			var command = nxt.Text('cellar door');
+			command.type.should.equal('Node');
+			command.method.should.equal('render');
+			command.data.text.should.equal('cellar door');
+			command.data.node.nodeType.should.equal(Node.TEXT_NODE);
+			command.data.node.nodeValue.should.equal('cellar door');
 		});
 
 		it('returns undefined if text value is undefined', function() {
 			var result = nxt.Text();
 			should.not.exist(result);
-			var obj = nxt.Text('');
-			obj.text.should.equal('');
-			obj.node.nodeType.should.equal(Node.TEXT_NODE);
-			obj.node.nodeValue.should.equal('');
-			obj.type.should.equal('Node');
+			var command = nxt.Text('');
+			command.type.should.equal('Node');
+			command.method.should.equal('render');
+			command.data.text.should.equal('');
+			command.data.node.nodeType.should.equal(Node.TEXT_NODE);
+			command.data.node.nodeValue.should.equal('');
 		});
 	});
 
 	describe('nxt.Event', function() {
-		it('creates an event handler object', function() {
+		it('creates an event command', function() {
 			var handler = function (evt) {
 				evt.preventDefault();
 			};
-			var obj = nxt.Event('mouseover', handler);
-			obj.name.should.equal('mouseover');
-			obj.type.should.equal('Event');
+			var command = nxt.Event('mouseover', handler);
+			command.type.should.equal('Event');
+			command.method.should.equal('add');
+			command.data.name.should.equal('mouseover');
 		});
 	});
 
 	describe('nxt.Element', function() {
-		it('creates an element object', function() {
-			var obj = nxt.Element('div');
-			obj.name.should.equal('div');
-			obj.node.nodeType.should.equal(Node.ELEMENT_NODE);
-			obj.node.nodeName.toLowerCase().should.equal('div');
-			obj.type.should.equal('Node');
+		it('creates an element command', function() {
+			var command = nxt.Element('div');
+			command.type.should.equal('Node');
+			command.method.should.equal('render');
+			command.data.name.should.equal('div');
+			command.data.node.nodeType.should.equal(Node.ELEMENT_NODE);
+			command.data.node.nodeName.toLowerCase().should.equal('div');
 		});
 
 		it('renders inner content', function() {
-			var elem = nxt.Element('div',
+			var command = nxt.Element('div',
 				nxt.Attr('class', 'button-big-blue'),
 				nxt.Text('Click Me!')
 			);
-			elem.node.childNodes.length.should.equal(1);
-			elem.node.childNodes[0].nodeType.should.equal(Node.TEXT_NODE);
-			elem.node.childNodes[0].nodeValue.should.equal('Click Me!');
-			elem.node.attributes.length.should.equal(1);
-			elem.node.getAttribute('class').should.equal('button-big-blue');
+			command.data.node.childNodes.length.should.equal(1);
+			command.data.node.childNodes[0].nodeType.should.equal(Node.TEXT_NODE);
+			command.data.node.childNodes[0].nodeValue.should.equal('Click Me!');
+			command.data.node.attributes.length.should.equal(1);
+			command.data.node.getAttribute('class').should.equal('button-big-blue');
 		});
 
 		it('accepts both single content items and item arrays', function() {
-			var elem = nxt.Element('div',
+			var command = nxt.Element('div',
 				nxt.Attr('class', 'button-big-blue'),
 				nxt.Text('ce'),
 				[
@@ -100,70 +117,70 @@ describe('nxt helpers', function() {
 				],
 				nxt.Text('or')
 			);
-			elem.node.childNodes.length.should.equal(6);
-			elem.node.textContent.should.equal('cellar door');
+			command.node.childNodes.length.should.equal(6);
+			command.node.textContent.should.equal('cellar door');
 		});
 	});
 
 	describe('nxt.Binding', function() {
-		it('creates a binding object', function () {
+		it('creates a binding command cell', function () {
 			var cell = new nx.Cell();
-			var converter = function(value) { return -value; };
-			var obj = nxt.Binding(cell, converter);
-			obj.cell.should.equal(cell);
-			obj.conversion.should.equal(converter);
-			obj.type.should.equal('Binding');
-			obj.dynamic.should.equal(true);
-		});
-
-		it('has `mode` set to `->` by default', function() {
-			var cell = new nx.Cell();
-			var converter = function(value) { return -value; };
-			var obj = nxt.Binding(cell, converter);
-			obj.mode.should.equal('->');
+			var converter = function(value) { return nxt.Text(value); };
+			var commandCell = nxt.Binding(cell, converter);
+			cell.value = 'cellar door';
+			commandCell.value.type.should.equal('Node');
+			commandCell.value.method.should.equal('render');
+			commandCell.value.data.text.should.equal('cellar door');
+			commandCell.value.data.node.nodeType.should.equal(Node.TEXT_NODE);
+			commandCell.value.data.node.nodeValue.should.equal('cellar door');
 		});
 	});
 
 	describe('nxt.DelegatedEvent', function() {
-		it('creates a delegated event object', function() {
+		it('creates a delegated event command', function() {
 			var handlerMap = {
 				'li': function(evt, item) {} ,
 				'a': function(evt, item) {}
 			};
-			var obj = nxt.DelegatedEvent('click', handlerMap);
-			obj.handlers.should.deep.equal(handlerMap);
-			obj.type.should.equal('DelegatedEvent');
-			obj.name.should.equal('click');
+			var command = nxt.DelegatedEvent('click', handlerMap);
+			command.type.should.equal('DelegatedEvent');
+			command.method.should.equal('add');
+			command.data.handlers.should.deep.equal(handlerMap);
+			command.data.name.should.equal('click');
 		});
 	});
 
 	describe('nxt.Collection', function() {
-		it('creates a collection object', function () {
+		it('creates a collection command cell', function () {
 			var collection = new nx.Collection();
 			var converter = function(item) { return nxt.Text(item); };
-			var obj = new nxt.Collection(collection, converter);
-			obj.collection.should.equal(collection);
-			obj.conversion.should.equal(converter);
-			obj.type.should.equal('Collection');
-			obj.dynamic.should.equal(true);
+			var commandCell = new nxt.Collection(collection, converter);
+			collection.append('cellar door');
+			commandCell.value.type.should.equal('Collection');
+			var textCommand = commandCell.value.data.items[0];
+			textCommand.type.should.equal('Node');
+			textCommand.method.should.equal('render');
+			textCommand.data.text.should.equal('cellar door');
+			textCommand.data.node.nodeType.should.equal(Node.TEXT_NODE);
+			textCommand.data.node.nodeValue.should.equal('cellar door');
 		});
 
 		it('allows an arbitrary number of delegate event handlers to be passed', function() {
 			var collection = new nx.Collection();
 			var converter = function(item) { return nxt.Element('li', nxt.Element('a', nxt.Text(item))); };
 			var linkEvent = nxt.DelegatedEvent('mouseover', { 'a': function(evt, item) {} });
-			var obj = new nxt.Collection(
+			var command = new nxt.Collection(
 				collection,
 				converter,
 				nxt.DelegatedEvent('click', { 'li': function(evt, item) {} }),
 				linkEvent
 			);
-			obj.collection.should.equal(collection);
-			obj.conversion.should.equal(converter);
-			obj.type.should.equal('Collection');
-			obj.events.length.should.equal(2);
-			obj.events[1].should.deep.equal(linkEvent);
-			obj.dynamic.should.equal(true);
+			command.collection.should.equal(collection);
+			command.conversion.should.equal(converter);
+			command.type.should.equal('Collection');
+			command.events.length.should.equal(2);
+			command.events[1].should.deep.equal(linkEvent);
+			command.dynamic.should.equal(true);
 		});
 	});
 });

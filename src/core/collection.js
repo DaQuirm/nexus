@@ -8,7 +8,7 @@ nx.Collection = function (options) {
 
 	var _this = this;
 	this.onsync.add(function(items) {
-		_this.event.value = nxt.Command('collection', 'reset', { items: items });
+		_this.event.value = new nxt.Command('Collection', 'reset', { items: items });
 	});
 };
 
@@ -24,7 +24,7 @@ Object.defineProperty(nx.Collection.prototype, 'items', {
 nx.Collection.prototype.append = function() {
 	var args = [].slice.call(arguments);
 	this.value = this.value.concat(args);
-	this.event.value = nxt.Command('collection', 'append', { items: args });
+	this.event.value = new nxt.Command('Collection', 'append', { items: args });
 };
 
 nx.Collection.prototype.remove = function() {
@@ -41,7 +41,7 @@ nx.Collection.prototype.remove = function() {
 		}
 		return true;
 	});
-	this.event.value = nxt.Command('collection', 'remove', {
+	this.event.value = new nxt.Command('Collection', 'remove', {
 		items: _slice.call(arguments),
 		indexes: indexes
 	});
@@ -51,7 +51,7 @@ nx.Collection.prototype.insertBefore = function(beforeItem, items) {
 	items = Array.isArray(items) ? items : [items];
 	var insertIndex = this.items.indexOf(beforeItem);
 	[].splice.apply(this.items, [insertIndex, 0].concat(items));
-	this.event.value = nxt.Command('collection', 'insertbefore', {
+	this.event.value = new nxt.Command('Collection', 'insertbefore', {
 		items: items,
 		index: insertIndex
 	});
@@ -59,10 +59,10 @@ nx.Collection.prototype.insertBefore = function(beforeItem, items) {
 
 nx.Collection.prototype.removeAll = function() {
 	this.items = [];
-	this.event.value = nxt.Command('collection', 'reset', { items: [] });
+	this.event.value = new nxt.Command('Collection', 'reset', { items: [] });
 };
 
 nx.Collection.prototype.set = function(array) {
 	this.items = array;
-	this.event.value = nxt.Command('collection', 'reset', { items: array });
+	this.event.value = new nxt.Command('Collection', 'reset', { items: array });
 };
