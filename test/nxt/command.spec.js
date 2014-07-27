@@ -12,12 +12,22 @@ describe('nxt.Command', function () {
 
 	describe('run', function () {
 		it('calls the appropriate renderer method, passing data and its arguments', function () {
-			nxt.FakeRenderer = { method: sinon.spy() };
+			nxt.FakeRenderer = function(){};
+			nxt.FakeRenderer.prototype.method = sinon.spy();
 			var data = { cellar: 'door' };
 			var command = new nxt.Command('Fake', 'method', data);
 			var domContext = { container: document.createElement('div') };
 			command.run(domContext);
-			nxt.FakeRenderer.method.should.have.been.calledWith(data, domContext);
+			nxt.FakeRenderer.prototype.method.should.have.been.calledWith(data, domContext);
+		});
+
+		it('returns content rendered by the renderer', function () {
+			nxt.FakeRenderer = function() { this.method = function(data) { return data.cellar; } };
+			var data = { cellar: 'door' };
+			var command = new nxt.Command('Fake', 'method', data);
+			var domContext = { container: document.createElement('div') };
+			var content = command.run(domContext);
+			content.should.equal('door');
 		});
 	});
 });
