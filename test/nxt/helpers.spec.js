@@ -88,7 +88,6 @@ describe('nxt helpers', function() {
 			var command = nxt.Element('div');
 			command.type.should.equal('Node');
 			command.method.should.equal('render');
-			command.data.name.should.equal('div');
 			command.data.node.nodeType.should.equal(Node.ELEMENT_NODE);
 			command.data.node.nodeName.toLowerCase().should.equal('div');
 		});

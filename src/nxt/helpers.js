@@ -1,43 +1,33 @@
 window.nxt = window.nxt || {};
 
 nxt.Attr = function(name, value) {
-	return (typeof name === 'string') ?
-		{
-			name: name,
-			value: typeof value === 'undefined' ? '' : value,
-			type: 'Attr'
-		}
-		: {
-			items: name,
-			type: 'Attr'
-		};
+	var data = (typeof name === 'string')
+		? { name: name, value: typeof value === 'undefined' ? '' : value }
+		: { items: name };
+	return new nxt.Command('Attr', 'set', data);
 };
 
 nxt.Class = function(name, set) {
-	return {
-		name: name,
-		set: set,
-		type: 'Class'
-	};
+	if (typeof set === 'undefined') {
+		set = true;
+	}
+	return set
+		? new nxt.Command('Class', 'add', { name: name })
+		: new nxt.Command('Class', 'remove', { name: name });
 };
 
 nxt.Text = function(text) {
 	if (typeof text === 'undefined') {
 		return undefined;
 	}
-	return {
-		text: text,
+	return new nxt.Command('Node', 'render', {
 		node: document.createTextNode(text),
-		type: 'Node'
-	};
+		text: text
+	});
 };
 
 nxt.Event = function(name, handler) {
-	return {
-		name: name,
-		handler: handler,
-		type: 'Event'
-	};
+	return new nxt.Command('Event', 'add', { name: name, handler: handler });
 };
 
 nxt.Element = function() {
@@ -49,43 +39,29 @@ nxt.Element = function() {
 	var node = document.createElement(name);
 	if (args.length > 1) {
 		var content = args.slice(1);
-		var contentManager = new nxt.ContentManager(node);
+		var contentManager = new nxt.ContentManager({ container: node });
 		nxt.ContentManager.prototype.render.apply(contentManager, content);
 	}
-	return {
-		name: name,
-		node: node,
-		type: 'Node'
-	};
+	return new nxt.Command('Node', 'render', { node: node });
 };
 
 nxt.Binding = function(cell, conversion, mode) {
-	return {
-		cell: cell,
-		conversion: conversion,
-		mode: mode || '->',
-		type: 'Binding',
-		dynamic: true
-	};
+	var commandCell = new nx.Cell();
+	cell.bind(commandCell, '->', conversion);
+	return commandCell;
 };
 
 nxt.DelegatedEvent = function(name, handlers) {
-	return {
-		name: name,
-		handlers: handlers,
-		type: 'DelegatedEvent'
-	};
+	return new nxt.Command('DelegatedEvent', 'add', { name: name, handlers: handlers });
 };
 
 nxt.Collection = function () {
 	var collection = arguments[0];
 	var conversion = arguments[1];
 	var events = [].slice.call(arguments, 2);
-	return {
-		collection: collection,
-		conversion: conversion,
-		events: events,
-		type: 'Collection',
-		dynamic: true
-	};
+	var commandCell = new nx.Cell();
+	collection.event.bind(commandCell, '->', function(command) {
+		command.data.items = command.data.items.map(conversion);
+	});
+	return commandCell;
 };
