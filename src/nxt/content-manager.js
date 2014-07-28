@@ -2,7 +2,6 @@ window.nxt = window.nxt || {};
 
 nxt.ContentManager = function(domContext) {
 	this.domContext = domContext;
-	this.renderers = {};
 	this.regions = [];
 };
 

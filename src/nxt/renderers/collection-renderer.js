@@ -1,11 +1,6 @@
 window.nxt = window.nxt || {};
 
-nxt.CollectionRenderer = function(element) {
-	var _this = this;
-	this.element = element;
-	this.content = [];
-	this.visible = new nx.Cell();
-};
+nxt.CollectionRenderer = function() {};
 
 nxt.CollectionRenderer.prototype.render = function(data) {
 	var _this = this;
@@ -44,17 +39,18 @@ nxt.CollectionRenderer.prototype.render = function(data) {
 	}
 };
 
+nxt.CollectionRenderer.prototype.visible = function(content) {
+	return content.length > 0;
+};
+
 nxt.CollectionRenderer.prototype.append = function(data, domContext) {
-	var convItems = evt.items.map(this.conversion);
-	var manager = new nxt.ContentManager(this.element);
-	nxt.ContentManager.prototype.render.apply(manager, convItems);
-	this.content = this.content.concat(manager.content);
-	this.visible.value = this.content.length > 0;
+	var manager = new nxt.ContentManager(domContext);
+	nxt.ContentManager.prototype.render.apply(manager, data.items);
 };
 
 nxt.CollectionRenderer.prototype.insertBefore = function(data, domContext) {
 	var _this = this;
-	var convItems = evt.items.map(this.conversion).forEach(function(item) {
+	var convItems = data.items.forEach(function(item) {
 		var renderer = new nxt[item.type+'Renderer'](_this.element);
 		renderer.insertReference = _this.element.childNodes[evt.index];
 		renderer.render(item);
@@ -66,7 +62,7 @@ nxt.CollectionRenderer.prototype.insertBefore = function(data, domContext) {
 
 nxt.CollectionRenderer.prototype.remove = function(data, domContext) {
 	var _this = this;
-	evt.indexes.forEach(function(index){
+	data.indexes.forEach(function(index){
 		_this.element.removeChild(_this.element.childNodes[index]);
 		_this.content.splice(index, 1);
 	});

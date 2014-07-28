@@ -61,7 +61,9 @@ nxt.Collection = function () {
 	var events = [].slice.call(arguments, 2);
 	var commandCell = new nx.Cell();
 	collection.event.bind(commandCell, '->', function(command) {
-		command.data.items = command.data.items.map(conversion);
+		if (typeof command !== 'undefined') {
+			command.data.items = command.data.items.map(conversion);
+		}
 	});
 	return commandCell;
 };
