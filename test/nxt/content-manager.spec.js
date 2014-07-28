@@ -6,19 +6,12 @@ describe('nxt.ContentManager', function() {
 	var manager;
 
 	beforeEach(function () {
-		var element = document.createElement('div');
-		var domContext = { container: element };
-		var manager = new nxt.ContentManager(domContext);
+		element = document.createElement('div');
+		domContext = { container: element };
+		manager = new nxt.ContentManager(domContext);
 	});
 
 	describe('render', function() {
-		it('creates appropriate static renderers for content items or reuses existing ones', function () {
-			manager.render(nxt.Element('span'), nxt.Text('cellar door'), nxt.Attr('class', 'container'));
-			Object.keys(manager.renderers).length.should.equal(2);
-			manager.render(nxt.Text('cellar door'));
-			Object.keys(manager.renderers).length.should.equal(2);
-		});
-
 		it('uses content renderers to append static items to the container', function() {
 			manager.render(nxt.Element('span'), nxt.Text('cellar door'), nxt.Attr('class', 'container'));
 			element.childNodes.length.should.equal(2);
@@ -29,13 +22,14 @@ describe('nxt.ContentManager', function() {
 			element.getAttribute('class').should.equal('container');
 		});
 
-		it('passes its domContext to the renderers', function() {
+		it('passes its domContext container to the renderers', function() {
 			var span = document.createElement('span');
 			element.appendChild(span)
 			manager.domContext = { container: element, insertReference: span };
 			var spy = sinon.spy(nxt.NodeRenderer.prototype, 'render');
-			manager.render(nxt.Element('span'));
-			spy.should.have.been.calledWith(manager.domContext);
+			var command = nxt.Element('span');
+			manager.render(command);
+			spy.should.have.been.calledWith(command.data, manager.domContext);
 			nxt.NodeRenderer.prototype.render.restore();
 		});
 
@@ -95,21 +89,4 @@ describe('nxt.ContentManager', function() {
 		});
 	});
 
-	// describe('content', function () {
-	// 	it('points to rendered content', function () {
-	// 		var element = document.createElement('div');
-	// 		var manager = new nxt.ContentManager(element);
-	// 		var cell = new nx.Cell();
-	// 		manager.render(
-	// 			nxt.Attr('class', 'container'),
-	// 			nxt.Element('div', nxt.Text('cellar door')),
-	// 			nxt.Binding(cell, function(value) { return value; }),
-	// 			nxt.Binding(cell, function(value) { return value; }),
-	// 			nxt.Element('div')
-	// 		);
-	// 		manager.content.length.should.equal(2);
-	// 		manager.content[0].nodeName.toLowerCase().should.equal('div');
-	// 		manager.content[0].textContent.should.equal('cellar door');
-	// 	});
-	// });
 });
