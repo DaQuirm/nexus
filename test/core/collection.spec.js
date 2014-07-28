@@ -34,7 +34,7 @@ describe('nx.Collection', function() {
 			collection.append(3,4);
 			collection.items.should.deep.equal([1,2,3,4]);
 			collection.event.value.should.deep.equal(
-				nxt.Command('collection', 'append', { items: [3,4] })
+				new nxt.Command('Collection', 'append', { items: [3,4] })
 			);
 		});
 	});
@@ -51,7 +51,7 @@ describe('nx.Collection', function() {
 			collection.remove(2,4);
 			collection.items.should.deep.equal([1,3,5]);
 			collection.event.value.should.deep.equal(
-				nxt.Command('collection', 'remove', { items: [2,4], indexes: [1,3] })
+				new nxt.Command('Collection', 'remove', { items: [2,4], indexes: [1,3] })
 			);
 		});
 	});
@@ -68,7 +68,7 @@ describe('nx.Collection', function() {
 			collection.insertBefore(4,3);
 			collection.items.should.deep.equal([1,2,3,4]);
 			collection.event.value.should.deep.equal(
-				nxt.Command('collection', 'insertbefore', { items: [3], index: 2 })
+				new nxt.Command('Collection', 'insertbefore', { items: [3], index: 2 })
 			);
 		});
 	});
@@ -85,7 +85,7 @@ describe('nx.Collection', function() {
 			collection.removeAll();
 			collection.items.should.deep.equal([]);
 			collection.event.value.should.deep.equal(
-				nxt.Command('collection', 'reset', { items: [] })
+				new nxt.Command('Collection', 'reset', { items: [] })
 			);
 		});
 	});
@@ -102,7 +102,7 @@ describe('nx.Collection', function() {
 			collection.set([4,5]);
 			collection.items.should.deep.equal([4,5]);
 			collection.event.value.should.deep.equal(
-				nxt.Command('collection', 'reset', { items: [4,5] })
+				new nxt.Command('Collection', 'reset', { items: [4,5] })
 			);
 		});
 	});
@@ -135,7 +135,7 @@ describe('nx.Collection', function() {
 			collection.bind(cell, '<-', fib);
 			cell.value = 2;
 			collection.event.value.should.deep.equal(
-				nxt.Command('collection', 'reset', { items: [1, 1] })
+				new nxt.Command('Collection', 'reset', { items: [1, 1] })
 			);
 		});
 
