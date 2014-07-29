@@ -1,6 +1,8 @@
 window.nxt = window.nxt || {};
 
-nxt.CollectionRenderer = function() {};
+nxt.CollectionRenderer = function() {
+	this.manager = new nxt.ContentManager();
+};
 
 nxt.CollectionRenderer.prototype.render = function(data) {
 	var _this = this;
@@ -44,35 +46,17 @@ nxt.CollectionRenderer.prototype.visible = function(content) {
 };
 
 nxt.CollectionRenderer.prototype.append = function(data, domContext) {
-	var manager = new nxt.ContentManager(domContext);
-	nxt.ContentManager.prototype.render.apply(manager, data.items);
+	return this.manager.render(data.items, domContext);
 };
 
 nxt.CollectionRenderer.prototype.insertBefore = function(data, domContext) {
-	var _this = this;
-	var convItems = data.items.forEach(function(item) {
-		var renderer = new nxt[item.type+'Renderer'](_this.element);
-		renderer.insertReference = _this.element.childNodes[evt.index];
-		renderer.render(item);
-		if (typeof renderer.content === 'undefined') {
-			this.content.splice(evt.index, 1, renderer.content);
-		}
-	});
+	return this.manager.insertBefore(data.index, data.items, domContext);
 };
 
 nxt.CollectionRenderer.prototype.remove = function(data, domContext) {
-	var _this = this;
-	data.indexes.forEach(function(index){
-		_this.element.removeChild(_this.element.childNodes[index]);
-		_this.content.splice(index, 1);
-	});
-	this.visible.value = this.content.length > 0;
+	return this.manager.remove(data.indexes, domContext);
 };
 
 nxt.CollectionRenderer.prototype.reset = function(data, domContext) {
-	for (var itemIndex = 0; itemIndex < this.content.length; itemIndex++) {
-		this.element.removeChild(this.content[itemIndex]);
-	}
-	this.content = [];
-	this.append(evt);
+	return this.manager.reset(data.items, domContext);
 };

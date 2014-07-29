@@ -88,20 +88,20 @@ describe('nxt.CollectionRenderer', function() {
 
 	describe('remove', function () {
 		it('removes content items from the element', function () {
-			renderer.append({ items:['a', 'b', 'c'].map(conversion) }, domContext);
+			domContext.content = renderer.append({ items:['a', 'b', 'c'].map(conversion) }, domContext);
 			container.childNodes.length.should.equal(3);
-			renderer.remove({ items:['b'].map(conversion), indexes:[1]}, domContext);
+			var content = renderer.remove({ items:['b'].map(conversion), indexes:[1]}, domContext);
 			container.childNodes.length.should.equal(2);
 			container.firstChild.textContent.should.equal('a');
 			container.lastChild.textContent.should.equal('c');
-			renderer.content[0].should.deep.equal(container.firstChild);
-			renderer.content[1].should.deep.equal(container.lastChild);
+			content[0].should.deep.equal(container.firstChild);
+			content[1].should.deep.equal(container.lastChild);
 		});
 	});
 
 	describe('insertBefore', function () {
 		it('inserts an item before an existing item inside the element', function () {
-			renderer.append({ items:['a', 'c'].map(conversion) });
+			domContext.content = renderer.append({ items:['a', 'c'].map(conversion) }, domContext);
 			renderer.insertBefore({ items: ['b'].map(conversion), index: 1 }, domContext);
 			container.childNodes.length.should.equal(3);
 			container.firstChild.textContent.should.equal('a');
