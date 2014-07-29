@@ -1,29 +1,28 @@
 describe('nxt.ClassRenderer', function() {
 	'use strict';
 
-	describe('constructor', function() {
-		it('creates CSS class rendering instance', function() {
-			var element = document.createElement('a');
-			var renderer = new nxt.ClassRenderer(element);
-			renderer.element.should.equal(element);
-		});
+	var link;
+	var domContext;
+	var renderer;
+
+	beforeEach(function () {
+		link = document.createElement('a');
+		link.classList.add('epic-link');
+		renderer = new nxt.ClassRenderer();
+		domContext = { container: link };
 	});
 
-	describe('render', function() {
+	describe('add', function() {
 		it('adds a class to the element\'s class list if the `set` field is true', function() {
-			var link = document.createElement('a');
-			link.classList.add('epic-link');
-			var renderer = new nxt.ClassRenderer(link);
-			renderer.render(nxt.Class('large-text', true));
+			renderer.add(nxt.Class('large-text', true).data, domContext);
 			link.classList.contains('epic-link').should.equal(true);
 			link.classList.contains('large-text').should.equal(true);
 		});
+	});
 
+	describe('remove', function () {
 		it('removes a class from the element\'s class list if the `set` field is false', function() {
-			var link = document.createElement('a');
-			link.classList.add('epic-link');
-			var renderer = new nxt.ClassRenderer(link);
-			renderer.render(nxt.Class('large-text', false));
+			renderer.remove(nxt.Class('large-text', false).data, domContext);
 			link.classList.contains('epic-link').should.equal(true);
 			link.classList.contains('large-text').should.equal(false);
 		});

@@ -1,13 +1,11 @@
 window.nxt = window.nxt || {};
 
-nxt.ClassRenderer = function(element) {
-	this.element = element;
+nxt.ClassRenderer = function() {};
+
+nxt.ClassRenderer.prototype.add = function(data, domContext) {
+	domContext.container.classList.add(data.name);
 };
 
-nxt.ClassRenderer.prototype.render = function(classObj) {
-	if (classObj.set) {
-		this.element.classList.add(classObj.name);
-	} else {
-		this.element.classList.remove(classObj.name);
-	}
+nxt.ClassRenderer.prototype.remove = function(data, domContext) {
+	domContext.container.classList.remove(data.name);
 };
