@@ -64,6 +64,7 @@ nxt.Collection = function () {
 		if (typeof command !== 'undefined') {
 			command.data.items = command.data.items.map(conversion);
 		}
+		return command;
 	});
 	return commandCell;
 };
