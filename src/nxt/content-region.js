@@ -19,15 +19,6 @@ nxt.ContentRegion.prototype.add = function(commandCell) {
 
 	commandCell.bind(cell, '->', new nx.Mapping({ '_': 'command' }));
 	this.cells.push(cell);
-
-	// item.visible.onvalue.add(function(visible) {
-	// 	var wasVisible = _this.visibility[id];
-	// 	if (visible && !wasVisible) {
-	// 		_this.update(id, true);
-	// 	} else if (!visible && wasVisible) {
-	// 		_this.update(id, false);
-	// 	}
-	// });
 };
 
 nxt.ContentRegion.prototype.update = function(state) {
