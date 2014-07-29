@@ -11,18 +11,28 @@ module.exports = function(grunt) {
 			src_files:             'src/**/*.js',
 			test_files:            'test/**/*.js',
 			build_file:            'build/nexus.js',
-			build_file_compressed: 'build/nexus.min.js'
+			build_file_compressed: 'build/nexus.min.js',
+			build_dev_file:        'build/nexus.dev.js'
 		},
 
 		concat: {
 			source: {
 				src: '<%= paths.src_files %>',
 				dest: '<%= paths.build_file %>'
+			},
+			source_dev: {
+				src: '<%= paths.src_files %>',
+				dest: '<%= paths.build_dev_file %>'
 			}
 		},
 		wrap: {
 			build: {
 				src: '<%= paths.build_file %>',
+				dest: '',
+				wrapper: ['(function() {\n\t\'use strict\';\n', '\n})();\n']
+			},
+			build_dev: {
+				src: '<%= paths.build_dev_file %>',
 				dest: '',
 				wrapper: ['(function() {\n\t\'use strict\';\n', '\n})();\n']
 			}
@@ -38,6 +48,22 @@ module.exports = function(grunt) {
 			build: {
 				files: {
 					src: '<%= paths.build_file %>'
+				},
+				options: {
+					boss: true,
+					browser: true,
+					forin: false,
+					strict: true,
+					laxbreak: true,
+					globals: {
+						nx: true,
+						nxt: true
+					}
+				}
+			},
+			build_dev: {
+				files: {
+					src: '<%= paths.build_dev_file %>'
 				},
 				options: {
 					boss: true,
@@ -74,7 +100,7 @@ module.exports = function(grunt) {
 		watch: {
 			scripts: {
 				files: ['<%= paths.src_files %>'],
-				tasks: ['concat:source', 'wrap:build', 'jshint:build'],
+				tasks: ['concat:source_dev', 'wrap:build_dev', 'jshint:build_dev'],
 				options: {
 				  spawn: false,
 				},
