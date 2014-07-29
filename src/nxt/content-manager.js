@@ -64,3 +64,12 @@ nxt.ContentManager.prototype.remove = function(indexes, domContext) {
 		});
 	return domContext.content;
 };
+
+nxt.ContentManager.prototype.reset = function(items, domContext) {
+	var firstChild;
+	while (firstChild = domContext.container.firstChild) {
+		domContext.container.removeChild(domContext.container.firstChild);
+	}
+	delete domContext.content;
+	return this.render(items, domContext);
+};

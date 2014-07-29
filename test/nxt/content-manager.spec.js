@@ -128,4 +128,25 @@ describe('nxt.ContentManager', function() {
 		});
 	});
 
+	describe('reset', function () {
+		it('replaces existing content items with new ones', function () {
+			var content = manager.render([
+				nxt.Element('header'),
+				nxt.Element('main', nxt.Text('cellar door')),
+				nxt.Element('footer')
+			], domContext);
+			domContext = { container: element, content: content };
+			content = manager.reset([
+				nxt.Element('img'),
+				nxt.Element('div', nxt.Text('cellar door')),
+				nxt.Element('span')
+			], domContext);
+			content.length.should.equal(3);
+			content[0].nodeName.toLowerCase().should.equal('img');
+			content[1].nodeName.toLowerCase().should.equal('div');
+			content[1].textContent.should.deep.equal('cellar door');
+			content[2].nodeName.toLowerCase().should.equal('span');
+		});
+	});
+
 });
