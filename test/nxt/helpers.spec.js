@@ -116,8 +116,8 @@ describe('nxt helpers', function() {
 				],
 				nxt.Text('or')
 			);
-			command.node.childNodes.length.should.equal(6);
-			command.node.textContent.should.equal('cellar door');
+			command.data.node.childNodes.length.should.equal(6);
+			command.data.node.textContent.should.equal('cellar door');
 		});
 	});
 
