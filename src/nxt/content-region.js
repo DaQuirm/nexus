@@ -11,7 +11,12 @@ nxt.ContentRegion.prototype.add = function(commandCell) {
 	var cell = new nx.Cell({
 		value: {
 			index: this.cells.length,
-			domContext: this.domContext,
+			// copying domContext, because its `content` and `renderer` fields
+			// are different for each cell
+			domContext: {
+				container: this.domContext.container,
+				insertReference: this.domContext.insertReference
+			},
 			visible: false
 		},
 		action: function(state) { _this.update(state); }

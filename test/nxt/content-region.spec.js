@@ -37,6 +37,14 @@ describe('nxt.ContentRegion', function() {
 			region.add(cell);
 			region.cells[0].value.index.should.equal(0);
 		});
+
+		it('copies its domContext for each cell instead of passing it by reference', function () {
+			var cell = new nx.Cell();
+			region.add(cell);
+			domContext = '!';
+			region.cells[0].value.domContext.should.not.equal('!');
+			region.cells[0].value.domContext.should.be.an('object');
+		});
 	});
 
 	describe('update', function () {
@@ -151,7 +159,6 @@ describe('nxt.ContentRegion', function() {
 		var first = new nx.Cell();
 		var second = new nx.Cell();
 		var between = new nx.Cell();
-		var renderer;
 		var addCell = function(cell) {
 			region.add(nxt.Binding(cell, nxt.Text));
 		};
@@ -169,10 +176,10 @@ describe('nxt.ContentRegion', function() {
 		element.textContent.should.equal('rock & roll');
 	});
 
-	it('keeps track of visibility of all dynamic items that have a `visible` cell', function () {
-		var cell = new nx.Cell();
+	it('keeps track of visibility of all dynamic items', function () {
 		var collection = new nx.Collection();
 		var between = new nx.Cell();
+		var cell = new nx.Cell();
 		region.add(nxt.Collection(collection, nxt.Text));
 		region.add(nxt.Binding(between, nxt.Text));
 		region.add(nxt.Binding(cell, nxt.Text));
