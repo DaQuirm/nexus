@@ -10,14 +10,14 @@ describe('nxt.NodeRenderer', function() {
 	});
 
 	describe('render', function() {
-		it('appends an element to the container if there is no insert reference and replace flag is not set', function() {
-			var data = nxt.Element('span', nxt.Text('cellar door').data);
+		it('appends an element to the container if there is no insert reference and no previously rendered content', function() {
+			var data = nxt.Element('span', nxt.Text('cellar door')).data;
 			renderer.render(data, domContext);
 			domContext.container.childNodes.length.should.equal(1);
 			domContext.container.textContent.should.equal('cellar door');
 		});
 
-		it('appends a text node to an element if there is no insert reference and replace flag is not set', function() {
+		it('appends a text node to an element if there is no insert reference and no previously rendered content', function() {
 			renderer.render(nxt.Text('cellar door').data, domContext);
 			domContext.container.childNodes.length.should.equal(1);
 			domContext.container.textContent.should.equal('cellar door');
@@ -31,18 +31,13 @@ describe('nxt.NodeRenderer', function() {
 			content.parentElement.should.equal(domContext.container);
 		});
 
-		it('replaces previously rendered content if replace flag is set to true', function() {
+		it('replaces previously rendered content if it is present', function() {
 			var content;
 			content = renderer.render(nxt.Element('span', nxt.Text('before')).data, domContext);
 			domContext.container.textContent.should.equal('before');
-			domContext.replace = true;
 			domContext.content = content;
 			content = renderer.render(nxt.Element('span', nxt.Text('after')).data, domContext);
 			domContext.container.textContent.should.equal('after');
-			domContext.content = content;
-			domContext.replace = false;
-			renderer.render(nxt.Element('span', nxt.Text('party')).data, domContext);
-			domContext.container.textContent.should.equal('afterparty');
 		});
 
 		it('inserts an element node before another node if an insert reference has been set', function() {
@@ -78,7 +73,7 @@ describe('nxt.NodeRenderer', function() {
 
 	describe('unrender', function () {
 		it('removes nodes from the container', function() {
-			var data = nxt.Element('span', nxt.Text('cellar door').data);
+			var data = nxt.Element('span', nxt.Text('cellar door')).data;
 			domContext.content = renderer.render(data, domContext);
 			domContext.container.childNodes.length.should.equal(1);
 			domContext.container.textContent.should.equal('cellar door');
