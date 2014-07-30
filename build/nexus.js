@@ -113,6 +113,10 @@ nx.Cell = function(options) {
 
 	this.onvalue = new nx.Event();
 	this.onsync = new nx.Event();
+
+	if (typeof options.action !== 'undefined') {
+		this.onvalue.add(options.action);
+	}
 };
 
 Object.defineProperty(nx.Cell.prototype, 'value', {
@@ -148,34 +152,32 @@ window.nx = window.nx || {};
 
 nx.Collection = function (options) {
 	options = options || {};
+	nx.Cell.call(this);
 
-	if (typeof options.items !== 'undefined') {
-		this.items = options.items;
-	} else {
-		this.items = [];
-	}
-
-	this.onappend = new nx.Event();
-	this.onremove = new nx.Event();
-	this.oninsertbefore = new nx.Event();
-	this.onreset = new nx.Event();
-
-	this.cell = new nx.Cell({ value: this.items });
 	var _this = this;
-	this.cell.onsync.add(function(items) {
-		_this.items = items;
-		_this.onreset.trigger({ items:items });
+	this.event = new nx.Cell();
+	this.items = options.items || [];
+	this.onsync.add(function (items) {
+		_this.event.value = new nxt.Command('Collection', 'reset', { items: items });
 	});
 };
 
+nx.Collection.prototype = Object.create(nx.Cell.prototype);
+nx.Collection.prototype.constructor = nx.Collection;
+
+Object.defineProperty(nx.Collection.prototype, 'items', {
+	enumerable : true,
+	get: function() { return this.value; },
+	set: function(items) {
+		this.value = items;
+		this.event.value = new nxt.Command('Collection', 'reset', { items: items });
+	}
+});
+
 nx.Collection.prototype.append = function() {
 	var args = [].slice.call(arguments);
-	var _this = this;
-	args.forEach(function(item) {
-		_this.items.push(item);
-	});
-	this.onappend.trigger({items: args});
-	this.cell.value = this.items;
+	this.value = this.value.concat(args);
+	this.event.value = new nxt.Command('Collection', 'append', { items: args });
 };
 
 nx.Collection.prototype.remove = function() {
@@ -183,7 +185,7 @@ nx.Collection.prototype.remove = function() {
 	var args = _slice.call(arguments);
 	var indexes = [];
 
-	this.items = this.items.filter(function(item, index) {
+	this.value = this.items.filter(function(item, index) {
 		var argIndex = args.indexOf(item);
 		if (argIndex !== -1) {
 			indexes.push(index);
@@ -192,32 +194,24 @@ nx.Collection.prototype.remove = function() {
 		}
 		return true;
 	});
-	this.onremove.trigger({items: _slice.call(arguments), indexes: indexes});
-	this.cell.value = this.items;
+	this.event.value = new nxt.Command('Collection', 'remove', {
+		items: _slice.call(arguments),
+		indexes: indexes
+	});
 };
 
 nx.Collection.prototype.insertBefore = function(beforeItem, items) {
 	items = Array.isArray(items) ? items : [items];
 	var insertIndex = this.items.indexOf(beforeItem);
 	[].splice.apply(this.items, [insertIndex, 0].concat(items));
-	this.oninsertbefore.trigger({items: items, index: insertIndex});
-	this.cell.value = this.items;
+	this.event.value = new nxt.Command('Collection', 'insertbefore', {
+		items: items,
+		index: insertIndex
+	});
 };
 
 nx.Collection.prototype.removeAll = function() {
 	this.items = [];
-	this.onreset.trigger({items:[]});
-	this.cell.value = this.items;
-};
-
-nx.Collection.prototype.set = function(array) {
-	this.items = array;
-	this.onreset.trigger({items:array});
-	this.cell.value = this.items;
-};
-
-nx.Collection.prototype.bind = function(cell, mode, converter) {
-	return this.cell.bind(cell, mode, converter);
 };
 
 window.nx = window.nx || {};
@@ -289,139 +283,191 @@ nx.Utils.interpolateString = function(string, props) {
 
 window.nxt = window.nxt || {};
 
-nxt.ContentManager = function(element) {
-	this.element = element;
-	this.renderers = {};
-	this.regions = [];
+nxt.Command = function(type, method, data) {
+    this.type = type;
+    this.method = method;
+    this.data = data;
 };
 
-nxt.ContentManager.prototype.render = function() {
-	var args = [].slice.call(arguments);
-	var _this = this;
-	var newRegion;
-	var dynamicItems = [];
-	this.content = [];
-	args.forEach(function(item, index) {
-		if (item !== undefined) {
-			if (!item.dynamic) {
-				if (typeof _this.renderers[item.type] === 'undefined') {
-					_this.renderers[item.type] = new nxt[item.type+'Renderer'](_this.element);
-				}
-				if (_this.renderers[item.type].replace) {
-					_this.renderers[item.type].replace = false;
-				}
-				_this.renderers[item.type].render(item);
-
-				if (typeof _this.renderers[item.type].content !== 'undefined') {
-					_this.content.push(_this.renderers[item.type].content);
-				}
-
-				if (dynamicItems.length > 0) { // dynamic content followed by static content
-					newRegion = new nxt.ContentRegion(_this.element);
-					newRegion.insertReference = item.node;
-					for (var itemIndex = 0; itemIndex < dynamicItems.length; itemIndex++) {
-						newRegion.add(dynamicItems[itemIndex]);
-					}
-					_this.regions.push(newRegion);
-					dynamicItems = [];
-				}
-			} else {
-				var renderer = new nxt[item.type+'Renderer'](_this.element);
-				renderer.render(item);
-				dynamicItems.push(renderer);
-			}
-		}
-	});
-	if (dynamicItems.length > 0) {
-		newRegion = new nxt.ContentRegion(_this.element);
-		for (var itemIndex = 0; itemIndex < dynamicItems.length; itemIndex++) {
-			newRegion.add(dynamicItems[itemIndex]);
-		}
-		this.regions.push(newRegion);
-	}
+nxt.Command.prototype.run = function() {
+	this.renderer = new nxt[this.type + 'Renderer']();
+	return this.renderer[this.method].apply(
+		this.renderer,
+		[this.data].concat([].slice.apply(arguments))
+	);
 };
 
 window.nxt = window.nxt || {};
 
-nxt.ContentRegion = function(element) {
-	this.element = element;
-	this.items = [];
-	this.visibility = [];
-};
+nxt.ContentManager = function() {};
 
-nxt.ContentRegion.prototype.add = function(item) {
-	var id = this.items.length;
+nxt.ContentManager.prototype.render = function(items, domContext) {
+	this.regions = [];
+	var cells = [];
+	var contentItems = domContext.content || [];
+
 	var _this = this;
-	this.items.push(item);
-	if (typeof this.insertReference !== 'undefined') {
-		item.insertReference = this.insertReference;
-	}
-	item.visible.onvalue.add(function(visible) {
-		var wasVisible = _this.visibility[id];
-		if (visible && !wasVisible) {
-			_this.update(id, true);
-		} else if (!visible && wasVisible) {
-			_this.update(id, false);
+	var createRegion = function(domContext, cells) {
+		var newRegion = new nxt.ContentRegion(domContext);
+		for (var itemIndex = 0; itemIndex < cells.length; itemIndex++) {
+			newRegion.add(cells[itemIndex]);
+		}
+		_this.regions.push(newRegion);
+	};
+
+	items.forEach(function (command, index) {
+		if (command !== undefined) {
+			if (!(command instanceof nx.Cell)) {
+				var content = command.run(domContext);
+				contentItems.push(content);
+				if (cells.length > 0) { // dynamic content followed by static content
+					createRegion(
+						{
+							container: domContext.container,
+							insertReference: content
+						},
+						cells
+					);
+					cells = [];
+				}
+			} else {
+				cells.push(command);
+			}
 		}
 	});
+
+	if (cells.length > 0) {
+		// no need for an insert reference as these cells' content is appended by default
+		createRegion({ container: domContext.container }, cells);
+	}
+	return contentItems;
 };
 
-nxt.ContentRegion.prototype.update = function(id, visible) {
-	this.visibility[id] = visible;
-	var insertReference;
-	if (visible) {
-		insertReference = Array.isArray(this.items[id].content) ? this.items[id].content[0] : this.items[id].content; // item's content will serve as an insert reference
-	} else if (this.items[id].insertReference) {
-		insertReference = this.items[id].insertReference; // item's right visible neighbor will serve as an insert reference
-	} else {
-		insertReference = this.insertReference; // a static element adjacent to the region (if any) will serve as an insert reference
+nxt.ContentManager.prototype.insertBefore = function(insertIndex, items, domContext) {
+	items.forEach(function (item, index) {
+		var content = item.run({
+			container: domContext.container,
+			insertReference: domContext.content[insertIndex + index]
+		});
+		domContext.content.splice(insertIndex + index, 0, content);
+	});
+	return domContext.content;
+};
+
+nxt.ContentManager.prototype.remove = function(indexes, domContext) {
+	indexes
+		.sort(function (a,b) { return a - b; })
+		.forEach(function (removeIndex, index) {
+			domContext.container.removeChild(domContext.content[removeIndex - index]);
+			domContext.content.splice(removeIndex - index, 1);
+		});
+	return domContext.content;
+};
+
+nxt.ContentManager.prototype.reset = function(items, domContext) {
+	var firstChild;
+	if (typeof domContext.content !== 'undefined') {
+		for (var index = 0; index < domContext.content.length; index++) {
+			domContext.container.removeChild(domContext.content[index]);
+		}
+		delete domContext.content;
 	}
-	for (var index = id-1; index >= 0; index--) {
-		this.items[index].insertReference = insertReference;
-		if (this.visibility[index]) { break; }
+	return this.render(items, domContext);
+};
+
+window.nxt = window.nxt || {};
+
+nxt.ContentRegion = function(domContext) {
+	this.domContext = domContext;
+	this.cells = [];
+};
+
+nxt.ContentRegion.prototype.add = function(commandCell) {
+	var index = this.cells.length;
+	var _this = this;
+	var cell = new nx.Cell({
+		value: {
+			index: this.cells.length,
+			// copying domContext, because its `content` and `renderer` fields
+			// are different for each cell
+			domContext: {
+				container: this.domContext.container,
+				insertReference: this.domContext.insertReference
+			},
+			visible: false
+		},
+		action: function(state) { _this.update(state); }
+	});
+
+	commandCell.bind(cell, '->', new nx.Mapping({ '_': 'command' }));
+	this.cells.push(cell);
+};
+
+nxt.ContentRegion.prototype.update = function(state) {
+	var hasRenderer = typeof state.renderer !== 'undefined';
+	var noCommand = typeof state.command === 'undefined';
+	if (hasRenderer) {
+		if (noCommand) {
+			state.domContext.content = state.renderer.unrender(state.domContext);
+			state.visible = false;
+		}
+		else if (!(state.renderer instanceof nxt[state.command.type+'Renderer'])) {
+			state.domContext.content = state.renderer.unrender(state.domContext);
+		}
+	}
+	if (!noCommand) {
+		state.domContext.content = state.command.run(state.domContext);
+		state.renderer = state.command.renderer;
+		if (typeof state.renderer.visible === 'function') {
+			state.visible = state.renderer.visible(state.domContext.content);
+		} else {
+			state.visible = false;
+		}
+	}
+	var insertReference;
+	if (state.visible) {
+		insertReference = Array.isArray(state.domContext.content)
+			? state.domContext.content[0]
+			: state.domContext.content; // cell's content will serve as an insert reference
+	} else {
+		insertReference = state.domContext.insertReference; // item's right visible neighbor will serve as an insert reference
+	}
+	for (var index = state.index - 1; index >= 0; index--) {
+		this.cells[index].value.domContext.insertReference = insertReference;
+		if (this.cells[index].value.visible) { break; }
 	}
 };
 
 window.nxt = window.nxt || {};
 
 nxt.Attr = function(name, value) {
-	return (typeof name === 'string') ?
-		{
-			name: name,
-			value: typeof value === 'undefined' ? '' : value,
-			type: 'Attr'
-		}
-		: {
-			items: name,
-			type: 'Attr'
-		};
+	var data = (typeof name === 'string')
+		? { name: name, value: typeof value === 'undefined' ? '' : value }
+		: { items: name };
+	return new nxt.Command('Attr', 'render', data);
 };
 
 nxt.Class = function(name, set) {
-	return {
-		name: name,
-		set: set,
-		type: 'Class'
-	};
+	if (typeof set === 'undefined') {
+		set = true;
+	}
+	return set
+		? new nxt.Command('Class', 'add', { name: name })
+		: new nxt.Command('Class', 'remove', { name: name });
 };
 
 nxt.Text = function(text) {
 	if (typeof text === 'undefined') {
 		return undefined;
 	}
-	return {
-		text: text,
+	return new nxt.Command('Node', 'render', {
 		node: document.createTextNode(text),
-		type: 'Node'
-	};
+		text: text
+	});
 };
 
 nxt.Event = function(name, handler) {
-	return {
-		name: name,
-		handler: handler,
-		type: 'Event'
-	};
+	return new nxt.Command('Event', 'add', { name: name, handler: handler });
 };
 
 nxt.Element = function() {
@@ -433,124 +479,70 @@ nxt.Element = function() {
 	var node = document.createElement(name);
 	if (args.length > 1) {
 		var content = args.slice(1);
-		var contentManager = new nxt.ContentManager(node);
-		nxt.ContentManager.prototype.render.apply(contentManager, content);
+		var contentManager = new nxt.ContentManager();
+		contentManager.render(content, { container: node });
 	}
-	return {
-		name: name,
-		node: node,
-		type: 'Node'
-	};
+	return new nxt.Command('Node', 'render', { node: node });
 };
 
 nxt.Binding = function(cell, conversion, mode) {
-	return {
-		cell: cell,
-		conversion: conversion,
-		mode: mode || '->',
-		type: 'Binding',
-		dynamic: true
-	};
+	var commandCell = new nx.Cell();
+	cell.bind(commandCell, '->', conversion);
+	return commandCell;
 };
 
 nxt.DelegatedEvent = function(name, handlers) {
-	return {
-		name: name,
-		handlers: handlers,
-		type: 'DelegatedEvent'
-	};
+	return new nxt.Command('DelegatedEvent', 'add', { name: name, handlers: handlers });
 };
 
 nxt.Collection = function () {
 	var collection = arguments[0];
 	var conversion = arguments[1];
 	var events = [].slice.call(arguments, 2);
-	return {
-		collection: collection,
-		conversion: conversion,
-		events: events,
-		type: 'Collection',
-		dynamic: true
-	};
+	var commandCell = new nx.Cell();
+	collection.event.bind(commandCell, '->', function(command) {
+		if (typeof command !== 'undefined') {
+			command.data.items = command.data.items.map(conversion);
+		}
+		return command;
+	});
+	return commandCell;
 };
 
 window.nxt = window.nxt || {};
 
-nxt.AttrRenderer = function(element) {
-	this.element = element;
-};
+nxt.AttrRenderer = function() {};
 
-nxt.AttrRenderer.prototype.render = function(attr) {
-	if (typeof attr.items !== 'undefined') {
-		for (var key in attr.items) {
-			this.element.setAttribute(key, attr.items[key]);
+nxt.AttrRenderer.prototype.render = function(data, domContext) {
+	if (typeof data.items !== 'undefined') {
+		for (var key in data.items) {
+			domContext.container.setAttribute(key, data.items[key]);
 		}
 	} else {
-		this.element.setAttribute(attr.name, attr.value);
+		domContext.container.setAttribute(data.name, data.value);
 	}
 };
 
 window.nxt = window.nxt || {};
 
-nxt.BindingRenderer = function(element) {
-	var _this = this;
-	this.element = element;
+nxt.ClassRenderer = function() {};
 
-	this.cell = new nx.Cell();
-	this.cell.onvalue.add(function(data) {
-		if (typeof data !== 'undefined') {
-			if (!_this.contentRenderer || !_this.contentRenderer instanceof nxt[data.type+'Renderer']) {
-				_this.contentRenderer = new nxt[data.type+'Renderer'](_this.element);
-			}
-		}
-		if (typeof _this.contentRenderer !== 'undefined') {
-			_this.contentRenderer.insertReference = _this.insertReference;
-			_this.contentRenderer.render(data);
-			_this.content = _this.contentRenderer.content;
-		}
-	});
-
-	this.visible = new nx.Cell();
-	this.visible.bind(this.cell, '<-', function(value) {
-		return typeof value !== 'undefined';
-	});
+nxt.ClassRenderer.prototype.add = function(data, domContext) {
+	domContext.container.classList.add(data.name);
 };
 
-nxt.BindingRenderer.prototype.render = function(binding) {
-	this.binding = binding.cell.bind(this.cell, binding.mode, binding.conversion);
+nxt.ClassRenderer.prototype.remove = function(data, domContext) {
+	domContext.container.classList.remove(data.name);
 };
 
 window.nxt = window.nxt || {};
 
-nxt.ClassRenderer = function(element) {
-	this.element = element;
-};
-
-nxt.ClassRenderer.prototype.render = function(classObj) {
-	if (classObj.set) {
-		this.element.classList.add(classObj.name);
-	} else {
-		this.element.classList.remove(classObj.name);
-	}
-};
-
-window.nxt = window.nxt || {};
-
-nxt.CollectionRenderer = function(element) {
-	var _this = this;
-	this.element = element;
-	this.content = [];
-	this.visible = new nx.Cell();
+nxt.CollectionRenderer = function() {
+	this.manager = new nxt.ContentManager();
 };
 
 nxt.CollectionRenderer.prototype.render = function(data) {
 	var _this = this;
-	this.collection = data.collection;
-	this.conversion = data.conversion;
-	this.collection.onappend.add(function(evt){	_this.append(evt); });
-	this.collection.oninsertbefore.add(function(evt){ _this.insertBefore(evt); });
-	this.collection.onremove.add(function(evt){	_this.remove(evt); });
-	this.collection.onreset.add(function(evt){ _this.reset(evt); });
 
 	data.events.forEach(function(event) {
 		_this.element.addEventListener(event.name, function(evt) {
@@ -586,77 +578,58 @@ nxt.CollectionRenderer.prototype.render = function(data) {
 	}
 };
 
-nxt.CollectionRenderer.prototype.append = function(evt) {
-	var convItems = evt.items.map(this.conversion);
-	var manager = new nxt.ContentManager(this.element);
-	nxt.ContentManager.prototype.render.apply(manager, convItems);
-	this.content = this.content.concat(manager.content);
-	this.visible.value = this.content.length > 0;
+nxt.CollectionRenderer.prototype.visible = function(content) {
+	return content.length > 0;
 };
 
-nxt.CollectionRenderer.prototype.insertBefore = function(evt) {
-	var _this = this;
-	var convItems = evt.items.map(this.conversion).forEach(function(item) {
-		var renderer = new nxt[item.type+'Renderer'](_this.element);
-		renderer.insertReference = _this.element.childNodes[evt.index];
-		renderer.render(item);
-		if (typeof renderer.content === 'undefined') {
-			this.content.splice(evt.index, 1, renderer.content);
-		}
-	});
+nxt.CollectionRenderer.prototype.append = function(data, domContext) {
+	return this.manager.render(data.items, domContext);
 };
 
-nxt.CollectionRenderer.prototype.remove = function(evt) {
-	var _this = this;
-	evt.indexes.forEach(function(index){
-		_this.element.removeChild(_this.element.childNodes[index]);
-		_this.content.splice(index, 1);
-	});
-	this.visible.value = this.content.length > 0;
+nxt.CollectionRenderer.prototype.insertBefore = function(data, domContext) {
+	return this.manager.insertBefore(data.index, data.items, domContext);
 };
 
-nxt.CollectionRenderer.prototype.reset = function(evt) {
-	for (var itemIndex = 0; itemIndex < this.content.length; itemIndex++) {
-		this.element.removeChild(this.content[itemIndex]);
-	}
-	this.content = [];
-	this.append(evt);
+nxt.CollectionRenderer.prototype.remove = function(data, domContext) {
+	return this.manager.remove(data.indexes, domContext);
+};
+
+nxt.CollectionRenderer.prototype.reset = function(data, domContext) {
+	return this.manager.reset(data.items, domContext);
 };
 
 window.nxt = window.nxt || {};
 
-nxt.EventRenderer = function(element) {
-	this.element = element;
+nxt.EventRenderer = function() {};
+
+nxt.EventRenderer.prototype.add = function(data, domContext) {
+	domContext.container.addEventListener(data.name, data.handler);
 };
 
-nxt.EventRenderer.prototype.render = function(event) {
-	this.element.addEventListener(event.name, event.handler);
-};
 window.nxt = window.nxt || {};
 
-nxt.NodeRenderer = function(element) {
-	this.element = element;
-	this.replace = true;
-};
+nxt.NodeRenderer = function() {};
 
-nxt.NodeRenderer.prototype.render = function(element) {
-	if (typeof element !== 'undefined') {
-		if (typeof this.insertReference !== 'undefined') {
-			this.element.insertBefore(element.node, this.insertReference);
-		} else {
-			if (typeof this.content !== 'undefined' && this.replace) {
-				this.element.replaceChild(element.node, this.content);
-			} else {
-				this.element.appendChild(element.node);
-			}
-		}
-		this.content = element.node;
+nxt.NodeRenderer.prototype.render = function(data, domContext) {
+	var content;
+	if (typeof domContext.insertReference !== 'undefined') {
+		domContext.container.insertBefore(data.node, domContext.insertReference);
 	} else {
-		this.element.removeChild(this.content);
-		this.content = undefined;
+		if (typeof domContext.content !== 'undefined') {
+			domContext.container.replaceChild(data.node, domContext.content);
+		} else {
+			domContext.container.appendChild(data.node);
+		}
 	}
+	return data.node;
+};
 
-	return this.content;
+nxt.NodeRenderer.prototype.visible = function(content) {
+	return typeof content !== 'undefined';
+};
+
+nxt.NodeRenderer.prototype.unrender = function(domContext) {
+	domContext.container.removeChild(domContext.content);
 };
 
 window.nx = window.nx || {};
