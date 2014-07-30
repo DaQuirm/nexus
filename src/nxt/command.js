@@ -7,7 +7,7 @@ nxt.Command = function(type, method, data) {
 };
 
 nxt.Command.prototype.run = function() {
-	this.renderer = new nxt[this.type + 'Renderer'];
+	this.renderer = new nxt[this.type + 'Renderer']();
 	return this.renderer[this.method].apply(
 		this.renderer,
 		[this.data].concat([].slice.apply(arguments))
