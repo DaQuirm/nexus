@@ -138,7 +138,10 @@ describe('nxt.ContentRegion', function() {
 			data = { name: 'class', value: 'cellar door' };
 			cell.value = new nxt.Command('Attr', 'render', data);
 			region.cells[0].value.renderer.should.be.an.instanceof(nxt.AttrRenderer);
-			spy.should.have.been.calledWith(domContext);
+			region.cells[0].value.visible.should.equal(false);
+			spy.should.have.been.called;
+			spy.getCall(0).args[0].container.should.equal(domContext.container);
+			// no need for a spy.restore() call because renderer is overwritten
 		});
 
 		it('calls the unrender method of the previous renderer if command is undefined', function() {
@@ -150,7 +153,9 @@ describe('nxt.ContentRegion', function() {
 			var spy = sinon.spy(region.cells[0].value.renderer, 'unrender');
 			data = { name: 'class', value: 'cellar door' };
 			cell.value = undefined;
-			spy.should.have.been.calledWith(domContext);
+			spy.should.have.been.called;
+			spy.getCall(0).args[0].container.should.equal(domContext.container);
+			region.cells[0].value.visible.should.equal(false);
 			region.cells[0].value.renderer.unrender.restore();
 		});
 	});
@@ -284,9 +289,9 @@ describe('nxt.ContentRegion', function() {
 		should.not.exist(region.cells[3].value.domContext.insertReference);
 		element.textContent.should.equal('ad');
 		cells[2].value = 'c';
-		region.cells[0].value.domContext.insertReference.should.equal(region.cells[2].value.domContext.contentRenderer.content);
-		region.cells[1].value.domContext.insertReference.should.equal(region.cells[2].value.domContext.contentRenderer.content);
-		region.cells[2].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.contentRenderer.content);
+		region.cells[0].value.domContext.insertReference.should.equal(region.cells[2].value.domContext.content);
+		region.cells[1].value.domContext.insertReference.should.equal(region.cells[2].value.domContext.content);
+		region.cells[2].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
 		should.not.exist(region.cells[3].value.domContext.insertReference);
 		element.textContent.should.equal('acd');
 	});
