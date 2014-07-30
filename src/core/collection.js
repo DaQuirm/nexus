@@ -4,11 +4,10 @@ nx.Collection = function (options) {
 	options = options || {};
 	nx.Cell.call(this, { value: options.items || [] });
 
-	this.event = new nx.Cell();
-
 	var _this = this;
-	this.onsync.add(function(items) {
-		_this.event.value = new nxt.Command('Collection', 'reset', { items: items });
+	this.event = new nx.Cell();
+	this.bind(this.event, '->', function (items) {
+		return new nxt.Command('Collection', 'reset', { items: items });
 	});
 };
 

@@ -12,6 +12,17 @@ describe('nx.Collection', function() {
 			var collection = new nx.Collection({ items: [1,2,3] });
 			collection.items.should.deep.equal([1,2,3]);
 		});
+
+		it('assigns the append command to the event cell if the `items` option is not empty', function () {
+			var collection = new nx.Collection();
+			collection.event.value.should.deep.equal(
+				new nxt.Command('Collection', 'reset', { items: [] })
+			);
+			collection = new nx.Collection({ items: [1,2,3] });
+			collection.event.value.should.deep.equal(
+				new nxt.Command('Collection', 'reset', { items: [1,2,3] })
+			);
+		})
 	});
 
 	describe('items', function() {
