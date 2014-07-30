@@ -1,20 +1,20 @@
 describe('nxt.EventRenderer', function() {
 	'use strict';
 
-	describe('constructor', function() {
-		it('creates an event managing instance by event name and handler', function() {
-			var element = document.createElement('div');
-			var renderer = new nxt.EventRenderer(element);
-			renderer.element.should.equal(element);
-		});
+	var element;
+	var domContext;
+	var renderer;
+
+	beforeEach(function () {
+		element = document.createElement('div');
+		domContext = { container: element };
+		renderer = new nxt.EventRenderer();
 	});
 
-	describe('render', function() {
+	describe('add', function() {
 		it('attaches an event handler to the element', function() {
-			var element = document.createElement('div');
-			var renderer = new nxt.EventRenderer(element);
 			var handler = sinon.spy();
-			renderer.render(nxt.Event('click', handler));
+			renderer.add(nxt.Event('click', handler).data, domContext);
 			element.click();
 			handler.should.have.been.called;
 		});

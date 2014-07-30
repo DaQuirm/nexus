@@ -1,9 +1,7 @@
 window.nxt = window.nxt || {};
 
-nxt.EventRenderer = function(element) {
-	this.element = element;
-};
+nxt.EventRenderer = function() {};
 
-nxt.EventRenderer.prototype.render = function(event) {
-	this.element.addEventListener(event.name, event.handler);
+nxt.EventRenderer.prototype.add = function(data, domContext) {
+	domContext.container.addEventListener(data.name, data.handler);
 };
