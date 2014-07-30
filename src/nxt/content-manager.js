@@ -67,8 +67,8 @@ nxt.ContentManager.prototype.remove = function(indexes, domContext) {
 
 nxt.ContentManager.prototype.reset = function(items, domContext) {
 	var firstChild;
-	while (firstChild = domContext.container.firstChild) {
-		domContext.container.removeChild(domContext.container.firstChild);
+	for (var index = 0; index < domContext.content.length; index++) {
+		domContext.container.removeChild(domContext.content[index]);
 	}
 	delete domContext.content;
 	return this.render(items, domContext);
