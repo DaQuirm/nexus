@@ -59,7 +59,7 @@ nxt.ContentManager.prototype.remove = function(indexes, domContext) {
 	indexes
 		.sort(function (a,b) { return a - b; })
 		.forEach(function (removeIndex, index) {
-			domContext.container.removeChild(domContext.container.childNodes[removeIndex - index]);
+			domContext.container.removeChild(domContext.content[removeIndex - index]);
 			domContext.content.splice(removeIndex - index, 1);
 		});
 	return domContext.content;
@@ -67,9 +67,11 @@ nxt.ContentManager.prototype.remove = function(indexes, domContext) {
 
 nxt.ContentManager.prototype.reset = function(items, domContext) {
 	var firstChild;
-	for (var index = 0; index < domContext.content.length; index++) {
-		domContext.container.removeChild(domContext.content[index]);
+	if (typeof domContext.content !== 'undefined') {
+		for (var index = 0; index < domContext.content.length; index++) {
+			domContext.container.removeChild(domContext.content[index]);
+		}
+		delete domContext.content;
 	}
-	delete domContext.content;
 	return this.render(items, domContext);
 };

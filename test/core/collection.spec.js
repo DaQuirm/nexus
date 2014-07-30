@@ -31,6 +31,21 @@ describe('nx.Collection', function() {
 			collection.items.should.be.an.instanceof(Array);
 			collection.items.should.be.empty;
 		});
+
+		it('populates the collection from an array discarding all existing items', function() {
+			var collection = new nx.Collection({ items: [1,2,3] });
+			collection.items = [4,5];
+			collection.value.should.deep.equal([4,5]);
+		});
+
+		it('assigns the `reset` command to the event cell', function() {
+			var collection = new nx.Collection({ items: [1,2,3] });
+			collection.items = [4,5];
+			collection.value.should.deep.equal([4,5]);
+			collection.event.value.should.deep.equal(
+				new nxt.Command('Collection', 'reset', { items: [4,5] })
+			);
+		});
 	});
 
 	describe('append', function() {
@@ -101,23 +116,6 @@ describe('nx.Collection', function() {
 		});
 	});
 
-	describe('set', function () {
-		it('populates the collection from an array discarding all existing items', function() {
-			var collection = new nx.Collection({ items: [1,2,3] });
-			collection.set([4,5]);
-			collection.items.should.deep.equal([4,5]);
-		});
-
-		it('assigns the `reset` command to the event cell', function() {
-			var collection = new nx.Collection({ items: [1,2,3] });
-			collection.set([4,5]);
-			collection.items.should.deep.equal([4,5]);
-			collection.event.value.should.deep.equal(
-				new nxt.Command('Collection', 'reset', { items: [4,5] })
-			);
-		});
-	});
-
 	// additional tests for the inherited bind method
 	describe('bind', function() {
 		var fib = function(value) {
@@ -164,7 +162,7 @@ describe('nx.Collection', function() {
 			cell.value.should.deep.equal(['e', 'b', 'd']);
 			collection.removeAll();
 			cell.value.should.deep.equal([]);
-			collection.set(['a', 'b', 'c']);
+			collection.items = ['a', 'b', 'c'];
 			cell.value.should.deep.equal(['a', 'b', 'c']);
 		});
 	});
