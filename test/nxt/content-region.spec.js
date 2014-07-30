@@ -204,6 +204,9 @@ describe('nxt.ContentRegion', function() {
 		var addCell = function(cell) {
 			region.add(nxt.Binding(cell, nxt.Text));
 		};
+		var first = new nx.Cell();
+		var between = new nx.Cell();
+		var second = new nx.Cell();
 		addCell(first);
 		addCell(between);
 		addCell(second);
