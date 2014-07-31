@@ -3,12 +3,11 @@ window.nxt = window.nxt || {};
 nxt.NodeRenderer = function() {};
 
 nxt.NodeRenderer.prototype.render = function(data, domContext) {
-	var content;
-	if (typeof domContext.insertReference !== 'undefined') {
-		domContext.container.insertBefore(data.node, domContext.insertReference);
+	if (typeof domContext.content !== 'undefined') {
+		domContext.container.replaceChild(data.node, domContext.content);
 	} else {
-		if (typeof domContext.content !== 'undefined') {
-			domContext.container.replaceChild(data.node, domContext.content);
+		if (typeof domContext.insertReference !== 'undefined') {
+			domContext.container.insertBefore(data.node, domContext.insertReference);
 		} else {
 			domContext.container.appendChild(data.node);
 		}

@@ -32,8 +32,7 @@ describe('nxt.NodeRenderer', function() {
 		});
 
 		it('replaces previously rendered content if it is present', function() {
-			var content;
-			content = renderer.render(nxt.Element('span', nxt.Text('before')).data, domContext);
+			var content = renderer.render(nxt.Element('span', nxt.Text('before')).data, domContext);
 			domContext.container.textContent.should.equal('before');
 			domContext.content = content;
 			content = renderer.render(nxt.Element('span', nxt.Text('after')).data, domContext);
@@ -53,15 +52,19 @@ describe('nxt.NodeRenderer', function() {
 			domContext.container.childNodes[1].nodeName.toLowerCase().should.equal('span');
 		});
 
-		// it('clears rendered content when called with undefined or no parameters', function(){
-		// 	renderer.render(domContext, nxt.Element('span', nxt.Text('cellar door')));
-		// 	element.childNodes.length.should.equal(1);
-		// 	element.textContent.should.equal('cellar door');
-		// 	renderer.render();
-		// 	should.not.exist(renderer.content);
-		// 	element.childNodes.length.should.equal(0);
-		// 	element.textContent.should.be.empty;
-		// });
+		it('replaces existing content even if insert reference is present', function () {
+			var movieNode = document.createElement('span');
+			movieNode.textContent = 'Lethal Weapon II';
+			domContext.container.appendChild(movieNode);
+			domContext.insertReference = movieNode;
+			domContext.content = renderer.render(nxt.Element('span', nxt.Text('Beverly Hills Cop')).data, domContext);
+			renderer.render(nxt.Element('span', nxt.Text('Lethal Weapon I')).data, domContext);
+			domContext.container.childNodes.length.should.equal(2);
+			domContext.container.childNodes[0].textContent.should.equal('Lethal Weapon I');
+			domContext.container.childNodes[0].nodeName.toLowerCase().should.equal('span');
+			domContext.container.childNodes[1].textContent.should.equal('Lethal Weapon II');
+			domContext.container.childNodes[1].nodeName.toLowerCase().should.equal('span');
+		});
 	});
 
 	describe('visible', function () {
