@@ -199,6 +199,24 @@ describe('nxt.ContentRegion', function() {
 		element.textContent.should.equal('rock & roll');
 	});
 
+	it('preserves the order of dynamic items regardless of their current content', function () {
+		var cell = new nx.Cell();
+		var between = new nx.Cell();
+		var collection = new nx.Collection({ items: ['r', 'o'] });
+		region.add(nxt.Binding(cell, nxt.Text));
+		region.add(nxt.Binding(between, nxt.Text));
+		region.add(nxt.Collection(collection, nxt.Text));
+		cell.value = 'rock';
+		element.childNodes.length.should.equal(3);
+		element.textContent.should.equal('rockro');
+		collection.append('l','l');
+		element.childNodes.length.should.equal(5);
+		element.textContent.should.equal('rockroll');
+		between.value = ' & ';
+		element.childNodes.length.should.equal(6);
+		element.textContent.should.equal('rock & roll');
+	});
+
 	it('uses an insert reference for prepending content instead of appending it to the element directly', function () {
 		var exclamationMark = document.createTextNode('!');
 		element.appendChild(exclamationMark);

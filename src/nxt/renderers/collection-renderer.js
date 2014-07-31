@@ -46,7 +46,7 @@ nxt.CollectionRenderer.prototype.visible = function(content) {
 };
 
 nxt.CollectionRenderer.prototype.append = function(data, domContext) {
-	return this.manager.render(data.items, domContext);
+	return this.manager.append(data.items, domContext);
 };
 
 nxt.CollectionRenderer.prototype.insertBefore = function(data, domContext) {

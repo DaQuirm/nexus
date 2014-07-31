@@ -101,8 +101,23 @@ describe('nxt.ContentManager', function() {
 		});
 	});
 
+	describe('append', function () {
+		it('appends content items to the container', function () {
+			var content = manager.render([nxt.Element('header')], domContext);
+			domContext = { container: element, content: content };
+			content = manager.append([
+				nxt.Element('main', nxt.Text('cellar door')),
+				nxt.Element('footer')
+			], domContext);
+			content.length.should.equal(3);
+			content[0].nodeName.toLowerCase().should.equal('header');
+			content[1].nodeName.toLowerCase().should.equal('main');
+			content[2].nodeName.toLowerCase().should.equal('footer');
+		});
+	});
+
 	describe('insertBefore', function () {
-		it('inserts content items before a an item with specified index', function () {
+		it('inserts content items before an item with specified index', function () {
 			var content = manager.render([
 				nxt.Element('header'),
 				nxt.Element('footer')

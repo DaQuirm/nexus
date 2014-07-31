@@ -5,7 +5,7 @@ nxt.ContentManager = function() {};
 nxt.ContentManager.prototype.render = function(items, domContext) {
 	this.regions = [];
 	var cells = [];
-	var contentItems = domContext.content || [];
+	var contentItems = [];
 
 	var _this = this;
 	var createRegion = function(domContext, cells) {
@@ -16,7 +16,7 @@ nxt.ContentManager.prototype.render = function(items, domContext) {
 		_this.regions.push(newRegion);
 	};
 
-	items.forEach(function (command, index) {
+	items.forEach(function (command) {
 		if (command !== undefined) {
 			if (!(command instanceof nx.Cell)) {
 				var content = command.run(domContext);
@@ -42,6 +42,15 @@ nxt.ContentManager.prototype.render = function(items, domContext) {
 		createRegion({ container: domContext.container }, cells);
 	}
 	return contentItems;
+};
+
+nxt.ContentManager.prototype.append = function(items, domContext) {
+	return (domContext.content || []).concat(
+		this.render(items, {
+			container: domContext.container,
+			insertReference: domContext.insertReference
+		})
+	);
 };
 
 nxt.ContentManager.prototype.insertBefore = function(insertIndex, items, domContext) {
