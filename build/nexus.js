@@ -304,7 +304,7 @@ nxt.ContentManager = function() {};
 nxt.ContentManager.prototype.render = function(items, domContext) {
 	this.regions = [];
 	var cells = [];
-	var contentItems = domContext.content || [];
+	var contentItems = [];
 
 	var _this = this;
 	var createRegion = function(domContext, cells) {
@@ -315,7 +315,7 @@ nxt.ContentManager.prototype.render = function(items, domContext) {
 		_this.regions.push(newRegion);
 	};
 
-	items.forEach(function (command, index) {
+	items.forEach(function (command) {
 		if (command !== undefined) {
 			if (!(command instanceof nx.Cell)) {
 				var content = command.run(domContext);
@@ -341,6 +341,15 @@ nxt.ContentManager.prototype.render = function(items, domContext) {
 		createRegion({ container: domContext.container }, cells);
 	}
 	return contentItems;
+};
+
+nxt.ContentManager.prototype.append = function(items, domContext) {
+	return (domContext.content || []).concat(
+		this.render(items, {
+			container: domContext.container,
+			insertReference: domContext.insertReference
+		})
+	);
 };
 
 nxt.ContentManager.prototype.insertBefore = function(insertIndex, items, domContext) {
@@ -583,7 +592,7 @@ nxt.CollectionRenderer.prototype.visible = function(content) {
 };
 
 nxt.CollectionRenderer.prototype.append = function(data, domContext) {
-	return this.manager.render(data.items, domContext);
+	return this.manager.append(data.items, domContext);
 };
 
 nxt.CollectionRenderer.prototype.insertBefore = function(data, domContext) {
@@ -611,12 +620,11 @@ window.nxt = window.nxt || {};
 nxt.NodeRenderer = function() {};
 
 nxt.NodeRenderer.prototype.render = function(data, domContext) {
-	var content;
-	if (typeof domContext.insertReference !== 'undefined') {
-		domContext.container.insertBefore(data.node, domContext.insertReference);
+	if (typeof domContext.content !== 'undefined') {
+		domContext.container.replaceChild(data.node, domContext.content);
 	} else {
-		if (typeof domContext.content !== 'undefined') {
-			domContext.container.replaceChild(data.node, domContext.content);
+		if (typeof domContext.insertReference !== 'undefined') {
+			domContext.container.insertBefore(data.node, domContext.insertReference);
 		} else {
 			domContext.container.appendChild(data.node);
 		}
