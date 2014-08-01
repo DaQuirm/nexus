@@ -29,10 +29,10 @@ nx.RestCollection.prototype.retrieve = function(done) {
 		url: this.options.url,
 		method: 'get',
 		success: function(items) {
-			_this.items.set(items.map(function(item) {
+			_this.items = items.map(function(item) {
 				var doc = new _this.options.item({ data: item, url: _this.options.url });
 				return doc;
-			}));
+			});
 			if (typeof done === 'function') {
 				done.call(null, _this.items);
 			}
