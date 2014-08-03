@@ -29,7 +29,7 @@ nx.RestCollection.prototype.retrieve = function(done) {
 		url: this.options.url,
 		method: 'get',
 		success: function(items) {
-			_this.items = items.map(function(item) {
+			_this.items.items = items.map(function(item) {
 				var doc = new _this.options.item({ data: item, url: _this.options.url });
 				return doc;
 			});
