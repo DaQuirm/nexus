@@ -204,7 +204,7 @@ nx.Collection.prototype.insertBefore = function(beforeItem, items) {
 	items = Array.isArray(items) ? items : [items];
 	var insertIndex = this.items.indexOf(beforeItem);
 	[].splice.apply(this.items, [insertIndex, 0].concat(items));
-	this.event.value = new nxt.Command('Collection', 'insertbefore', {
+	this.event.value = new nxt.Command('Collection', 'insertBefore', {
 		items: items,
 		index: insertIndex
 	});
@@ -509,6 +509,7 @@ nxt.Collection = function () {
 	var conversion = arguments[1];
 	var events = [].slice.call(arguments, 2);
 	var commandCell = new nx.Cell();
+	collection.event.value = new nxt.Command('Collection', 'reset', { items: collection.items });
 	collection.event.bind(commandCell, '->', function(command) {
 		if (typeof command !== 'undefined') {
 			command.data.items = command.data.items.map(conversion);
@@ -671,10 +672,10 @@ nx.RestCollection.prototype.retrieve = function(done) {
 		url: this.options.url,
 		method: 'get',
 		success: function(items) {
-			_this.items.set(items.map(function(item) {
+			_this.items.items = items.map(function(item) {
 				var doc = new _this.options.item({ data: item, url: _this.options.url });
 				return doc;
-			}));
+			});
 			if (typeof done === 'function') {
 				done.call(null, _this.items);
 			}
