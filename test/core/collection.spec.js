@@ -89,12 +89,12 @@ describe('nx.Collection', function() {
 			collection.items.should.deep.equal([1,2,3,4]);
 		});
 
-		it('assigns the `insertbefore` command to the event cell', function() {
+		it('assigns the `insertBefore` command to the event cell', function() {
 			var collection = new nx.Collection({ items: [1,2,4] });
 			collection.insertBefore(4,3);
 			collection.items.should.deep.equal([1,2,3,4]);
 			collection.event.value.should.deep.equal(
-				new nxt.Command('Collection', 'insertbefore', { items: [3], index: 2 })
+				new nxt.Command('Collection', 'insertBefore', { items: [3], index: 2 })
 			);
 		});
 	});

@@ -54,7 +54,7 @@ nx.Collection.prototype.insertBefore = function(beforeItem, items) {
 	items = Array.isArray(items) ? items : [items];
 	var insertIndex = this.items.indexOf(beforeItem);
 	[].splice.apply(this.items, [insertIndex, 0].concat(items));
-	this.event.value = new nxt.Command('Collection', 'insertbefore', {
+	this.event.value = new nxt.Command('Collection', 'insertBefore', {
 		items: items,
 		index: insertIndex
 	});
