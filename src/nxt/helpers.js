@@ -60,6 +60,7 @@ nxt.Collection = function () {
 	var conversion = arguments[1];
 	var events = [].slice.call(arguments, 2);
 	var commandCell = new nx.Cell();
+	collection.event.value = new nxt.Command('Collection', 'reset', { items: collection.items });
 	collection.event.bind(commandCell, '->', function(command) {
 		if (typeof command !== 'undefined') {
 			command.data.items = command.data.items.map(conversion);

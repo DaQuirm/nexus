@@ -181,5 +181,17 @@ describe('nxt helpers', function() {
 			command.events[1].should.deep.equal(linkEvent);
 			command.dynamic.should.equal(true);
 		});
+
+		it('assigns a `reset` command to the event cell to make the first rendering include all collection items', function () {
+			var collection = new nx.Collection();
+			var converter = function(item) { return nxt.Text(item); };
+			collection.append('1');
+			collection.append('3');
+			collection.insertBefore('3', '2');
+			var commandCell = new nxt.Collection(collection, converter);
+			commandCell.value.should.deep.equal(
+				new nxt.Command('Collection', 'reset', { items: ['1', '2', '3'].map(converter) })
+			);
+		});
 	});
 });
