@@ -164,24 +164,6 @@ describe('nxt helpers', function() {
 			textCommand.data.node.nodeValue.should.equal('cellar door');
 		});
 
-		it('allows an arbitrary number of delegate event handlers to be passed', function() {
-			var collection = new nx.Collection();
-			var converter = function(item) { return nxt.Element('li', nxt.Element('a', nxt.Text(item))); };
-			var linkEvent = nxt.DelegatedEvent('mouseover', { 'a': function(evt, item) {} });
-			var command = new nxt.Collection(
-				collection,
-				converter,
-				nxt.DelegatedEvent('click', { 'li': function(evt, item) {} }),
-				linkEvent
-			);
-			command.collection.should.equal(collection);
-			command.conversion.should.equal(converter);
-			command.type.should.equal('Collection');
-			command.events.length.should.equal(2);
-			command.events[1].should.deep.equal(linkEvent);
-			command.dynamic.should.equal(true);
-		});
-
 		it('assigns a `reset` command to the event cell to make the first rendering include all collection items', function () {
 			var collection = new nx.Collection();
 			var converter = function(item) { return nxt.Text(item); };
