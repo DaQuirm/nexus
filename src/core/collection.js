@@ -8,7 +8,7 @@ nx.Collection = function (options) {
 	this.event = new nx.Cell();
 	this.items = options.items || [];
 	this.onsync.add(function (items) {
-		_this.event.value = new nxt.Command('Collection', 'reset', { items: items });
+		_this.event.value = new nxt.Command('Content', 'reset', { items: items });
 	});
 };
 
@@ -20,14 +20,14 @@ Object.defineProperty(nx.Collection.prototype, 'items', {
 	get: function() { return this.value; },
 	set: function(items) {
 		this.value = items;
-		this.event.value = new nxt.Command('Collection', 'reset', { items: items });
+		this.event.value = new nxt.Command('Content', 'reset', { items: items });
 	}
 });
 
 nx.Collection.prototype.append = function() {
 	var args = [].slice.call(arguments);
 	this.value = this.value.concat(args);
-	this.event.value = new nxt.Command('Collection', 'append', { items: args });
+	this.event.value = new nxt.Command('Content', 'append', { items: args });
 };
 
 nx.Collection.prototype.remove = function() {
@@ -44,7 +44,7 @@ nx.Collection.prototype.remove = function() {
 		}
 		return true;
 	});
-	this.event.value = new nxt.Command('Collection', 'remove', {
+	this.event.value = new nxt.Command('Content', 'remove', {
 		items: _slice.call(arguments),
 		indexes: indexes
 	});
@@ -54,7 +54,7 @@ nx.Collection.prototype.insertBefore = function(beforeItem, items) {
 	items = Array.isArray(items) ? items : [items];
 	var insertIndex = this.items.indexOf(beforeItem);
 	[].splice.apply(this.items, [insertIndex, 0].concat(items));
-	this.event.value = new nxt.Command('Collection', 'insertBefore', {
+	this.event.value = new nxt.Command('Content', 'insertBefore', {
 		items: items,
 		index: insertIndex
 	});

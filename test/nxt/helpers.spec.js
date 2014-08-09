@@ -155,7 +155,7 @@ describe('nxt helpers', function() {
 			var converter = function(item) { return nxt.Text(item); };
 			var commandCell = new nxt.Collection(collection, converter);
 			collection.append('cellar door');
-			commandCell.value.type.should.equal('Collection');
+			commandCell.value.type.should.equal('Content');
 			var textCommand = commandCell.value.data.items[0];
 			textCommand.type.should.equal('Node');
 			textCommand.method.should.equal('render');
@@ -172,7 +172,7 @@ describe('nxt helpers', function() {
 			collection.insertBefore('3', '2');
 			var commandCell = new nxt.Collection(collection, converter);
 			commandCell.value.should.deep.equal(
-				new nxt.Command('Collection', 'reset', { items: ['1', '2', '3'].map(converter) })
+				new nxt.Command('Content', 'reset', { items: ['1', '2', '3'].map(converter) })
 			);
 		});
 	});

@@ -1,8 +1,8 @@
 window.nxt = window.nxt || {};
 
-nxt.ContentManager = function() {};
+nxt.ContentRenderer = function() {};
 
-nxt.ContentManager.prototype.render = function(items, domContext) {
+nxt.ContentRenderer.prototype.render = function(data, domContext) {
 	this.regions = [];
 	var cells = [];
 	var contentItems = [];
@@ -16,7 +16,7 @@ nxt.ContentManager.prototype.render = function(items, domContext) {
 		_this.regions.push(newRegion);
 	};
 
-	items.forEach(function (command) {
+	data.items.forEach(function (command) {
 		if (command !== undefined) {
 			if (!(command instanceof nx.Cell)) {
 				var content = command.run(domContext);
@@ -44,28 +44,28 @@ nxt.ContentManager.prototype.render = function(items, domContext) {
 	return contentItems;
 };
 
-nxt.ContentManager.prototype.append = function(items, domContext) {
+nxt.ContentRenderer.prototype.append = function(data, domContext) {
 	return (domContext.content || []).concat(
-		this.render(items, {
+		this.render(data, {
 			container: domContext.container,
 			insertReference: domContext.insertReference
 		})
 	);
 };
 
-nxt.ContentManager.prototype.insertBefore = function(insertIndex, items, domContext) {
-	items.forEach(function (item, index) {
+nxt.ContentRenderer.prototype.insertBefore = function(data, domContext) {
+	data.items.forEach(function (item, index) {
 		var content = item.run({
 			container: domContext.container,
-			insertReference: domContext.content[insertIndex + index]
+			insertReference: domContext.content[data.insertIndex + index]
 		});
-		domContext.content.splice(insertIndex + index, 0, content);
+		domContext.content.splice(data.insertIndex + index, 0, content);
 	});
 	return domContext.content;
 };
 
-nxt.ContentManager.prototype.remove = function(indexes, domContext) {
-	indexes
+nxt.ContentRenderer.prototype.remove = function(data, domContext) {
+	data.indexes
 		.sort(function (a,b) { return a - b; })
 		.forEach(function (removeIndex, index) {
 			domContext.container.removeChild(domContext.content[removeIndex - index]);
@@ -74,7 +74,7 @@ nxt.ContentManager.prototype.remove = function(indexes, domContext) {
 	return domContext.content;
 };
 
-nxt.ContentManager.prototype.reset = function(items, domContext) {
+nxt.ContentRenderer.prototype.reset = function(data, domContext) {
 	var firstChild;
 	if (typeof domContext.content !== 'undefined') {
 		for (var index = 0; index < domContext.content.length; index++) {
@@ -82,5 +82,9 @@ nxt.ContentManager.prototype.reset = function(items, domContext) {
 		}
 		delete domContext.content;
 	}
-	return this.render(items, domContext);
+	return this.render(data, domContext);
+};
+
+nxt.ContentRenderer.prototype.visible = function(content) {
+	return content.length > 0;
 };

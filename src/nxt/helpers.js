@@ -39,8 +39,8 @@ nxt.Element = function() {
 	var node = document.createElement(name);
 	if (args.length > 1) {
 		var content = args.slice(1);
-		var contentManager = new nxt.ContentManager();
-		contentManager.render(content, { container: node });
+		var contentRenderer = new nxt.ContentRenderer();
+		contentRenderer.render({ items: content }, { container: node });
 	}
 	return new nxt.Command('Node', 'render', { node: node });
 };
@@ -60,7 +60,7 @@ nxt.Collection = function () {
 	var conversion = arguments[1];
 	var events = [].slice.call(arguments, 2);
 	var commandCell = new nx.Cell();
-	collection.event.value = new nxt.Command('Collection', 'reset', { items: collection.items });
+	collection.event.value = new nxt.Command('Content', 'reset', { items: collection.items });
 	collection.event.bind(commandCell, '->', function(command) {
 		if (typeof command !== 'undefined') {
 			command.data.items = command.data.items.map(conversion);

@@ -16,11 +16,11 @@ describe('nx.Collection', function() {
 		it('assigns the append command to the event cell if the `items` option is not empty', function () {
 			var collection = new nx.Collection();
 			collection.event.value.should.deep.equal(
-				new nxt.Command('Collection', 'reset', { items: [] })
+				new nxt.Command('Content', 'reset', { items: [] })
 			);
 			collection = new nx.Collection({ items: [1,2,3] });
 			collection.event.value.should.deep.equal(
-				new nxt.Command('Collection', 'reset', { items: [1,2,3] })
+				new nxt.Command('Content', 'reset', { items: [1,2,3] })
 			);
 		})
 	});
@@ -43,7 +43,7 @@ describe('nx.Collection', function() {
 			collection.items = [4,5];
 			collection.value.should.deep.equal([4,5]);
 			collection.event.value.should.deep.equal(
-				new nxt.Command('Collection', 'reset', { items: [4,5] })
+				new nxt.Command('Content', 'reset', { items: [4,5] })
 			);
 		});
 	});
@@ -60,7 +60,7 @@ describe('nx.Collection', function() {
 			collection.append(3,4);
 			collection.items.should.deep.equal([1,2,3,4]);
 			collection.event.value.should.deep.equal(
-				new nxt.Command('Collection', 'append', { items: [3,4] })
+				new nxt.Command('Content', 'append', { items: [3,4] })
 			);
 		});
 	});
@@ -77,7 +77,7 @@ describe('nx.Collection', function() {
 			collection.remove(2,4);
 			collection.items.should.deep.equal([1,3,5]);
 			collection.event.value.should.deep.equal(
-				new nxt.Command('Collection', 'remove', { items: [2,4], indexes: [1,3] })
+				new nxt.Command('Content', 'remove', { items: [2,4], indexes: [1,3] })
 			);
 		});
 	});
@@ -94,7 +94,7 @@ describe('nx.Collection', function() {
 			collection.insertBefore(4,3);
 			collection.items.should.deep.equal([1,2,3,4]);
 			collection.event.value.should.deep.equal(
-				new nxt.Command('Collection', 'insertBefore', { items: [3], index: 2 })
+				new nxt.Command('Content', 'insertBefore', { items: [3], index: 2 })
 			);
 		});
 	});
@@ -111,7 +111,7 @@ describe('nx.Collection', function() {
 			collection.removeAll();
 			collection.items.should.deep.equal([]);
 			collection.event.value.should.deep.equal(
-				new nxt.Command('Collection', 'reset', { items: [] })
+				new nxt.Command('Content', 'reset', { items: [] })
 			);
 		});
 	});
@@ -144,7 +144,7 @@ describe('nx.Collection', function() {
 			collection.bind(cell, '<-', fib);
 			cell.value = 2;
 			collection.event.value.should.deep.equal(
-				new nxt.Command('Collection', 'reset', { items: [1, 1] })
+				new nxt.Command('Content', 'reset', { items: [1, 1] })
 			);
 		});
 

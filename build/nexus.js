@@ -158,7 +158,7 @@ nx.Collection = function (options) {
 	this.event = new nx.Cell();
 	this.items = options.items || [];
 	this.onsync.add(function (items) {
-		_this.event.value = new nxt.Command('Collection', 'reset', { items: items });
+		_this.event.value = new nxt.Command('Content', 'reset', { items: items });
 	});
 };
 
@@ -170,14 +170,14 @@ Object.defineProperty(nx.Collection.prototype, 'items', {
 	get: function() { return this.value; },
 	set: function(items) {
 		this.value = items;
-		this.event.value = new nxt.Command('Collection', 'reset', { items: items });
+		this.event.value = new nxt.Command('Content', 'reset', { items: items });
 	}
 });
 
 nx.Collection.prototype.append = function() {
 	var args = [].slice.call(arguments);
 	this.value = this.value.concat(args);
-	this.event.value = new nxt.Command('Collection', 'append', { items: args });
+	this.event.value = new nxt.Command('Content', 'append', { items: args });
 };
 
 nx.Collection.prototype.remove = function() {
@@ -194,7 +194,7 @@ nx.Collection.prototype.remove = function() {
 		}
 		return true;
 	});
-	this.event.value = new nxt.Command('Collection', 'remove', {
+	this.event.value = new nxt.Command('Content', 'remove', {
 		items: _slice.call(arguments),
 		indexes: indexes
 	});
@@ -204,7 +204,7 @@ nx.Collection.prototype.insertBefore = function(beforeItem, items) {
 	items = Array.isArray(items) ? items : [items];
 	var insertIndex = this.items.indexOf(beforeItem);
 	[].splice.apply(this.items, [insertIndex, 0].concat(items));
-	this.event.value = new nxt.Command('Collection', 'insertBefore', {
+	this.event.value = new nxt.Command('Content', 'insertBefore', {
 		items: items,
 		index: insertIndex
 	});
@@ -299,93 +299,6 @@ nxt.Command.prototype.run = function() {
 
 window.nxt = window.nxt || {};
 
-nxt.ContentManager = function() {};
-
-nxt.ContentManager.prototype.render = function(items, domContext) {
-	this.regions = [];
-	var cells = [];
-	var contentItems = [];
-
-	var _this = this;
-	var createRegion = function(domContext, cells) {
-		var newRegion = new nxt.ContentRegion(domContext);
-		for (var itemIndex = 0; itemIndex < cells.length; itemIndex++) {
-			newRegion.add(cells[itemIndex]);
-		}
-		_this.regions.push(newRegion);
-	};
-
-	items.forEach(function (command) {
-		if (command !== undefined) {
-			if (!(command instanceof nx.Cell)) {
-				var content = command.run(domContext);
-				contentItems.push(content);
-				if (cells.length > 0) { // dynamic content followed by static content
-					createRegion(
-						{
-							container: domContext.container,
-							insertReference: content
-						},
-						cells
-					);
-					cells = [];
-				}
-			} else {
-				cells.push(command);
-			}
-		}
-	});
-
-	if (cells.length > 0) {
-		// no need for an insert reference as these cells' content is appended by default
-		createRegion({ container: domContext.container }, cells);
-	}
-	return contentItems;
-};
-
-nxt.ContentManager.prototype.append = function(items, domContext) {
-	return (domContext.content || []).concat(
-		this.render(items, {
-			container: domContext.container,
-			insertReference: domContext.insertReference
-		})
-	);
-};
-
-nxt.ContentManager.prototype.insertBefore = function(insertIndex, items, domContext) {
-	items.forEach(function (item, index) {
-		var content = item.run({
-			container: domContext.container,
-			insertReference: domContext.content[insertIndex + index]
-		});
-		domContext.content.splice(insertIndex + index, 0, content);
-	});
-	return domContext.content;
-};
-
-nxt.ContentManager.prototype.remove = function(indexes, domContext) {
-	indexes
-		.sort(function (a,b) { return a - b; })
-		.forEach(function (removeIndex, index) {
-			domContext.container.removeChild(domContext.content[removeIndex - index]);
-			domContext.content.splice(removeIndex - index, 1);
-		});
-	return domContext.content;
-};
-
-nxt.ContentManager.prototype.reset = function(items, domContext) {
-	var firstChild;
-	if (typeof domContext.content !== 'undefined') {
-		for (var index = 0; index < domContext.content.length; index++) {
-			domContext.container.removeChild(domContext.content[index]);
-		}
-		delete domContext.content;
-	}
-	return this.render(items, domContext);
-};
-
-window.nxt = window.nxt || {};
-
 nxt.ContentRegion = function(domContext) {
 	this.domContext = domContext;
 	this.cells = [];
@@ -449,6 +362,97 @@ nxt.ContentRegion.prototype.update = function(state) {
 
 window.nxt = window.nxt || {};
 
+nxt.ContentRenderer = function() {};
+
+nxt.ContentRenderer.prototype.render = function(data, domContext) {
+	this.regions = [];
+	var cells = [];
+	var contentItems = [];
+
+	var _this = this;
+	var createRegion = function(domContext, cells) {
+		var newRegion = new nxt.ContentRegion(domContext);
+		for (var itemIndex = 0; itemIndex < cells.length; itemIndex++) {
+			newRegion.add(cells[itemIndex]);
+		}
+		_this.regions.push(newRegion);
+	};
+
+	data.items.forEach(function (command) {
+		if (command !== undefined) {
+			if (!(command instanceof nx.Cell)) {
+				var content = command.run(domContext);
+				contentItems.push(content);
+				if (cells.length > 0) { // dynamic content followed by static content
+					createRegion(
+						{
+							container: domContext.container,
+							insertReference: content
+						},
+						cells
+					);
+					cells = [];
+				}
+			} else {
+				cells.push(command);
+			}
+		}
+	});
+
+	if (cells.length > 0) {
+		// no need for an insert reference as these cells' content is appended by default
+		createRegion({ container: domContext.container }, cells);
+	}
+	return contentItems;
+};
+
+nxt.ContentRenderer.prototype.append = function(data, domContext) {
+	return (domContext.content || []).concat(
+		this.render(data, {
+			container: domContext.container,
+			insertReference: domContext.insertReference
+		})
+	);
+};
+
+nxt.ContentRenderer.prototype.insertBefore = function(data, domContext) {
+	data.items.forEach(function (item, index) {
+		var content = item.run({
+			container: domContext.container,
+			insertReference: domContext.content[data.insertIndex + index]
+		});
+		domContext.content.splice(data.insertIndex + index, 0, content);
+	});
+	return domContext.content;
+};
+
+nxt.ContentRenderer.prototype.remove = function(data, domContext) {
+	data.indexes
+		.sort(function (a,b) { return a - b; })
+		.forEach(function (removeIndex, index) {
+			domContext.container.removeChild(domContext.content[removeIndex - index]);
+			domContext.content.splice(removeIndex - index, 1);
+		});
+	return domContext.content;
+};
+
+nxt.ContentRenderer.prototype.reset = function(data, domContext) {
+	var firstChild;
+	if (typeof domContext.content !== 'undefined') {
+		for (var index = 0; index < domContext.content.length; index++) {
+			domContext.container.removeChild(domContext.content[index]);
+		}
+		delete domContext.content;
+	}
+	return this.render(data, domContext);
+};
+
+nxt.ContentRenderer.prototype.visible = function(content) {
+	return content.length > 0;
+};
+
+window.nxt = window.nxt || {};
+
 nxt.Attr = function(name, value) {
 	var data = (typeof name === 'string')
 		? { name: name, value: typeof value === 'undefined' ? '' : value }
@@ -488,8 +492,8 @@ nxt.Element = function() {
 	var node = document.createElement(name);
 	if (args.length > 1) {
 		var content = args.slice(1);
-		var contentManager = new nxt.ContentManager();
-		contentManager.render(content, { container: node });
+		var contentRenderer = new nxt.ContentRenderer();
+		contentRenderer.render({ items: content }, { container: node });
 	}
 	return new nxt.Command('Node', 'render', { node: node });
 };
@@ -509,7 +513,7 @@ nxt.Collection = function () {
 	var conversion = arguments[1];
 	var events = [].slice.call(arguments, 2);
 	var commandCell = new nx.Cell();
-	collection.event.value = new nxt.Command('Collection', 'reset', { items: collection.items });
+	collection.event.value = new nxt.Command('Content', 'reset', { items: collection.items });
 	collection.event.bind(commandCell, '->', function(command) {
 		if (typeof command !== 'undefined') {
 			command.data.items = command.data.items.map(conversion);
@@ -543,69 +547,6 @@ nxt.ClassRenderer.prototype.add = function(data, domContext) {
 
 nxt.ClassRenderer.prototype.remove = function(data, domContext) {
 	domContext.container.classList.remove(data.name);
-};
-
-window.nxt = window.nxt || {};
-
-nxt.CollectionRenderer = function() {
-	this.manager = new nxt.ContentManager();
-};
-
-nxt.CollectionRenderer.prototype.render = function(data) {
-	var _this = this;
-
-	data.events.forEach(function(event) {
-		_this.element.addEventListener(event.name, function(evt) {
-			var target = evt.target;
-			var contentIndex, contentItem;
-			_this.content.some(function(item, index) {
-				var found = item.isEqualNode(target) || item.contains(target);
-				if (found) {
-					contentIndex = index;
-					contentItem = item;
-				}
-				return found;
-			});
-			var selectors = Object.keys(event.handlers);
-			var callMatchingHandlers = function(selector) {
-				if (target.matches(selector)) {
-					event.handlers[selector].call(
-						null,
-						evt,
-						_this.collection.items[contentIndex]
-					);
-				}
-			};
-			while (!contentItem.isEqualNode(target)) {
-				selectors.forEach(callMatchingHandlers);
-				target = target.parentNode;
-			}
-			selectors.forEach(callMatchingHandlers);
-		});
-	});
-	if (typeof this.collection.items !== 'undefined') {
-		this.append({items: this.collection.items});
-	}
-};
-
-nxt.CollectionRenderer.prototype.visible = function(content) {
-	return content.length > 0;
-};
-
-nxt.CollectionRenderer.prototype.append = function(data, domContext) {
-	return this.manager.append(data.items, domContext);
-};
-
-nxt.CollectionRenderer.prototype.insertBefore = function(data, domContext) {
-	return this.manager.insertBefore(data.index, data.items, domContext);
-};
-
-nxt.CollectionRenderer.prototype.remove = function(data, domContext) {
-	return this.manager.remove(data.indexes, domContext);
-};
-
-nxt.CollectionRenderer.prototype.reset = function(data, domContext) {
-	return this.manager.reset(data.items, domContext);
 };
 
 window.nxt = window.nxt || {};
