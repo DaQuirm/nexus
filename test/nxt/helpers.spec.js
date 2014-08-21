@@ -135,13 +135,13 @@ describe('nxt helpers', function() {
 		});
 	});
 
-	describe('nxt.DelegatedEvent', function() {
+	describe('nxt.ItemEvent', function() {
 		it('creates a delegated event command', function() {
 			var handlerMap = {
 				'li': function(evt, item) {} ,
 				'a': function(evt, item) {}
 			};
-			var command = nxt.DelegatedEvent('click', handlerMap);
+			var command = nxt.ItemEvent('click', handlerMap);
 			command.type.should.equal('DelegatedEvent');
 			command.method.should.equal('add');
 			command.data.handlers.should.deep.equal(handlerMap);
@@ -174,6 +174,35 @@ describe('nxt helpers', function() {
 			commandCell.value.should.deep.equal(
 				new nxt.Command('Content', 'reset', { items: ['1', '2', '3'].map(converter) })
 			);
+		});
+
+		it('attaches delegated item event handlers', function(done) {
+			var domContext = {
+				container: document.createElement('ul')
+			};
+			document.body.appendChild(domContext.container);
+			var collection = new nx.Collection({ items: ['a','b','c'] });
+			var renderer = new nxt.ContentRenderer();
+			renderer.render({
+				items: [
+					nxt.Collection(collection, function(item) {
+							return nxt.Element('li',
+								nxt.Element('span',
+									nxt.Text(item)
+								)
+							)
+						},
+						nxt.ItemEvent('click', {
+							'span': function(evt, item) {
+								item.should.equal('c');
+								document.body.removeChild(container);
+								done();
+							}
+						})
+					)
+				]
+			}, domContext);
+			container.childNodes[2].childNodes[0].click();
 		});
 	});
 });
