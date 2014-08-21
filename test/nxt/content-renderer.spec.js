@@ -214,6 +214,30 @@ describe('nxt.ContentRenderer', function() {
 		});
 	});
 
+	describe('get', function () {
+		it('passes renderer\'s content to a command callback', function (done) {
+			var container = document.createElement('ul');
+			var conversion = function(value) {
+				return nxt.Element('li', nxt.Text(value));
+			};
+			domContext.container = container;
+			domContext.content = renderer.append({
+				items: ['a','b','c','d'].map(conversion)
+			}, domContext);
+			container.textContent.should.equal('abcd');
+			renderer.get({
+				next: function(content) {
+					content.length.should.equal(4);
+					content[0].textContent.should.equal('a');
+					content[1].textContent.should.equal('b');
+					content[2].textContent.should.equal('c');
+					content[3].textContent.should.equal('d');
+					done();
+				}
+			}, domContext);
+		});
+	});
+
 	describe('visible', function () {
 		it('returns true for non-empty collection content', function () {
 			renderer.visible([]).should.equal(false);

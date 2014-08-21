@@ -136,16 +136,14 @@ describe('nxt helpers', function() {
 	});
 
 	describe('nxt.ItemEvent', function() {
-		it('creates a delegated event command', function() {
+		it('creates a delegated event object', function() {
 			var handlerMap = {
 				'li': function(evt, item) {} ,
 				'a': function(evt, item) {}
 			};
 			var command = nxt.ItemEvent('click', handlerMap);
-			command.type.should.equal('DelegatedEvent');
-			command.method.should.equal('add');
-			command.data.handlers.should.deep.equal(handlerMap);
-			command.data.name.should.equal('click');
+			command.handlers.should.deep.equal(handlerMap);
+			command.name.should.equal('click');
 		});
 	});
 
@@ -176,6 +174,34 @@ describe('nxt helpers', function() {
 			);
 		});
 
+		it('returns a command cell and event commands if item event handlers are passed', function () {
+			var collection = new nx.Collection({ items: ['1', '2', '3'] });
+			var handler = function(evt, item) {};
+			var converter = function(item) {
+				return nxt.Element('li',
+					nxt.Element('span',
+						nxt.Text(item)
+					)
+				)
+			};
+			var items = nxt.Collection(collection, converter,
+				nxt.ItemEvent('click', {
+					'span': handler
+				}),
+				nxt.ItemEvent('mouseover', {
+					'div': handler
+				})
+			);
+			items.length.should.equal(3);
+			items[0].value.should.deep.equal(
+				new nxt.Command('Content', 'reset', { items: collection.items.map(converter) })
+			);
+			items[1].type.should.deep.equal('Event');
+			items[1].method.should.deep.equal('add');
+			items[2].type.should.deep.equal('Event');
+			items[2].method.should.deep.equal('add');
+		});
+
 		it('attaches delegated item event handlers', function(done) {
 			var domContext = {
 				container: document.createElement('ul')
@@ -184,25 +210,23 @@ describe('nxt helpers', function() {
 			var collection = new nx.Collection({ items: ['a','b','c'] });
 			var renderer = new nxt.ContentRenderer();
 			renderer.render({
-				items: [
-					nxt.Collection(collection, function(item) {
-							return nxt.Element('li',
-								nxt.Element('span',
-									nxt.Text(item)
-								)
+				items: nxt.Collection(collection, function(item) {
+						return nxt.Element('li',
+							nxt.Element('span',
+								nxt.Text(item)
 							)
-						},
-						nxt.ItemEvent('click', {
-							'span': function(evt, item) {
-								item.should.equal('c');
-								document.body.removeChild(container);
-								done();
-							}
-						})
-					)
-				]
+						)
+					},
+					nxt.ItemEvent('click', {
+						'span': function(evt, item) {
+							item.should.equal('c');
+							document.body.removeChild(domContext.container);
+							done();
+						}
+					})
+				)
 			}, domContext);
-			container.childNodes[2].childNodes[0].click();
+			domContext.container.childNodes[2].childNodes[0].click();
 		});
 	});
 });

@@ -85,6 +85,11 @@ nxt.ContentRenderer.prototype.reset = function(data, domContext) {
 	return this.render(data, domContext);
 };
 
+nxt.ContentRenderer.prototype.get = function(data, domContext) {
+	data.next(domContext.content);
+	return domContext.content;
+};
+
 nxt.ContentRenderer.prototype.visible = function(content) {
 	return content.length > 0;
 };

@@ -51,8 +51,8 @@ nxt.Binding = function(cell, conversion, mode) {
 	return commandCell;
 };
 
-nxt.DelegatedEvent = function(name, handlers) {
-	return new nxt.Command('DelegatedEvent', 'add', { name: name, handlers: handlers });
+nxt.ItemEvent = function(name, handlers) {
+	return { name: name, handlers: handlers };
 };
 
 nxt.Collection = function () {
@@ -67,5 +67,44 @@ nxt.Collection = function () {
 		}
 		return command;
 	});
-	return commandCell;
+	var delegatedEvents;
+	if (events.length > 0) {
+		delegatedEvents = events.map(function(event) {
+			return nxt.Event(event.name, function(evt) {
+				var target = evt.target;
+				var contentIndex, contentItem;
+				collection.event.value = new nxt.Command('Content', 'get', {
+					items: [], // so that collection's event cell converter doesn't complain
+					next: function(content) {
+						content.some(function(item, index) {
+							var found = item.isEqualNode(target) || item.contains(target);
+							if (found) {
+								contentIndex = index;
+								contentItem = item;
+							}
+							return found;
+						});
+						var selectors = Object.keys(event.handlers);
+						var callMatchingHandlers = function(selector) {
+							if (target.matches(selector)) {
+								event.handlers[selector].call(
+									null,
+									evt,
+									collection.items[contentIndex]
+								);
+							}
+						};
+						while (!contentItem.isEqualNode(target)) {
+							selectors.forEach(callMatchingHandlers);
+							target = target.parentNode;
+						}
+						selectors.forEach(callMatchingHandlers);
+					}
+				});
+			});
+		});
+		return [commandCell].concat(delegatedEvents);
+	} else {
+		return commandCell;
+	}
 };
