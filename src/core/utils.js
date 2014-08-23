@@ -10,3 +10,11 @@ nx.Utils.interpolateString = function(string, props) {
 	}
 	return string;
 };
+
+nx.Utils.mixin = function(target, source) {
+	var keys = Object.getOwnPropertyNames(source);
+	keys.forEach(function (key) {
+		var desc = Object.getOwnPropertyDescriptor(source, key);
+		Object.defineProperty(target, key, desc);
+	});
+};
