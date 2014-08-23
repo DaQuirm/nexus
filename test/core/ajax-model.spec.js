@@ -2,7 +2,7 @@ describe('nx.AjaxModel', function() {
 
 	var model;
 
-	before(function() {
+	beforeEach(function() {
 		model = new nx.AjaxModel();
 	});
 
@@ -53,14 +53,43 @@ describe('nx.AjaxModel', function() {
 			server.requests[0].method.should.equal('get');
 		});
 
+		it('sends the data cell value if POST or PUT methods are used', function() {
+			var data = { 'cellar': 'door' };
+			model.data.value = data;
+			model.request({
+				url: url,
+				method: 'post'
+			});
+			server.requests.length.should.equal(1);
+			server.requests[0].url.should.equal(url);
+			server.requests[0].method.should.equal('post');
+			server.requests[0].requestBody.should.equal(JSON.stringify(data));
+		});
+
 		it('interpolates the url using placeholders in curly braces and substitute values from model data', function() {
+			model.data.value = { 'name': 'Samuel', '_id':1337 };
 			model.request({
 				url: 'http://localhost/users/{_id}',
-				method: 'put',
-				data: { 'name': 'Samuel', '_id':1337 }
+				method: 'put'
 			});
 			server.requests.length.should.equal(1);
 			server.requests[0].url.should.equal('http://localhost/users/1337');
+		});
+
+		it('updates the data cell if request succeeds', function () {
+			var response = { 'response': 'cellar door' };
+			server.respondWith([
+				200,
+				{ "Content-Type": "application/json" },
+				JSON.stringify(response)
+			]);
+			model.data.value = { 'name': 'Samuel' };
+			model.request({
+				url: url,
+				method: 'put'
+			});
+			server.respond();
+			model.data.value.should.deep.equal(response);
 		});
 
 		it('calls a success handler if request succeeds and passes received data as the first parameter', function() {
@@ -71,10 +100,10 @@ describe('nx.AjaxModel', function() {
 				{ "Content-Type": "application/json" },
 				JSON.stringify(response)
 			]);
+			model.data.value = { 'name': 'Samuel' };
 			model.request({
 				url: url,
 				method: 'put',
-				data: { 'name': 'Samuel' },
 				success: handler
 			});
 			server.respond();
@@ -91,10 +120,10 @@ describe('nx.AjaxModel', function() {
 				{ "Content-Type": "application/json" },
 				JSON.stringify(response)
 			]);
+			model.data.value = { 'name': 'Samuel' };
 			model.request({
 				url: url,
 				method: 'put',
-				data: { 'name': 'Samuel' },
 				success: success_handler,
 				error: error_handler
 			});

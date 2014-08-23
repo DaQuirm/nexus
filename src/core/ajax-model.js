@@ -19,13 +19,14 @@ nx.AjaxModel = function(options) {
 
 nx.AjaxModel.prototype.request = function(options) {
 	var _this = this;
-	var url = nx.Utils.interpolateString(options.url, options.data);
+	var url = nx.Utils.interpolateString(options.url, this.data.value);
 	this.xhr = new XMLHttpRequest();
 	this.xhr.open(options.method, url, true);
 	this.xhr.responseType = (!window.chrome) ? 'json' : 'text';
 
 	this.xhr.onload = function (evt) {
 		var handler;
+
 		if (this.status === 200 || this.status === 201 || this.status === 204) {
 			handler = options.success;
 			_this.status.value = nx.AsyncStatus.DONE;
@@ -33,20 +34,21 @@ nx.AjaxModel.prototype.request = function(options) {
 			handler = options.error;
 			_this.status.value = nx.AsyncStatus.ERROR;
 		}
+
+		if (this.responseType === "json") {
+			_this.data.value = this.response;
+		} else if (this.responseText) {
+			_this.data.value = JSON.parse(this.responseText);
+		}
+
 		if (typeof handler === 'function') {
-			if (this.responseType === "json") {
-				handler(this.response);
-			} else if (this.responseText) {
-				handler(JSON.parse(this.responseText));
-			} else {
-				handler();
-			}
+			handler(_this.data.value);
 		}
 	};
 
 	if (options.method === 'post' || options.method === 'put') {
 		this.xhr.setRequestHeader('Content-Type', 'application/json');
-		this.xhr.send(JSON.stringify(options.data));
+		this.xhr.send(JSON.stringify(this.data.value));
 	} else {
 		this.xhr.send();
 	}

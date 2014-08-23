@@ -85,9 +85,7 @@ describe('nx.RestDocument', function() {
 			model.save(function() {
 				request_spy.should.have.been.calledOnce;
 				var requestOptions = request_spy.lastCall.args[0];
-				requestOptions.should.have.property('url', url);
 				requestOptions.should.have.property('method', 'put');
-				requestOptions.data.should.deep.equal({ name:'Samuel' });
 				model.request.restore();
 				done();
 			});
@@ -102,7 +100,6 @@ describe('nx.RestDocument', function() {
 			model.remove(function() {
 				request_spy.should.have.been.calledOnce;
 				var requestOptions = request_spy.lastCall.args[0];
-				requestOptions.should.have.property('url', url);
 				requestOptions.should.have.property('method', 'delete');
 				model.request.restore();
 				done();

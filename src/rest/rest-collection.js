@@ -2,40 +2,43 @@ window.nx = window.nx || {};
 
 nx.RestCollection = function(options) {
 	nx.AjaxModel.call(this, options);
+	nx.Collection.call(this, options);
 	this.options = options;
-	this.items = new nx.Collection();
+
+	var _this = this;
+	this.data.bind(
+		this,
+		'<->',
+		function (items) {
+			return items.map(function (item) {
+				new _this.options.item({ data: item, url: _this.options.url });
+			});
+		},
+		function (items) {
+			items.map(function (item) { return item.data.value; });
+		}
+	);
 };
 
 nx.RestCollection.prototype = Object.create(nx.AjaxModel.prototype);
 nx.RestCollection.prototype.constructor = nx.RestCollection;
 
+nx.RestCollection.prototype.request = function(options) {
+	nx.AjaxModel.prototype.request.call(this, {
+		url: this.options.url,
+		method: options.method,
+		success: options.success
+	});
+};
+
 nx.RestCollection.prototype.create = function(doc, done) {
-	this.request({
+	nx.RestDocument.prototype.request.call(doc, {
 		url: this.options.url,
 		method: 'post',
-		data: doc.data.value,
-		success: function(response) {
-			doc.data.value = response;
-			if (typeof done === 'function') {
-				done.call(null, response);
-			}
-		}
+		success: done
 	});
 };
 
 nx.RestCollection.prototype.retrieve = function(done) {
-	var _this = this;
-	this.request({
-		url: this.options.url,
-		method: 'get',
-		success: function(items) {
-			_this.items.items = items.map(function(item) {
-				var doc = new _this.options.item({ data: item, url: _this.options.url });
-				return doc;
-			});
-			if (typeof done === 'function') {
-				done.call(null, _this.items);
-			}
-		}
-	});
+	this.request({ method: 'get', success: done });
 };

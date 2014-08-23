@@ -8,45 +8,22 @@ nx.RestDocument = function(options) {
 nx.RestDocument.prototype = Object.create(nx.AjaxModel.prototype);
 nx.RestDocument.prototype.constructor = nx.RestDocument;
 
-nx.RestDocument.prototype.retrieve = function(done) {
-	var _this = this;
-	this.request({
-		url: this.options.url,
-		method: 'get',
-		success: function(data) {
-			_this.data.value = data;
-			if (typeof done === 'function') {
-				done.call(null, data);
-			}
-		}
+nx.RestDocument.prototype.request = function(options) {
+	nx.AjaxModel.prototype.request.call(this, {
+		url: options.url || this.options.url,
+		method: options.method,
+		success: options.success
 	});
+};
+
+nx.RestDocument.prototype.retrieve = function(done) {
+	this.request({ method: 'get', success: done	});
 };
 
 nx.RestDocument.prototype.save = function(done) {
-	var _this = this;
-	this.request({
-		url: this.options.url,
-		data: this.data.value,
-		method: 'put',
-		success: function(data) {
-			_this.data.value = data;
-			if (typeof done === 'function') {
-				done.call(null, data);
-			}
-		}
-	});
+	this.request({ method: 'put', success: done	});
 };
 
 nx.RestDocument.prototype.remove = function(done) {
-	var _this = this;
-	this.request({
-		url: this.options.url,
-		data: this.data.value, // for url interpolation
-		method: 'delete',
-		success: function(data) {
-			if (typeof done === 'function') {
-				done.call(null, data);
-			}
-		}
-	});
+	this.request({ method: 'delete', success: done });
 };

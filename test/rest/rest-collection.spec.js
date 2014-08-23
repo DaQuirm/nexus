@@ -37,7 +37,7 @@ describe('nx.RestCollection', function() {
 	describe('create', function() {
 		it('adds a model instance to the collection model with a POST request', function(done) {
 			var collection = new nx.RestCollection({ url: url, item: UserModel });
-			var request_spy = sinon.spy(collection, 'request');
+			var request_spy = sinon.spy(nx.RestDocument.prototype, 'request');
 			var itemData = {
 				firstname: 'Samuel',
 				lastname: 'Vimes'
@@ -55,11 +55,10 @@ describe('nx.RestCollection', function() {
 			]);
 			collection.create(item, function(data) {
 				var requestOptions = request_spy.lastCall.args[0];
-				requestOptions.should.have.property('url', url);
 				requestOptions.should.have.property('method', 'post');
-				requestOptions.data.should.deep.equal(itemData);
 				data.should.deep.equal(response);
 				item.data.value.should.deep.equal(data);
+				nx.RestDocument.prototype.request.restore();
 				done();
 			});
 			server.respond();
