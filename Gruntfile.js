@@ -8,7 +8,10 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 
 		paths: {
-			src_files:             'src/**/*.js',
+			src_files:              [
+										'src/core/utils.js',
+										'src/**/*!(utils).js'
+									],
 			test_files:            'test/**/*.js',
 			build_file:            'build/nexus.js',
 			build_file_compressed: 'build/nexus.min.js',
