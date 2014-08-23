@@ -12,8 +12,7 @@ nx.Collection = function (options) {
 	});
 };
 
-nx.Collection.prototype = Object.create(nx.Cell.prototype);
-nx.Collection.prototype.constructor = nx.Collection;
+nx.Utils.mixin(nx.Collection.prototype, nx.Cell.prototype);
 
 Object.defineProperty(nx.Collection.prototype, 'items', {
 	enumerable : true,

@@ -26,14 +26,6 @@ describe('nx.RestCollection', function() {
 		});
 	});
 
-	describe('items', function() {
-		it('is an nx.Collection instance', function() {
-			var collection = new nx.RestCollection({ url: url });
-			collection.items.should.be.an.instanceOf(nx.Collection);
-			collection.items.items.should.be.empty;
-		});
-	});
-
 	describe('create', function() {
 		it('adds a model instance to the collection model with a POST request', function(done) {
 			var collection = new nx.RestCollection({ url: url, item: UserModel });
@@ -80,10 +72,9 @@ describe('nx.RestCollection', function() {
 				JSON.stringify(response)
 			]);
 			collection.retrieve(function(items) {
-				items.items.should.have.length(2);
+				items.should.have.length(2);
 				collection.items.should.deep.equal(items);
 				var requestOptions = request_spy.lastCall.args[0];
-				requestOptions.should.have.property('url', url);
 				requestOptions.should.have.property('method', 'get');
 				done();
 			});
@@ -102,8 +93,8 @@ describe('nx.RestCollection', function() {
 				JSON.stringify(response)
 			]);
 			collection.retrieve(function(items) {
-				collection.items.items.should.have.length(2);
-				collection.items.items[1].data.value.should.deep.equal(response[1]);
+				collection.items.should.have.length(2);
+				collection.items[1].data.value.should.deep.equal(response[1]);
 				done();
 			});
 			server.respond();

@@ -1,33 +1,34 @@
 window.nx = window.nx || {};
 
 nx.RestCollection = function(options) {
-	nx.AjaxModel.call(this, options);
 	nx.Collection.call(this, options);
+	nx.AjaxModel.call(this, options);
 	this.options = options;
 
 	var _this = this;
-	this.data.bind(
-		this,
+	this.bind(
+		this.data,
 		'<->',
 		function (items) {
-			return items.map(function (item) {
-				new _this.options.item({ data: item, url: _this.options.url });
-			});
+			return items.map(function (item) { return item.data.value; });
 		},
 		function (items) {
-			items.map(function (item) { return item.data.value; });
+			return items.map(function (item) {
+				return new _this.options.item({ data: item, url: _this.options.url });
+			});
 		}
 	);
 };
 
-nx.RestCollection.prototype = Object.create(nx.AjaxModel.prototype);
-nx.RestCollection.prototype.constructor = nx.RestCollection;
+nx.Utils.mixin(nx.RestCollection.prototype, nx.Collection.prototype);
+nx.Utils.mixin(nx.RestCollection.prototype, nx.AjaxModel.prototype);
 
 nx.RestCollection.prototype.request = function(options) {
+	var _this = this;
 	nx.AjaxModel.prototype.request.call(this, {
 		url: this.options.url,
 		method: options.method,
-		success: options.success
+		success: function () { options.success(_this.items); }
 	});
 };
 
