@@ -158,6 +158,25 @@ describe('nxt.ContentRegion', function() {
 			region.cells[0].value.visible.should.equal(false);
 			region.cells[0].value.renderer.unrender.restore();
 		});
+
+		it('calls the unrender method of the event renderer if command is undefined', function() {
+			var cell = new nx.Cell();
+			region.add(cell);
+			var data = { name: 'click', handler: sinon.spy() };
+			cell.value = new nxt.Command('Event', 'add', data);
+			region.cells[0].value.renderer.should.be.an.instanceof(nxt.EventRenderer);
+			domContext.container.click();
+			data.handler.should.have.been.calledOnce;
+			var spy = sinon.spy(region.cells[0].value.renderer, 'unrender');
+			cell.value = undefined;
+			spy.should.have.been.called;
+			spy.getCall(0).args[0].container.should.equal(domContext.container);
+			region.cells[0].value.visible.should.equal(false);
+			domContext.container.click();
+			data.handler.should.have.been.calledOnce;
+			region.cells[0].value.renderer.unrender.restore();
+
+		});
 	});
 
 	it('keeps track of items\' visibility and updates insert references so that items are rendered in the correct order', function () {
