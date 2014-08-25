@@ -43,3 +43,11 @@ nx.RestCollection.prototype.create = function(doc, done) {
 nx.RestCollection.prototype.retrieve = function(done) {
 	this.request({ method: 'get', success: done });
 };
+
+nx.RestCollection.prototype.remove = function (doc, done) {
+	var _this = this;
+	doc.remove(function () {
+		nx.Collection.prototype.remove.call(_this, doc);
+		done();
+	});
+};

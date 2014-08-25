@@ -1,11 +1,11 @@
 describe('nx.RestCollection', function() {
 
 	var url = 'http://localhost/users/';
-	var UserModel = nx.RestDocument;
 
-	UserModel.constructor = function () {
-		nx.RestDocument.call(this, { url: url });
+	var UserModel = function (options) {
+		nx.RestDocument.call(this, { url: url, data: options.data });
 	};
+	nx.Utils.mixin(UserModel.prototype, nx.RestDocument.prototype);
 
 	beforeEach(function() {
 		xhr = sinon.useFakeXMLHttpRequest();
@@ -111,13 +111,16 @@ describe('nx.RestCollection', function() {
 				url: url,
 				item: UserModel,
 				items: [
-					{ firstname: 'Samuel', lastname: 'Vimes' },
-					{ firstname: 'Fred', lastname: 'Colon' }
+					new UserModel({ firstname: 'Samuel', lastname: 'Vimes' }),
+					new UserModel({ firstname: 'Fred', lastname: 'Colon' })
 				]
 			});
 			var fred = collection.items[1];
 			collection.remove(fred, function () {
 				fred.remove.should.have.been.called;
+				server.requests.length.should.equal(1);
+				server.requests[0].url.should.equal(url);
+				server.requests[0].method.should.equal('delete');
 				collection.items.should.not.contain(fred);
 				done();
 			});
