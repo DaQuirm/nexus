@@ -3,6 +3,10 @@ describe('nx.RestCollection', function() {
 	var url = 'http://localhost/users/';
 	var UserModel = nx.RestDocument;
 
+	UserModel.constructor = function () {
+		nx.RestDocument.call(this, { url: url });
+	};
+
 	beforeEach(function() {
 		xhr = sinon.useFakeXMLHttpRequest();
 		model = new nx.RestDocument({ url: url });
@@ -98,6 +102,25 @@ describe('nx.RestCollection', function() {
 				done();
 			});
 			server.respond();
+		});
+	});
+
+	describe('remove', function (done) {
+		it('calls the `remove` method of a document and removes it from the collection if request succeeds', function () {
+			var collection = new nx.RestCollection({
+				url: url,
+				item: UserModel,
+				items: [
+					{ firstname: 'Samuel', lastname: 'Vimes' },
+					{ firstname: 'Fred', lastname: 'Colon' }
+				]
+			});
+			var fred = collection.items[1];
+			collection.remove(fred, function () {
+				fred.remove.should.have.been.called;
+				collection.items.should.not.contain(fred);
+				done();
+			});
 		});
 	});
 });
