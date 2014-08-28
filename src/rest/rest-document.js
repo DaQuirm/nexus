@@ -5,7 +5,7 @@ nx.RestDocument = function(options) {
 	this.options = options;
 };
 
-nx.RestDocument.prototype = Object.create(nx.AjaxModel.prototype);
+nx.Utils.mixin(nx.RestDocument.prototype, nx.AjaxModel.prototype);
 nx.RestDocument.prototype.constructor = nx.RestDocument;
 
 nx.RestDocument.prototype.request = function(options) {

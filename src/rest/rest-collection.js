@@ -22,13 +22,18 @@ nx.RestCollection = function(options) {
 
 nx.Utils.mixin(nx.RestCollection.prototype, nx.Collection.prototype);
 nx.Utils.mixin(nx.RestCollection.prototype, nx.AjaxModel.prototype);
+nx.RestCollection.prototype.constructor = nx.RestCollection;
 
 nx.RestCollection.prototype.request = function(options) {
 	var _this = this;
 	nx.AjaxModel.prototype.request.call(this, {
 		url: this.options.url,
 		method: options.method,
-		success: function () { options.success(_this.items); }
+		success: function () {
+			if (typeof options.success === 'function') {
+				options.success(_this.items);
+			}
+		}
 	});
 };
 
@@ -48,6 +53,8 @@ nx.RestCollection.prototype.remove = function (doc, done) {
 	var _this = this;
 	doc.remove(function () {
 		nx.Collection.prototype.remove.call(_this, doc);
-		done();
+		if (typeof done === 'function') {
+			done();
+		}
 	});
 };
