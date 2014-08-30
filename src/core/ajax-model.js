@@ -10,6 +10,7 @@ nx.AjaxModel = function(options) {
 	options = options || {};
 
 	this.data = new nx.Cell();
+	this.error = new nx.Cell();
 	this.status = new nx.Cell();
 
 	if (typeof options.data !== 'undefined') {
@@ -25,24 +26,26 @@ nx.AjaxModel.prototype.request = function(options) {
 	this.xhr.responseType = (!window.chrome) ? 'json' : 'text';
 
 	this.xhr.onload = function (evt) {
-		var handler;
+		var handler, data;
+
+		if (this.responseType === "json") {
+			data = this.response;
+		} else if (this.responseText) {
+			data = JSON.parse(this.responseText);
+		}
 
 		if (this.status === 200 || this.status === 201 || this.status === 204) {
 			handler = options.success;
+			_this.data.value = data;
 			_this.status.value = nx.AsyncStatus.DONE;
 		} else {
 			handler = options.error;
+			_this.error.value = data;
 			_this.status.value = nx.AsyncStatus.ERROR;
 		}
 
-		if (this.responseType === "json") {
-			_this.data.value = this.response;
-		} else if (this.responseText) {
-			_this.data.value = JSON.parse(this.responseText);
-		}
-
 		if (typeof handler === 'function') {
-			handler(_this.data.value);
+			handler(data);
 		}
 	};
 

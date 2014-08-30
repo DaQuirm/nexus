@@ -133,6 +133,24 @@ describe('nx.AjaxModel', function() {
 			success_handler.should.not.have.been.called;
 		});
 
+		it('saves xhr data to the error cell', function (done) {
+			var response = { 'error': 'not found' };
+			server.respondWith([
+				404,
+				{ "Content-Type": "application/json" },
+				JSON.stringify(response)
+			]);
+			model.request({
+				url: url,
+				method: 'put',
+				error: function (data) {
+					model.error.value.should.deep.equal(data);
+					done();
+				}
+			});
+			server.respond();
+		});
+
 		it('changes model status to loading when request is sent', function() {
 			model.request({
 				url: url,
