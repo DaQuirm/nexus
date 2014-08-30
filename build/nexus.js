@@ -1,6 +1,27 @@
 (function() {
 	'use strict';
 window.nx = window.nx || {};
+window.nx.Utils = window.nx.Utils || {};
+
+nx.Utils.interpolateString = function(string, props) {
+	var matches = string.match(/[^{\}]+(?=\})/g);
+	if (matches) {
+		matches.forEach(function(match) {
+			string = string.replace('{'+match+'}', props[match]);
+		});
+	}
+	return string;
+};
+
+nx.Utils.mixin = function(target, source) {
+	var keys = Object.getOwnPropertyNames(source);
+	keys.forEach(function (key) {
+		var desc = Object.getOwnPropertyDescriptor(source, key);
+		Object.defineProperty(target, key, desc);
+	});
+};
+
+window.nx = window.nx || {};
 
 nx.AsyncStatus = {
 	LOADING: 1,
@@ -12,6 +33,7 @@ nx.AjaxModel = function(options) {
 	options = options || {};
 
 	this.data = new nx.Cell();
+	this.error = new nx.Cell();
 	this.status = new nx.Cell();
 
 	if (typeof options.data !== 'undefined') {
@@ -21,34 +43,38 @@ nx.AjaxModel = function(options) {
 
 nx.AjaxModel.prototype.request = function(options) {
 	var _this = this;
-	var url = nx.Utils.interpolateString(options.url, options.data);
+	var url = nx.Utils.interpolateString(options.url, this.data.value);
 	this.xhr = new XMLHttpRequest();
 	this.xhr.open(options.method, url, true);
 	this.xhr.responseType = (!window.chrome) ? 'json' : 'text';
 
 	this.xhr.onload = function (evt) {
-		var handler;
+		var handler, data;
+
+		if (this.responseType === "json") {
+			data = this.response;
+		} else if (this.responseText) {
+			data = JSON.parse(this.responseText);
+		}
+
 		if (this.status === 200 || this.status === 201 || this.status === 204) {
 			handler = options.success;
+			_this.data.value = data;
 			_this.status.value = nx.AsyncStatus.DONE;
 		} else {
 			handler = options.error;
+			_this.error.value = data;
 			_this.status.value = nx.AsyncStatus.ERROR;
 		}
+
 		if (typeof handler === 'function') {
-			if (this.responseType === "json") {
-				handler(this.response);
-			} else if (this.responseText) {
-				handler(JSON.parse(this.responseText));
-			} else {
-				handler();
-			}
+			handler(data);
 		}
 	};
 
 	if (options.method === 'post' || options.method === 'put') {
 		this.xhr.setRequestHeader('Content-Type', 'application/json');
-		this.xhr.send(JSON.stringify(options.data));
+		this.xhr.send(JSON.stringify(this.data.value));
 	} else {
 		this.xhr.send();
 	}
@@ -162,7 +188,7 @@ nx.Collection = function (options) {
 	});
 };
 
-nx.Collection.prototype = Object.create(nx.Cell.prototype);
+nx.Utils.mixin(nx.Collection.prototype, nx.Cell.prototype);
 nx.Collection.prototype.constructor = nx.Collection;
 
 Object.defineProperty(nx.Collection.prototype, 'items', {
@@ -268,19 +294,6 @@ nx.Mapping.prototype.inverse = function() {
 	return new nx.Mapping(inversePattern);
 };
 
-window.nx = window.nx || {};
-window.nx.Utils = window.nx.Utils || {};
-
-nx.Utils.interpolateString = function(string, props) {
-	var matches = string.match(/[^{\}]+(?=\})/g);
-	if (matches) {
-		matches.forEach(function(match) {
-			string = string.replace('{'+match+'}', props[match]);
-		});
-	}
-	return string;
-};
-
 window.nxt = window.nxt || {};
 
 nxt.Command = function(type, method, data) {
@@ -328,6 +341,7 @@ nxt.ContentRegion.prototype.add = function(commandCell) {
 nxt.ContentRegion.prototype.update = function(state) {
 	var hasRenderer = typeof state.renderer !== 'undefined';
 	var noCommand = typeof state.command === 'undefined';
+	var wasVisible = state.visible;
 	if (hasRenderer) {
 		if (noCommand) {
 			state.domContext.content = state.renderer.unrender(state.domContext);
@@ -347,16 +361,18 @@ nxt.ContentRegion.prototype.update = function(state) {
 		}
 	}
 	var insertReference;
-	if (state.visible) {
-		insertReference = Array.isArray(state.domContext.content)
-			? state.domContext.content[0]
-			: state.domContext.content; // cell's content will serve as an insert reference
-	} else {
-		insertReference = state.domContext.insertReference; // item's right visible neighbor will serve as an insert reference
-	}
-	for (var index = state.index - 1; index >= 0; index--) {
-		this.cells[index].value.domContext.insertReference = insertReference;
-		if (this.cells[index].value.visible) { break; }
+	if (state.visible !== wasVisible) {
+		if (state.visible) {
+			insertReference = Array.isArray(state.domContext.content)
+				? state.domContext.content[0]
+				: state.domContext.content; // cell's content will serve as an insert reference
+		} else {
+			insertReference = state.domContext.insertReference; // item's right visible neighbor will serve as an insert reference
+		}
+		for (var index = state.index - 1; index >= 0; index--) {
+			this.cells[index].value.domContext.insertReference = insertReference;
+			if (this.cells[index].value.visible) { break; }
+		}
 	}
 };
 
@@ -447,6 +463,11 @@ nxt.ContentRenderer.prototype.reset = function(data, domContext) {
 	return this.render(data, domContext);
 };
 
+nxt.ContentRenderer.prototype.get = function(data, domContext) {
+	data.next(domContext.content);
+	return domContext.content;
+};
+
 nxt.ContentRenderer.prototype.visible = function(content) {
 	return content.length > 0;
 };
@@ -504,8 +525,8 @@ nxt.Binding = function(cell, conversion, mode) {
 	return commandCell;
 };
 
-nxt.DelegatedEvent = function(name, handlers) {
-	return new nxt.Command('DelegatedEvent', 'add', { name: name, handlers: handlers });
+nxt.ItemEvent = function(name, handlers) {
+	return { name: name, handlers: handlers };
 };
 
 nxt.Collection = function () {
@@ -520,7 +541,46 @@ nxt.Collection = function () {
 		}
 		return command;
 	});
-	return commandCell;
+	var delegatedEvents;
+	if (events.length > 0) {
+		delegatedEvents = events.map(function(event) {
+			return nxt.Event(event.name, function(evt) {
+				var target = evt.target;
+				var contentIndex, contentItem;
+				collection.event.value = new nxt.Command('Content', 'get', {
+					items: [], // so that collection's event cell converter doesn't complain
+					next: function(content) {
+						content.some(function(item, index) {
+							var found = item.isEqualNode(target) || item.contains(target);
+							if (found) {
+								contentIndex = index;
+								contentItem = item;
+							}
+							return found;
+						});
+						var selectors = Object.keys(event.handlers);
+						var callMatchingHandlers = function(selector) {
+							if (target.matches(selector)) {
+								event.handlers[selector].call(
+									null,
+									evt,
+									collection.items[contentIndex]
+								);
+							}
+						};
+						while (!contentItem.isEqualNode(target)) {
+							selectors.forEach(callMatchingHandlers);
+							target = target.parentNode;
+						}
+						selectors.forEach(callMatchingHandlers);
+					}
+				});
+			});
+		});
+		return [commandCell].concat(delegatedEvents);
+	} else {
+		return commandCell;
+	}
 };
 
 window.nxt = window.nxt || {};
@@ -555,6 +615,11 @@ nxt.EventRenderer = function() {};
 
 nxt.EventRenderer.prototype.add = function(data, domContext) {
 	domContext.container.addEventListener(data.name, data.handler);
+	return data;
+};
+
+nxt.EventRenderer.prototype.unrender = function(domContext) {
+	domContext.container.removeEventListener(domContext.content.name, domContext.content.handler);
 };
 
 window.nxt = window.nxt || {};
@@ -585,41 +650,60 @@ nxt.NodeRenderer.prototype.unrender = function(domContext) {
 window.nx = window.nx || {};
 
 nx.RestCollection = function(options) {
+	nx.Collection.call(this, options);
 	nx.AjaxModel.call(this, options);
 	this.options = options;
-	this.items = new nx.Collection();
+
+	var _this = this;
+	this.bind(
+		this.data,
+		'<->',
+		function (items) {
+			return items.map(function (item) { return item.data.value; });
+		},
+		function (items) {
+			return items.map(function (item) {
+				return new _this.options.item({ data: item, url: _this.options.url });
+			});
+		}
+	);
 };
 
-nx.RestCollection.prototype = Object.create(nx.AjaxModel.prototype);
+nx.Utils.mixin(nx.RestCollection.prototype, nx.Collection.prototype);
+nx.Utils.mixin(nx.RestCollection.prototype, nx.AjaxModel.prototype);
 nx.RestCollection.prototype.constructor = nx.RestCollection;
 
-nx.RestCollection.prototype.create = function(doc, done) {
-	this.request({
+nx.RestCollection.prototype.request = function(options) {
+	var _this = this;
+	nx.AjaxModel.prototype.request.call(this, {
 		url: this.options.url,
-		method: 'post',
-		data: doc.data.value,
-		success: function(response) {
-			doc.data.value = response;
-			if (typeof done === 'function') {
-				done.call(null, response);
+		method: options.method,
+		success: function () {
+			if (typeof options.success === 'function') {
+				options.success(_this.items);
 			}
 		}
 	});
 };
 
-nx.RestCollection.prototype.retrieve = function(done) {
-	var _this = this;
-	this.request({
+nx.RestCollection.prototype.create = function(doc, done) {
+	nx.RestDocument.prototype.request.call(doc, {
 		url: this.options.url,
-		method: 'get',
-		success: function(items) {
-			_this.items.items = items.map(function(item) {
-				var doc = new _this.options.item({ data: item, url: _this.options.url });
-				return doc;
-			});
-			if (typeof done === 'function') {
-				done.call(null, _this.items);
-			}
+		method: 'post',
+		success: done
+	});
+};
+
+nx.RestCollection.prototype.retrieve = function(done) {
+	this.request({ method: 'get', success: done });
+};
+
+nx.RestCollection.prototype.remove = function (doc, done) {
+	var _this = this;
+	doc.remove(function () {
+		nx.Collection.prototype.remove.call(_this, doc);
+		if (typeof done === 'function') {
+			done();
 		}
 	});
 };
@@ -631,50 +715,27 @@ nx.RestDocument = function(options) {
 	this.options = options;
 };
 
-nx.RestDocument.prototype = Object.create(nx.AjaxModel.prototype);
+nx.Utils.mixin(nx.RestDocument.prototype, nx.AjaxModel.prototype);
 nx.RestDocument.prototype.constructor = nx.RestDocument;
 
-nx.RestDocument.prototype.retrieve = function(done) {
-	var _this = this;
-	this.request({
-		url: this.options.url,
-		method: 'get',
-		success: function(data) {
-			_this.data.value = data;
-			if (typeof done === 'function') {
-				done.call(null, data);
-			}
-		}
+nx.RestDocument.prototype.request = function(options) {
+	nx.AjaxModel.prototype.request.call(this, {
+		url: options.url || this.options.url,
+		method: options.method,
+		success: options.success
 	});
+};
+
+nx.RestDocument.prototype.retrieve = function(done) {
+	this.request({ method: 'get', success: done	});
 };
 
 nx.RestDocument.prototype.save = function(done) {
-	var _this = this;
-	this.request({
-		url: this.options.url,
-		data: this.data.value,
-		method: 'put',
-		success: function(data) {
-			_this.data.value = data;
-			if (typeof done === 'function') {
-				done.call(null, data);
-			}
-		}
-	});
+	this.request({ method: 'put', success: done	});
 };
 
 nx.RestDocument.prototype.remove = function(done) {
-	var _this = this;
-	this.request({
-		url: this.options.url,
-		data: this.data.value, // for url interpolation
-		method: 'delete',
-		success: function(data) {
-			if (typeof done === 'function') {
-				done.call(null, data);
-			}
-		}
-	});
+	this.request({ method: 'delete', success: done });
 };
 
 })();
