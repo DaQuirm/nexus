@@ -52,7 +52,7 @@ describe('nx.Mapping', function() {
 			(function(){ mapping.map(obj); }).should.not.throw(TypeError);
 			should.not.exist(mapping.map(obj));
 			mapping = new nx.Mapping({ '_':'code' });
-			(function(){ mapping.map(obj, 1337); }).should.not.throw(TypeError);
+			(function(){ mapping.map(obj, {}); }).should.not.throw(TypeError);
 		})
 	});
 
