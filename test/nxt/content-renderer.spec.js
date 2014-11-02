@@ -115,6 +115,20 @@ describe('nxt.ContentRenderer', function() {
 		});
 	});
 
+	describe('createRegion', function () {
+		it('creates a nxt.ContentRegion instance, adds cells into it and pushes the region to the region array', function () {
+			var cell = new nx.Cell();
+			var cells = [
+				nxt.Binding(cell, nxt.Text),
+				nxt.Binding(cell, nxt.Text)
+			];
+			renderer.regions = [];
+			renderer.createRegion({ container: domContext.container }, cells);
+			renderer.regions.length.should.equal(1);
+			renderer.regions[0].cells.length.should.equal(cells.length);
+		});
+	});
+
 	describe('append', function () {
 		it('appends content items to the container', function () {
 			var content = renderer.render({ items: [nxt.Element('header')] }, domContext);
