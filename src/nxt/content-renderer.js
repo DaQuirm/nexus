@@ -14,13 +14,13 @@ nxt.ContentRenderer.prototype.render = function(data, domContext) {
 				var content = command.run(domContext);
 				contentItems.push(content);
 				if (cells.length > 0) { // dynamic content followed by static content
-					_this.createRegion(
-						{
-							container: domContext.container,
-							insertReference: content
-						},
-						cells
-					);
+					var regionContext = { container: domContext.container };
+					// only visible items can serve as an insert reference
+					var renderer = new nxt[command.type + 'Renderer']();
+					if (typeof renderer.visible === 'function' && renderer.visible(content)) {
+						regionContext.insertReference = content;
+					}
+					_this.createRegion(regionContext, cells);
 					cells = [];
 				}
 			} else {
