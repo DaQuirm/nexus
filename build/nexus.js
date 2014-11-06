@@ -384,15 +384,7 @@ nxt.ContentRenderer.prototype.render = function(data, domContext) {
 	this.regions = [];
 	var cells = [];
 	var contentItems = [];
-
 	var _this = this;
-	var createRegion = function(domContext, cells) {
-		var newRegion = new nxt.ContentRegion(domContext);
-		for (var itemIndex = 0; itemIndex < cells.length; itemIndex++) {
-			newRegion.add(cells[itemIndex]);
-		}
-		_this.regions.push(newRegion);
-	};
 
 	data.items.forEach(function (command) {
 		if (command !== undefined) {
@@ -400,13 +392,13 @@ nxt.ContentRenderer.prototype.render = function(data, domContext) {
 				var content = command.run(domContext);
 				contentItems.push(content);
 				if (cells.length > 0) { // dynamic content followed by static content
-					createRegion(
-						{
-							container: domContext.container,
-							insertReference: content
-						},
-						cells
-					);
+					var regionContext = { container: domContext.container };
+					// only visible items can serve as an insert reference
+					var renderer = new nxt[command.type + 'Renderer']();
+					if (typeof renderer.visible === 'function' && renderer.visible(content)) {
+						regionContext.insertReference = content;
+					}
+					_this.createRegion(regionContext, cells);
 					cells = [];
 				}
 			} else {
@@ -417,9 +409,17 @@ nxt.ContentRenderer.prototype.render = function(data, domContext) {
 
 	if (cells.length > 0) {
 		// no need for an insert reference as these cells' content is appended by default
-		createRegion({ container: domContext.container }, cells);
+		this.createRegion({ container: domContext.container }, cells);
 	}
 	return contentItems;
+};
+
+nxt.ContentRenderer.prototype.createRegion = function(domContext, cells) {
+	var newRegion = new nxt.ContentRegion(domContext);
+	for (var itemIndex = 0; itemIndex < cells.length; itemIndex++) {
+		newRegion.add(cells[itemIndex]);
+	}
+	this.regions.push(newRegion);
 };
 
 nxt.ContentRenderer.prototype.append = function(data, domContext) {
