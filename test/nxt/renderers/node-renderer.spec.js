@@ -67,10 +67,12 @@ describe('nxt.NodeRenderer', function() {
 		});
 	});
 
-	describe('visible', function () {
+	describe('isVisible', function () {
 		it('returns true for node-type content', function () {
-			renderer.visible(domContext.container).should.equal(true);
+			renderer.visible(document.createElement('a')).should.equal(true);
+			renderer.visible(document.createTextNode('a')).should.equal(true);
 			renderer.visible(undefined).should.equal(false);
+			renderer.visible({}).should.equal(false);
 		});
 	});
 

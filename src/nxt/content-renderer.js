@@ -15,9 +15,9 @@ nxt.ContentRenderer.prototype.render = function(data, domContext) {
 				contentItems.push(content);
 				if (cells.length > 0) { // dynamic content followed by static content
 					var regionContext = { container: domContext.container };
-					// only visible items can serve as an insert reference
+					// only DOM-visible items can serve as an insert reference
 					var renderer = new nxt[command.type + 'Renderer']();
-					if (typeof renderer.visible === 'function' && renderer.visible(content)) {
+					if (nxt.NodeRenderer.prototype.visible(content)) {
 						regionContext.insertReference = content;
 					}
 					_this.createRegion(regionContext, cells);
@@ -91,5 +91,5 @@ nxt.ContentRenderer.prototype.get = function(data, domContext) {
 };
 
 nxt.ContentRenderer.prototype.visible = function(content) {
-	return content.length > 0;
+	return content.some(nxt.NodeRenderer.prototype.visible);
 };

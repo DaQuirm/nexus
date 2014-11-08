@@ -16,7 +16,8 @@ nxt.NodeRenderer.prototype.render = function(data, domContext) {
 };
 
 nxt.NodeRenderer.prototype.visible = function(content) {
-	return typeof content !== 'undefined';
+	return typeof content !== 'undefined'
+		&& (content.nodeType === Node.ELEMENT_NODE || content.nodeType === Node.TEXT_NODE);
 };
 
 nxt.NodeRenderer.prototype.unrender = function(domContext) {

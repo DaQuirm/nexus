@@ -45,7 +45,7 @@ nxt.ContentRegion.prototype.update = function(state) {
 		if (typeof state.renderer.visible === 'function') {
 			state.visible = state.renderer.visible(state.domContext.content);
 		} else {
-			state.visible = false;
+			state.visible = nxt.NodeRenderer.prototype.visible(state.domContext.content);
 		}
 	}
 	var insertReference;

@@ -255,7 +255,21 @@ describe('nxt.ContentRenderer', function() {
 	describe('visible', function () {
 		it('returns true for non-empty collection content', function () {
 			renderer.visible([]).should.equal(false);
-			renderer.visible([1,2,3]).should.equal(true);
+			renderer.visible([
+				document.createElement('li'),
+				document.createElement('li'),
+				document.createElement('li')
+			]).should.equal(true);
+		});
+
+		it('checks all content items and takes their visibility into consideration', function () {
+			var contentItems = renderer.render({
+				items: [
+					nxt.Event('click', function(){}),
+					nxt.Event('mouseover', function(){})
+				]
+			}, domContext);
+			renderer.visible(contentItems).should.equal(false);
 		});
 	});
 
