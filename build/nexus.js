@@ -357,7 +357,7 @@ nxt.ContentRegion.prototype.update = function(state) {
 		if (typeof state.renderer.visible === 'function') {
 			state.visible = state.renderer.visible(state.domContext.content);
 		} else {
-			state.visible = false;
+			state.visible = nxt.NodeRenderer.prototype.visible(state.domContext.content);
 		}
 	}
 	var insertReference;
@@ -393,9 +393,9 @@ nxt.ContentRenderer.prototype.render = function(data, domContext) {
 				contentItems.push(content);
 				if (cells.length > 0) { // dynamic content followed by static content
 					var regionContext = { container: domContext.container };
-					// only visible items can serve as an insert reference
+					// only DOM-visible items can serve as an insert reference
 					var renderer = new nxt[command.type + 'Renderer']();
-					if (typeof renderer.visible === 'function' && renderer.visible(content)) {
+					if (nxt.NodeRenderer.prototype.visible(content)) {
 						regionContext.insertReference = content;
 					}
 					_this.createRegion(regionContext, cells);
@@ -469,7 +469,7 @@ nxt.ContentRenderer.prototype.get = function(data, domContext) {
 };
 
 nxt.ContentRenderer.prototype.visible = function(content) {
-	return content.length > 0;
+	return content.some(nxt.NodeRenderer.prototype.visible);
 };
 
 window.nxt = window.nxt || {};
@@ -588,12 +588,22 @@ window.nxt = window.nxt || {};
 nxt.AttrRenderer = function() {};
 
 nxt.AttrRenderer.prototype.render = function(data, domContext) {
+	var attrMap = {};
 	if (typeof data.items !== 'undefined') {
 		for (var key in data.items) {
 			domContext.container.setAttribute(key, data.items[key]);
 		}
+		attrMap = data.items;
 	} else {
 		domContext.container.setAttribute(data.name, data.value);
+		attrMap[data.name] = data.value;
+	}
+	return attrMap;
+};
+
+nxt.AttrRenderer.prototype.unrender = function(domContext) {
+	for (var key in domContext.content) {
+		domContext.container.removeAttribute(key);
 	}
 };
 
@@ -640,7 +650,8 @@ nxt.NodeRenderer.prototype.render = function(data, domContext) {
 };
 
 nxt.NodeRenderer.prototype.visible = function(content) {
-	return typeof content !== 'undefined';
+	return typeof content !== 'undefined'
+		&& (content.nodeType === Node.ELEMENT_NODE || content.nodeType === Node.TEXT_NODE);
 };
 
 nxt.NodeRenderer.prototype.unrender = function(domContext) {
