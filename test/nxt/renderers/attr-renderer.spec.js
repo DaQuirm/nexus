@@ -9,7 +9,7 @@ describe('nxt.AttrRenderer', function() {
 		domContext = { container: document.createElement('a') };
 	});
 
-	describe('set', function() {
+	describe('render', function() {
 		it('sets an attribute of a DOM element', function() {
 			renderer.render(nxt.Attr('class', 'large-text').data, domContext);
 			domContext.container.getAttribute('class').should.equal('large-text');
@@ -22,6 +22,24 @@ describe('nxt.AttrRenderer', function() {
 			}).data, domContext);
 			domContext.container.getAttribute('class').should.equal('large-text');
 			domContext.container.getAttribute('id').should.equal('awesomest-link-ever');
+		});
+
+		it('returns attribute\'s name and value', function () {
+			var data = {
+				'class': 'large-text',
+				'id': 'awesomest-link-ever'
+			};
+			var content = renderer.render(nxt.Attr(data).data, domContext);
+			content.should.deep.equal(data);
+		});
+	});
+
+	describe('unrender', function () {
+		it('unsets attributes of the container', function() {
+			domContext.content = renderer.render(nxt.Attr('data-type', 'large-text').data, domContext);
+			domContext.container.getAttribute('data-type').should.equal('large-text');
+			renderer.unrender(domContext);
+			domContext.container.hasAttribute('data-type').should.equal(false);
 		});
 	});
 });
