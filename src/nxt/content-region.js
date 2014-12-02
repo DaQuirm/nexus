@@ -49,17 +49,15 @@ nxt.ContentRegion.prototype.update = function(state) {
 		}
 	}
 	var insertReference;
-	if (state.visible !== wasVisible) {
-		if (state.visible) {
-			insertReference = Array.isArray(state.domContext.content)
-				? state.domContext.content[0]
-				: state.domContext.content; // cell's content will serve as an insert reference
-		} else {
-			insertReference = state.domContext.insertReference; // item's right visible neighbor will serve as an insert reference
-		}
-		for (var index = state.index - 1; index >= 0; index--) {
-			this.cells[index].value.domContext.insertReference = insertReference;
-			if (this.cells[index].value.visible) { break; }
-		}
+	if (state.visible) {
+		insertReference = Array.isArray(state.domContext.content)
+			? state.domContext.content[0]
+			: state.domContext.content; // cell's content will serve as an insert reference
+	} else {
+		insertReference = state.domContext.insertReference; // item's right visible neighbor will serve as an insert reference
+	}
+	for (var index = state.index - 1; index >= 0; index--) {
+		this.cells[index].value.domContext.insertReference = insertReference;
+		if (this.cells[index].value.visible) { break; }
 	}
 };

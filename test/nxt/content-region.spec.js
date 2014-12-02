@@ -332,4 +332,21 @@ describe('nxt.ContentRegion', function() {
 		should.not.exist(region.cells[3].value.domContext.insertReference);
 		element.textContent.should.equal('acd');
 	});
+
+	it('updates cells\' insertReferences when a cell\'s content changes', function () {
+		region = new nxt.ContentRegion({
+			container: element
+		});
+		var addCell = function(cell) {
+			region.add(nxt.Binding(cell, nxt.Text));
+		};
+		var first = new nx.Cell();
+		var second = new nx.Cell();
+		addCell(first);
+		addCell(second);
+		second.value = 'rock';
+		region.cells[0].value.domContext.insertReference.should.equal(region.cells[1].value.domContext.content);
+		second.value = 'roll';
+		region.cells[0].value.domContext.insertReference.should.equal(region.cells[1].value.domContext.content);
+	});
 });
