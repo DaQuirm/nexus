@@ -79,6 +79,21 @@ describe('nxt.ContentRenderer', function() {
 			element.lastChild.textContent.toLowerCase().should.equal('cellar door');
 		});
 
+		it('passes the insertReference if last items rendered form a region', function () {
+			var cell = new nx.Cell();
+			var referenceNode = document.createElement('a');
+			domContext.container.appendChild(referenceNode);
+			renderer.render({
+				items: [
+					nxt.Attr('class', 'container'),
+					nxt.Element('div', nxt.Text('cellar door')),
+					nxt.Binding(cell, nxt.Text),
+					nxt.Binding(cell, nxt.Text)
+				]
+			}, { container: domContext.container, insertReference: referenceNode });
+			renderer.regions[0].domContext.insertReference.isEqualNode(referenceNode).should.equal(true);
+		});
+
 		it('skips undefined items', function () {
 			var cell = new nx.Cell();
 			renderer.render({
