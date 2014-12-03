@@ -407,7 +407,7 @@ nxt.ContentRenderer.prototype.render = function(data, domContext) {
 
 	if (cells.length > 0) {
 		// no need for an insert reference as these cells' content is appended by default
-		this.createRegion({ container: domContext.container }, cells);
+		this.createRegion({ container: domContext.container, insertReference: domContext.insertReference }, cells);
 	}
 	return contentItems;
 };
@@ -469,8 +469,6 @@ nxt.ContentRenderer.prototype.get = function(data, domContext) {
 nxt.ContentRenderer.prototype.visible = function(content) {
 	return content.some(nxt.NodeRenderer.prototype.visible);
 };
-
-
 
 window.nxt = window.nxt || {};
 
