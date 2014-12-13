@@ -45,9 +45,13 @@ nxt.Element = function() {
 	return new nxt.Command('Node', 'render', { node: node });
 };
 
-nxt.Binding = function(cell, conversion, mode) {
+nxt.Binding = function(cell, conversion, backConversion) {
 	var commandCell = new nx.Cell();
-	cell.bind(commandCell, '->', conversion);
+	if (typeof backConversion === 'undefined') {
+		cell.bind(commandCell, '->', conversion);
+	} else {
+		cell.bind(commandCell, '<->', conversion, backConversion);
+	}
 	return commandCell;
 };
 

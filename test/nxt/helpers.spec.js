@@ -133,6 +133,23 @@ describe('nxt helpers', function() {
 			commandCell.value.data.node.nodeType.should.equal(Node.TEXT_NODE);
 			commandCell.value.data.node.nodeValue.should.equal('cellar door');
 		});
+
+		it('creates a bi-directionally bound command cell when two converters are passed', function () {
+			var cell = new nx.Cell({ value: '' });
+			var commandCell = nxt.Binding(
+				cell,
+				function (value) {
+					return value.toUpperCase();
+				},
+				function (value) {
+					return value.toLowerCase();
+				}
+			);
+			cell.value = 'cellar door';
+			commandCell.value.should.equal('CELLAR DOOR');
+			commandCell.value = 'SNASA'
+			cell.value.should.equal('snasa');
+		});
 	});
 
 	describe('nxt.ItemEvent', function() {
