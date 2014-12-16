@@ -32,6 +32,13 @@ describe('nxt.AttrRenderer', function() {
 			var content = renderer.render(nxt.Attr(data).data, domContext);
 			content.should.deep.equal(data);
 		});
+
+		it('correctly sets the value attribute', function () {
+			domContext = { container: document.createElement('input') };
+			domContext.container.value = '';
+			renderer.render(nxt.Attr('value', 'cellar door').data, domContext);
+			domContext.container.value.should.equal('cellar door');
+		});
 	});
 
 	describe('unrender', function () {
