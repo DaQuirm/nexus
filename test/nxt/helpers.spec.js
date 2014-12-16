@@ -246,4 +246,27 @@ describe('nxt helpers', function() {
 			domContext.container.childNodes[2].childNodes[0].click();
 		});
 	});
+
+	describe('nxt.ValueBinding', function() {
+		'use strict';
+		it('binds a cell with an input value bidirectionally', function (done) {
+			var cell = new nx.Cell({ value: '' });
+			var input = nxt.Element('input',
+				new nxt.ValueBinding(
+					cell,
+					function (value) {
+						return value.toUpperCase();
+					},
+					function (value) {
+						return value.toLowerCase();
+					}
+				)
+			);
+			input.data.node.value = 'CELLAR';
+			cell.value.should.equal('cellar');
+			cell.value = 'door';
+			input.data.node.value.should.equal('DOOR');
+		});
+	});
+
 });
