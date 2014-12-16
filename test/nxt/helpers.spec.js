@@ -248,11 +248,10 @@ describe('nxt helpers', function() {
 	});
 
 	describe('nxt.ValueBinding', function() {
-		'use strict';
-		it('binds a cell with an input value bidirectionally', function (done) {
+		it('binds a cell with an input value bidirectionally', function () {
 			var cell = new nx.Cell({ value: '' });
 			var input = nxt.Element('input',
-				new nxt.ValueBinding(
+				nxt.ValueBinding(
 					cell,
 					function (value) {
 						return value.toUpperCase();
@@ -263,9 +262,17 @@ describe('nxt helpers', function() {
 				)
 			);
 			input.data.node.value = 'CELLAR';
+			var event = new Event('input');
+			input.data.node.dispatchEvent(event);
 			cell.value.should.equal('cellar');
 			cell.value = 'door';
 			input.data.node.value.should.equal('DOOR');
+
+			// and once again, just in case
+			input.data.node.value = 'CELLAR';
+			var event = new Event('input');
+			input.data.node.dispatchEvent(event);
+			cell.value.should.equal('cellar');
 		});
 	});
 
