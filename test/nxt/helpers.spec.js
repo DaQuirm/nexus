@@ -274,6 +274,23 @@ describe('nxt helpers', function() {
 			input.data.node.dispatchEvent(event);
 			cell.value.should.equal('cellar');
 		});
+
+		it('handles value binding when no converters are specified', function () {
+			var cell = new nx.Cell({ value: '' });
+			var input = nxt.Element('input', nxt.ValueBinding(cell));
+			input.data.node.value = 'cellar';
+			var event = new Event('input');
+			input.data.node.dispatchEvent(event);
+			cell.value.should.equal('cellar');
+			cell.value = 'door';
+			input.data.node.value.should.equal('door');
+
+			// and once again, just in case
+			input.data.node.value = 'cellar';
+			var event = new Event('input');
+			input.data.node.dispatchEvent(event);
+			cell.value.should.equal('cellar');
+		});
 	});
 
 });

@@ -116,13 +116,13 @@ nxt.ValueBinding = function (cell, conversion, backConversion) {
 	var locked = false;
 	var eventCommand = nxt.Event('input', function () {
 		locked = true;
-		cell.value = backConversion(this.value);
+		cell.value = backConversion ? backConversion(this.value) : this.value;
 	});
 
 	var commandCell = new nx.Cell();
 	cell.onvalue.add(function (value) {
 		if (!locked) {
-			commandCell.value = nxt.Attr('value', conversion(value));
+			commandCell.value = nxt.Attr('value', conversion ? conversion(value) : value);
 		} else {
 			locked = false;
 		}
