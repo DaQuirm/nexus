@@ -120,6 +120,7 @@ nxt.ValueBinding = function (cell, conversion, backConversion) {
 	});
 
 	var commandCell = new nx.Cell();
+	commandCell.value = nxt.Attr('value', conversion ? conversion(cell.value) : cell.value);
 	cell.onvalue.add(function (value) {
 		if (!locked) {
 			commandCell.value = nxt.Attr('value', conversion ? conversion(value) : value);

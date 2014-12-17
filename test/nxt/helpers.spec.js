@@ -275,6 +275,12 @@ describe('nxt helpers', function() {
 			cell.value.should.equal('cellar');
 		});
 
+		it('initializes input with cell value', function () {
+			var cell = new nx.Cell({ value: 'cellar door' });
+			var input = nxt.Element('input', nxt.ValueBinding(cell));
+			input.data.node.value.should.equal('cellar door');
+		});
+
 		it('handles value binding when no converters are specified', function () {
 			var cell = new nx.Cell({ value: '' });
 			var input = nxt.Element('input', nxt.ValueBinding(cell));
