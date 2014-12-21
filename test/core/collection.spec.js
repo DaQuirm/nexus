@@ -99,19 +99,24 @@ describe('nx.Collection', function() {
 		});
 	});
 
-	describe('removeAll', function () {
-		it('removes all items in the collection', function() {
+	describe('reset', function () {
+		it('replaces all items in the collection', function() {
 			var collection = new nx.Collection({ items: [1,2,3,4,5] });
-			collection.remove(2,4);
-			collection.items.should.deep.equal([1,3,5]);
+			collection.reset([6,7]);
+			collection.items.should.deep.equal([6,7]);
+		});
+
+		it('removes all items in the collection if called with no parameters', function () {
+			var collection = new nx.Collection({ items: [1,2,3,4,5] });
+			collection.reset();
+			collection.items.should.deep.equal([]);
 		});
 
 		it('assigns the `reset` command to the event cell', function() {
 			var collection = new nx.Collection({ items: [1,2,3,4] });
-			collection.removeAll();
-			collection.items.should.deep.equal([]);
+			collection.reset([5,6]);
 			collection.event.value.should.deep.equal(
-				new nxt.Command('Content', 'reset', { items: [] })
+				new nxt.Command('Content', 'reset', { items: [5,6] })
 			);
 		});
 	});
@@ -160,7 +165,7 @@ describe('nx.Collection', function() {
 			cell.value.should.deep.equal(['b', 'd']);
 			collection.insertBefore('b', 'e');
 			cell.value.should.deep.equal(['e', 'b', 'd']);
-			collection.removeAll();
+			collection.reset();
 			cell.value.should.deep.equal([]);
 			collection.items = ['a', 'b', 'c'];
 			cell.value.should.deep.equal(['a', 'b', 'c']);

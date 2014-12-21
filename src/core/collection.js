@@ -60,6 +60,6 @@ nx.Collection.prototype.insertBefore = function(beforeItem, items) {
 	});
 };
 
-nx.Collection.prototype.removeAll = function() {
-	this.items = [];
+nx.Collection.prototype.reset = function(items) {
+	this.items = items || [];
 };
