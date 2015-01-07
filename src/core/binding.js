@@ -1,46 +1,40 @@
 window.nx = window.nx || {};
 
-nx.Binding = function(source, target, mode, sourceConversion, targetConversion) {
+nx.Binding = function (source, target, conversion) {
 	var _this = this;
-	this.mode = mode;
-	this.locked = false;
 
-	if (mode === '<->' && sourceConversion instanceof nx.Mapping) {
-		targetConversion = targetConversion || sourceConversion.inverse();
-	} else if (mode === '<-') {
-		targetConversion = targetConversion || sourceConversion;
-	}
+	this.source = source;
+	this.target = target;
 
-	if (mode !== '<-') { // -> or <->
-		source.onvalue.add(function(value) {
-			_this.sync(target, value, sourceConversion);
-		});
-	}
-	if (mode !== '->') { // <- or <->
-		target.onvalue.add(function(value) {
-			_this.sync(source, value, targetConversion);
-		});
-	}
+	this.conversion = conversion;
 };
 
-nx.Binding.prototype.sync = function(recipient, value, conversion) {
-	if (this.mode === '<->') {
-		if (this.locked) {
-			this.locked = false;
+nx.Binding.prototype.sync = function () {
+	if (typeof this.lock !== 'undefined') {
+		if (this.lock.locked) {
+			this.lock.locked = false;
 			return;
 		} else {
-			this.locked = true;
+			this.lock.locked = true;
 		}
 	}
-	if (typeof conversion !== 'undefined') {
-		if (conversion instanceof nx.Mapping) {
-			value = conversion.map(value, recipient.value);
-		} else if (typeof conversion === 'function') {
-			value = conversion(value);
+
+	var value = this.source.value;
+	if (typeof this.conversion !== 'undefined') {
+		if (this.conversion instanceof nx.Mapping) {
+			value = this.conversion.map(value, this.target.value);
+		} else if (typeof this.conversion === 'function') {
+			value = this.conversion(value);
 		}
-	} else {
-		value = value;
 	}
-	recipient.value = value;
-	recipient.onsync.trigger(value);
+	this.target.value = value;
+	this.target.onsync.trigger(value);
+};
+
+nx.Binding.prototype.pair = function (binding) {
+	return this.lock = binding.lock = { locked: false };
+};
+
+nx.Binding.prototype.unbind = function () {
+	delete this.source.bindings[this.index];
 };

@@ -112,6 +112,7 @@ nxt.Collection = function () {
 		return commandCell;
 	}
 };
+
 nxt.ValueBinding = function (cell, conversion, backConversion) {
 	var locked = false;
 	var eventCommand = nxt.Event('input', function () {
