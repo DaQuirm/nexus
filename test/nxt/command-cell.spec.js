@@ -9,18 +9,18 @@ describe('nxt.CommandCell', function () {
 		});
 	});
 
-	describe('bind', function () {
+	describe('reverseBind', function () {
 		it('creates a command binding with command cell as a target', function () {
 			var cell = new nx.Cell({ value: 'cellar door' });
 			var commandCell = new nxt.CommandCell();
-			var binding = commandCell.bind(cell, nxt.Text);
+			var binding = commandCell.reverseBind(cell, nxt.Text);
 			binding.should.be.an.instanceOf(nxt.CommandBinding);
 		});
 
 		it('stores created binding', function () {
 			var cell = new nx.Cell({ value: 'cellar door' });
 			var commandCell = new nxt.CommandCell();
-			var binding = commandCell.bind(cell, nxt.Text);
+			var binding = commandCell.reverseBind(cell, nxt.Text);
 			commandCell._binding.should.equal(binding);
 		});
 	});
@@ -29,7 +29,7 @@ describe('nxt.CommandCell', function () {
 		it('removes the binding ', function () {
 			var cell = new nx.Cell({ value: 'cellar door' });
 			var commandCell = new nxt.CommandCell();
-			var binding = commandCell.bind(cell, nxt.Text);
+			var binding = commandCell.reverseBind(cell, nxt.Text);
 			var command = commandCell.value;
 			commandCell.unbind();
 			cell.value = 'woooo';

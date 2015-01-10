@@ -59,7 +59,7 @@ describe('nxt.CommandCellModel', function () {
 			model.enter(root);
 			model.enter(parent);
 
-			child.bind(cell, nxt.Text);
+			child.reverseBind(cell, nxt.Text);
 
 			model.exit(parent);
 			model.exit(root);

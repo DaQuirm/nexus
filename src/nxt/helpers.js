@@ -45,13 +45,9 @@ nxt.Element = function() {
 	return new nxt.Command('Node', 'render', { node: node });
 };
 
-nxt.Binding = function(cell, conversion, backConversion) {
-	var commandCell = new nx.Cell();
-	if (typeof backConversion === 'undefined') {
-		cell.bind(commandCell, '->', conversion);
-	} else {
-		cell.bind(commandCell, '<->', conversion, backConversion);
-	}
+nxt.Binding = function(cell, conversion) {
+	var commandCell = new nxt.CommandCell();
+	commandCell.reverseBind(cell, conversion);
 	return commandCell;
 };
 
@@ -63,9 +59,9 @@ nxt.Collection = function () {
 	var collection = arguments[0];
 	var conversion = arguments[1];
 	var events = [].slice.call(arguments, 2);
-	var commandCell = new nx.Cell();
+	var commandCell = new nxt.CommandCell();
 	collection.event.value = new nxt.Command('Content', 'reset', { items: collection.items });
-	collection.event.bind(commandCell, '->', function(command) {
+	commandCell.reverseBind(collection.event, function(command) {
 		if (typeof command !== 'undefined') {
 			command.data.items = command.data.items.map(conversion);
 		}

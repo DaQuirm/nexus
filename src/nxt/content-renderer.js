@@ -10,7 +10,7 @@ nxt.ContentRenderer.prototype.render = function(data, domContext) {
 
 	data.items.forEach(function (command) {
 		if (command !== undefined) {
-			if (!(command instanceof nx.Cell)) {
+			if (command instanceof nxt.Command) {
 				var content = command.run(domContext);
 				contentItems.push(content);
 				if (cells.length > 0) { // dynamic content followed by static content
@@ -23,7 +23,7 @@ nxt.ContentRenderer.prototype.render = function(data, domContext) {
 					_this.createRegion(regionContext, cells);
 					cells = [];
 				}
-			} else {
+			} else { // command is really a cell
 				cells.push(command);
 			}
 		}

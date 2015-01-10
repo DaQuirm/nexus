@@ -134,7 +134,7 @@ describe('nxt helpers', function() {
 			commandCell.value.data.node.nodeValue.should.equal('cellar door');
 		});
 
-		it('creates a bi-directionally bound command cell when two converters are passed', function () {
+		it.skip('creates a bi-directionally bound command cell when two converters are passed', function () {
 			var cell = new nx.Cell({ value: '' });
 			var commandCell = nxt.Binding(
 				cell,
