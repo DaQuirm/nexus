@@ -14,5 +14,7 @@ nxt.CommandCell.prototype.reverseBind = function (cell, conversion) {
 };
 
 nxt.CommandCell.prototype.unbind = function () {
-	this._binding.unbind();
+	if (typeof this._binding !== 'undefined') {
+		this._binding.unbind();
+	}
 };

@@ -69,6 +69,27 @@ describe('nxt.CommandCellModel', function () {
 			cell.value = 'cellar door';
 			child.value.should.equal(command);
 		});
+
+		it('performs a full subtree clean-up', function () {
+			var root = new nxt.CommandCell();
+			var parent = new nxt.CommandCell();
+			var child = new nxt.CommandCell();
+
+			var cell = new nx.Cell({ value: '' });
+
+			model.enter(root);
+			model.enter(parent);
+
+			child.reverseBind(cell, nxt.Text);
+
+			model.exit(parent);
+			model.exit(root);
+
+			model.enter(root);
+			var command = child.value;
+			cell.value = 'cellar door';
+			child.value.should.equal(command);
+		});
 	});
 
 	describe('exit', function () {

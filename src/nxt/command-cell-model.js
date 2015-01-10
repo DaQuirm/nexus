@@ -5,9 +5,15 @@ nxt.CommandCellModel = {
 	cellStack: [],
 
 	enter: function (cell) {
-		for (var index = 0; index < cell.children.length; index++) {
-			cell.children[index].unbind();
+		var queue = [cell];
+		while (queue.length > 0) {
+			var item = queue.shift();
+			for (var index = 0; index < item.children.length; index++) {
+				item.children[index].unbind();
+				queue.push(item.children[index]);
+			}
 		}
+
 		cell.children = [];
 
 		if (this.cellStack.length > 0) {
