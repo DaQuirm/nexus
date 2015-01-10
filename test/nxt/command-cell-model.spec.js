@@ -18,8 +18,35 @@ describe('nxt.CommandCellModel', function () {
 		it('pushes a command cell to the cell stack', function () {
 			var cell = new nxt.CommandCell();
 			model.enter(cell);
-			model.cellStack.should.have('length', 1);
+			model.cellStack.should.have.property('length', 1);
 			model.cellStack[0].should.equal(cell);
+		});
+
+		it('builds cell hierarchy by storing children in parent cells', function () {
+			var root = new nxt.CommandCell();
+			var parent = new nxt.CommandCell();
+			var child = new nxt.CommandCell();
+			var anotherChild = new nxt.CommandCell();
+
+			model.enter(root);
+			model.enter(parent);
+
+			model.enter(child);
+			model.exit(child);
+
+			model.enter(anotherChild);
+			model.exit(anotherChild);
+
+			model.exit(parent);
+			model.exit(root);
+
+			root.children.should.have.property('length', 1);
+			root.children[0].should.equal(parent);
+			parent.children.should.have.property('length', 2);
+			parent.children.should.deep.equal([
+				child,
+				anotherChild
+			]);
 		});
 
 		it('cleans up cell hierarchy by unbinding and removing child cells', function () {
@@ -31,17 +58,16 @@ describe('nxt.CommandCellModel', function () {
 
 			model.enter(root);
 			model.enter(parent);
-			model.enter(child);
 
-			cell.bind(child, '->', nxt.Text);
+			child.bind(cell, nxt.Text);
 
-			model.exit(child);
 			model.exit(parent);
 			model.exit(root);
 
 			model.enter(parent);
-
-
+			var command = child.value;
+			cell.value = 'cellar door';
+			child.value.should.equal(command);
 		});
 	});
 
@@ -50,7 +76,7 @@ describe('nxt.CommandCellModel', function () {
 			var cell = new nxt.CommandCell();
 			model.enter(cell);
 			model.exit();
-			model.cellStack.should.have('length', 0);
+			model.cellStack.should.have.property('length', 0);
 			model.cellStack.should.be.empty;
 		});
 	});
