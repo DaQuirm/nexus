@@ -34,6 +34,7 @@ nxt.ContentRegion.prototype.update = function(state) {
 		if (noCommand) {
 			state.domContext.content = state.renderer.unrender(state.domContext);
 			state.visible = false;
+			delete state.renderer;
 		}
 		else if (!(state.renderer instanceof nxt[state.command.type+'Renderer'])) {
 			state.domContext.content = state.renderer.unrender(state.domContext);

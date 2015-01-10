@@ -156,7 +156,7 @@ describe('nxt.ContentRegion', function() {
 			spy.should.have.been.called;
 			spy.getCall(0).args[0].container.should.equal(domContext.container);
 			region.cells[0].value.visible.should.equal(false);
-			region.cells[0].value.renderer.unrender.restore();
+			// no need for a spy.restore() call because renderer is removed
 		});
 
 		it('calls the unrender method of the event renderer if command is undefined', function() {
@@ -174,8 +174,21 @@ describe('nxt.ContentRegion', function() {
 			region.cells[0].value.visible.should.equal(false);
 			domContext.container.click();
 			data.handler.should.have.been.calledOnce;
-			region.cells[0].value.renderer.unrender.restore();
+			// no need for a spy.restore() call because renderer is removed
+		});
 
+		it('removes the renderer from the state when unrendering to prevent unrendering with no content', function () {
+			var cell = new nx.Cell();
+			region.add(cell);
+			var data = { node: document.createElement('div') };
+			cell.value = new nxt.Command('Node', 'render', data);
+			region.cells[0].value.renderer.should.be.an.instanceof(nxt.NodeRenderer);
+			data = { name: 'class', value: 'cellar door' };
+			cell.value = undefined;
+			should.not.exist(region.cells[0].value.renderer);
+			(function () {
+				cell.value = undefined;
+			}).should.not.throw;
 		});
 	});
 
