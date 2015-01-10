@@ -26,9 +26,9 @@
     "test.html"
   ],
   "dependencies": {
-    "mocha": ">=1.18.2",
-    "chai": ">=1.9.1",
-    "sinon-chai": ">=2.5.0",
-    "sinon": ">=1.9.1"
+    "mocha": "~2.1.0",
+    "chai": "~1.10.0",
+    "sinon": "http://sinonjs.org/releases/sinon-1.12.2.js",
+    "sinon-chai": "~2.6.0"
   }
 }
