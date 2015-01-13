@@ -72,7 +72,6 @@ nxt.ContentRenderer = {
 	},
 
 	reset: function (data, domContext) {
-		var firstChild;
 		if (typeof domContext.content !== 'undefined') {
 			for (var index = 0; index < domContext.content.length; index++) {
 				domContext.container.removeChild(domContext.content[index]);
