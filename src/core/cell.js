@@ -1,5 +1,3 @@
-window.nx = window.nx || {};
-
 nx.Cell = function(options) {
 	options = options || {};
 

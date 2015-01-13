@@ -1,10 +1,8 @@
-window.nx = window.nx || {};
-
-nx.Mapping = function(pattern) {
+nx.Mapping = function (pattern) {
 	this.pattern = pattern;
 };
 
-nx.Mapping.prototype.map = function(source, target) {
+nx.Mapping.prototype.map = function (source, target) {
 	if (typeof this.pattern !== 'undefined') {
 		for (var item in this.pattern) {
 			if (item === '_' && typeof target !== 'undefined') {
@@ -21,7 +19,7 @@ nx.Mapping.prototype.map = function(source, target) {
 	}
 };
 
-nx.Mapping.prototype.inverse = function() {
+nx.Mapping.prototype.inverse = function () {
 	var inversePattern = {};
 	for (var item in this.pattern) {
 		inversePattern[this.pattern[item]] = item;

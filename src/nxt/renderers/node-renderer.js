@@ -1,5 +1,3 @@
-window.nxt = window.nxt || {};
-
 nxt.NodeRenderer = {
 
 	render: function (data, domContext) {

@@ -1,5 +1,3 @@
-window.nx = window.nx || {};
-
 nx.AsyncStatus = {
 	LOADING: 1,
 	DONE: 2,

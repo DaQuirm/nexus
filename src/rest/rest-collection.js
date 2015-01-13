@@ -1,5 +1,3 @@
-window.nx = window.nx || {};
-
 nx.RestCollection = function(options) {
 	nx.Collection.call(this, options);
 	nx.AjaxModel.call(this, options);

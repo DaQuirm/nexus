@@ -1,5 +1,3 @@
-window.nx = window.nx || {};
-
 nx.Binding = function (source, target, conversion) {
 	var _this = this;
 

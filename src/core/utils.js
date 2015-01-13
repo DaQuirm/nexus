@@ -1,4 +1,7 @@
-window.nx = window.nx || {};
+/* since utils comes first in the build, create namespaces here */
+window.nx = {};
+window.nxt = {};
+
 window.nx.Utils = window.nx.Utils || {};
 
 nx.Utils.interpolateString = function(string, props) {

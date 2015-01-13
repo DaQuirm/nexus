@@ -1,5 +1,3 @@
-window.nxt = window.nxt || {};
-
 nxt.Attr = function(name, value) {
 	var data = (typeof name === 'string')
 		? { name: name, value: typeof value === 'undefined' ? '' : value }

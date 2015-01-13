@@ -1,5 +1,3 @@
-window.nxt = window.nxt || {};
-
 nxt.CommandCell = function(options) {
 	nx.Cell.call(this, options);
 	this.children = [];
