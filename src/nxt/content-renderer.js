@@ -3,7 +3,6 @@ window.nxt = window.nxt || {};
 nxt.ContentRenderer = function() {};
 
 nxt.ContentRenderer.prototype.render = function(data, domContext) {
-	this.regions = [];
 	var cells = [];
 	var contentItems = [];
 	var _this = this;
@@ -41,7 +40,7 @@ nxt.ContentRenderer.prototype.createRegion = function(domContext, cells) {
 	for (var itemIndex = 0; itemIndex < cells.length; itemIndex++) {
 		newRegion.add(cells[itemIndex]);
 	}
-	this.regions.push(newRegion);
+	return newRegion;
 };
 
 nxt.ContentRenderer.prototype.append = function(data, domContext) {

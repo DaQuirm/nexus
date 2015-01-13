@@ -41,6 +41,7 @@ describe('nxt.ContentRenderer', function() {
 
 		it('creates content regions for all consecutive series of dynamic content items', function () {
 			var cell = new nx.Cell();
+			var spy = sinon.spy(renderer, 'createRegion');
 			renderer.render({
 				items: [
 					nxt.Attr('class', 'container'),
@@ -56,12 +57,13 @@ describe('nxt.ContentRenderer', function() {
 					nxt.Binding(cell, function(value) { return value; })
 				]
 			}, domContext);
-			renderer.regions.length.should.equal(3);
-			renderer.regions[0].should.be.an.instanceof(nxt.ContentRegion);
+			renderer.createRegion.restore();
+			spy.should.have.been.calledThrice;
 		});
 
 		it('passes insert reference if a content region is followed by a static item', function () {
 			var cell = new nx.Cell();
+			var spy = sinon.spy(renderer, 'createRegion');
 			renderer.render({
 				items: [
 					nxt.Attr('class', 'container'),
@@ -71,9 +73,10 @@ describe('nxt.ContentRenderer', function() {
 					nxt.Element('div', nxt.Text('cellar door'))
 				]
 			}, domContext);
-			renderer.regions[0].domContext.insertReference.nodeType.should.equal(Node.ELEMENT_NODE);
-			renderer.regions[0].domContext.insertReference.nodeName.toLowerCase().should.equal('div');
-			renderer.regions[0].domContext.insertReference.textContent.should.equal('cellar door');
+			spy.returnValues[0].domContext.insertReference.nodeType.should.equal(Node.ELEMENT_NODE);
+			spy.returnValues[0].domContext.insertReference.nodeName.toLowerCase().should.equal('div');
+			spy.returnValues[0].domContext.insertReference.textContent.should.equal('cellar door');
+			renderer.createRegion.restore();
 			cell.value = 'a';
 			element.lastChild.nodeName.toLowerCase().should.equal('div');
 			element.lastChild.textContent.toLowerCase().should.equal('cellar door');
@@ -83,6 +86,7 @@ describe('nxt.ContentRenderer', function() {
 			var cell = new nx.Cell();
 			var referenceNode = document.createElement('a');
 			domContext.container.appendChild(referenceNode);
+			var spy = sinon.spy(renderer, 'createRegion');
 			renderer.render({
 				items: [
 					nxt.Attr('class', 'container'),
@@ -91,7 +95,8 @@ describe('nxt.ContentRenderer', function() {
 					nxt.Binding(cell, nxt.Text)
 				]
 			}, { container: domContext.container, insertReference: referenceNode });
-			renderer.regions[0].domContext.insertReference.isEqualNode(referenceNode).should.equal(true);
+			spy.returnValues[0].domContext.insertReference.isEqualNode(referenceNode).should.equal(true);
+			renderer.createRegion.restore();
 		});
 
 		it('skips undefined items', function () {
@@ -137,10 +142,8 @@ describe('nxt.ContentRenderer', function() {
 				nxt.Binding(cell, nxt.Text),
 				nxt.Binding(cell, nxt.Text)
 			];
-			renderer.regions = [];
-			renderer.createRegion({ container: domContext.container }, cells);
-			renderer.regions.length.should.equal(1);
-			renderer.regions[0].cells.length.should.equal(cells.length);
+			var region = renderer.createRegion({ container: domContext.container }, cells);
+			region.cells.length.should.equal(cells.length);
 		});
 	});
 
