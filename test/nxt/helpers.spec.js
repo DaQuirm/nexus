@@ -225,7 +225,7 @@ describe('nxt helpers', function() {
 			};
 			document.body.appendChild(domContext.container);
 			var collection = new nx.Collection({ items: ['a','b','c'] });
-			var renderer = new nxt.ContentRenderer();
+			var renderer = nxt.ContentRenderer;
 			renderer.render({
 				items: nxt.Collection(collection, function(item) {
 						return nxt.Element('li',

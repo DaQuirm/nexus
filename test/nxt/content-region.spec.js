@@ -64,7 +64,7 @@ describe('nxt.ContentRegion', function() {
 			region.update(cell.value);
 			runSpy.should.have.been.calledWith(domContext);
 			element.childNodes.length.should.equal(1);
-			cell.value.renderer.should.be.an.instanceof(nxt.NodeRenderer);
+			cell.value.renderer.should.equal(nxt.NodeRenderer);
 		});
 
 		it('updates cell\'s DOM context with rendered content', function () {
@@ -133,15 +133,15 @@ describe('nxt.ContentRegion', function() {
 			region.add(cell);
 			var data = { node: document.createElement('div') };
 			cell.value = new nxt.Command('Node', 'render', data);
-			region.cells[0].value.renderer.should.be.an.instanceof(nxt.NodeRenderer);
+			region.cells[0].value.renderer.should.equal(nxt.NodeRenderer);
 			var spy = sinon.spy(region.cells[0].value.renderer, 'unrender');
 			data = { name: 'class', value: 'cellar door' };
 			cell.value = new nxt.Command('Attr', 'render', data);
-			region.cells[0].value.renderer.should.be.an.instanceof(nxt.AttrRenderer);
+			region.cells[0].value.renderer.should.equal(nxt.AttrRenderer);
 			region.cells[0].value.visible.should.equal(false);
 			spy.should.have.been.called;
 			spy.getCall(0).args[0].container.should.equal(domContext.container);
-			// no need for a spy.restore() call because renderer is overwritten
+			spy.restore();
 		});
 
 		it('calls the unrender method of the previous renderer if command is undefined', function() {
@@ -149,7 +149,7 @@ describe('nxt.ContentRegion', function() {
 			region.add(cell);
 			var data = { node: document.createElement('div') };
 			cell.value = new nxt.Command('Node', 'render', data);
-			region.cells[0].value.renderer.should.be.an.instanceof(nxt.NodeRenderer);
+			region.cells[0].value.renderer.should.equal(nxt.NodeRenderer);
 			var spy = sinon.spy(region.cells[0].value.renderer, 'unrender');
 			data = { name: 'class', value: 'cellar door' };
 			cell.value = undefined;
@@ -164,7 +164,7 @@ describe('nxt.ContentRegion', function() {
 			region.add(cell);
 			var data = { name: 'click', handler: sinon.spy() };
 			cell.value = new nxt.Command('Event', 'add', data);
-			region.cells[0].value.renderer.should.be.an.instanceof(nxt.EventRenderer);
+			region.cells[0].value.renderer.should.equal(nxt.EventRenderer);
 			domContext.container.click();
 			data.handler.should.have.been.calledOnce;
 			var spy = sinon.spy(region.cells[0].value.renderer, 'unrender');
@@ -182,7 +182,7 @@ describe('nxt.ContentRegion', function() {
 			region.add(cell);
 			var data = { node: document.createElement('div') };
 			cell.value = new nxt.Command('Node', 'render', data);
-			region.cells[0].value.renderer.should.be.an.instanceof(nxt.NodeRenderer);
+			region.cells[0].value.renderer.should.equal(nxt.NodeRenderer);
 			data = { name: 'class', value: 'cellar door' };
 			cell.value = undefined;
 			should.not.exist(region.cells[0].value.renderer);

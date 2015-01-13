@@ -3,12 +3,11 @@ describe('nxt.ClassRenderer', function() {
 
 	var link;
 	var domContext;
-	var renderer;
+	var renderer = nxt.ClassRenderer;
 
 	beforeEach(function () {
 		link = document.createElement('a');
 		link.classList.add('epic-link');
-		renderer = new nxt.ClassRenderer();
 		domContext = { container: link };
 	});
 

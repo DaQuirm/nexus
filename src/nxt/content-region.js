@@ -36,7 +36,7 @@ nxt.ContentRegion.prototype.update = function(state) {
 			state.visible = false;
 			delete state.renderer;
 		}
-		else if (!(state.renderer instanceof nxt[state.command.type+'Renderer'])) {
+		else if (state.renderer !== nxt[state.command.type+'Renderer']) {
 			state.domContext.content = state.renderer.unrender(state.domContext);
 		}
 	}
@@ -46,7 +46,7 @@ nxt.ContentRegion.prototype.update = function(state) {
 		if (typeof state.renderer.visible === 'function') {
 			state.visible = state.renderer.visible(state.domContext.content);
 		} else {
-			state.visible = nxt.NodeRenderer.prototype.visible(state.domContext.content);
+			state.visible = nxt.NodeRenderer.visible(state.domContext.content);
 		}
 	}
 	var insertReference;

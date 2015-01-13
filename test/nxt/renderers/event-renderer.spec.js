@@ -3,12 +3,11 @@ describe('nxt.EventRenderer', function() {
 
 	var element;
 	var domContext;
-	var renderer;
+	var renderer = nxt.EventRenderer;
 
 	beforeEach(function () {
 		element = document.createElement('div');
 		domContext = { container: element };
-		renderer = new nxt.EventRenderer();
 	});
 
 	describe('add', function() {

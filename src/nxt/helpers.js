@@ -39,8 +39,7 @@ nxt.Element = function() {
 	var node = document.createElement(name);
 	if (args.length > 1) {
 		var content = args.slice(1);
-		var contentRenderer = new nxt.ContentRenderer();
-		contentRenderer.render({ items: content }, { container: node });
+		nxt.ContentRenderer.render({ items: content }, { container: node });
 	}
 	return new nxt.Command('Node', 'render', { node: node });
 };
