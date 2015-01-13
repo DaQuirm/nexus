@@ -1,5 +1,3 @@
-window.nxt = window.nxt || {};
-
 nxt.Command = function(type, method, data) {
     this.type = type;
     this.method = method;

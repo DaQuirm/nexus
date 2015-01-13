@@ -1,5 +1,3 @@
-window.nxt = window.nxt || {};
-
 nxt.EventRenderer = {
 
 	add: function (data, domContext) {

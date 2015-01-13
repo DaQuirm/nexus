@@ -1,5 +1,3 @@
-window.nxt = window.nxt || {};
-
 nxt.AttrRenderer = {
 
 	render: function (data, domContext) {

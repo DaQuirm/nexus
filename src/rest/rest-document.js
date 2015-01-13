@@ -1,5 +1,3 @@
-window.nx = window.nx || {};
-
 nx.RestDocument = function(options) {
 	nx.AjaxModel.call(this, options);
 	this.options = options;

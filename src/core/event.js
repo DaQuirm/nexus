@@ -1,5 +1,3 @@
-window.nx = window.nx || {};
-
 nx.Event = function() {
 	this.handlers = {};
 	this._nameIndex = 0;

@@ -1,5 +1,3 @@
-window.nxt = window.nxt || {};
-
 nxt.ContentRegion = function(domContext) {
 	this.domContext = domContext;
 	this.cells = [];
