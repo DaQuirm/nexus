@@ -3,12 +3,11 @@ describe('nxt.ContentRenderer', function() {
 
 	var element;
 	var domContext;
-	var renderer;
+	var renderer = nxt.ContentRenderer;
 
 	beforeEach(function () {
 		element = document.createElement('div');
 		domContext = { container: element };
-		renderer = new nxt.ContentRenderer();
 	});
 
 	describe('render', function() {
@@ -32,11 +31,11 @@ describe('nxt.ContentRenderer', function() {
 			var span = document.createElement('span');
 			element.appendChild(span);
 			domContext = { container: element, insertReference: span };
-			var spy = sinon.spy(nxt.NodeRenderer.prototype, 'render');
+			var spy = sinon.spy(nxt.NodeRenderer, 'render');
 			var command = nxt.Element('span');
 			renderer.render({ items: [command] }, domContext);
 			spy.should.have.been.calledWith(command.data, domContext);
-			nxt.NodeRenderer.prototype.render.restore();
+			nxt.NodeRenderer.render.restore();
 		});
 
 		it('creates content regions for all consecutive series of dynamic content items', function () {

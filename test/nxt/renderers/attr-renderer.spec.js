@@ -1,11 +1,10 @@
 describe('nxt.AttrRenderer', function() {
 	'use strict';
 
-	var renderer;
+	var renderer = nxt.AttrRenderer;
 	var domContext;
 
 	beforeEach(function () {
-		renderer = new nxt.AttrRenderer();
 		domContext = { container: document.createElement('a') };
 	});
 

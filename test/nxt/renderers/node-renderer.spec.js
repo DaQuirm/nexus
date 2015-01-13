@@ -1,11 +1,10 @@
 describe('nxt.NodeRenderer', function() {
 	'use strict';
 
-	var renderer;
+	var renderer = nxt.NodeRenderer;
 	var domContext;
 
 	beforeEach(function () {
-		renderer = new nxt.NodeRenderer();
 		domContext = { container: document.createElement('div') };
 	});
 

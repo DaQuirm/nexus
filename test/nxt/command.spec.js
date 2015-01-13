@@ -12,17 +12,18 @@ describe('nxt.Command', function () {
 
 	describe('run', function () {
 		it('calls the appropriate renderer method, passing data and its arguments', function () {
-			nxt.FakeRenderer = function(){};
-			nxt.FakeRenderer.prototype.method = sinon.spy();
+			nxt.FakeRenderer = {
+				method: sinon.spy()
+			};
 			var data = { cellar: 'door' };
 			var command = new nxt.Command('Fake', 'method', data);
 			var domContext = { container: document.createElement('div') };
 			command.run(domContext);
-			nxt.FakeRenderer.prototype.method.should.have.been.calledWith(data, domContext);
+			nxt.FakeRenderer.method.should.have.been.calledWith(data, domContext);
 		});
 
 		it('returns content rendered by the renderer', function () {
-			nxt.FakeRenderer = function() { this.method = function(data) { return data.cellar; } };
+			nxt.FakeRenderer = { method: function(data) { return data.cellar; } };
 			var data = { cellar: 'door' };
 			var command = new nxt.Command('Fake', 'method', data);
 			var domContext = { container: document.createElement('div') };
@@ -31,12 +32,12 @@ describe('nxt.Command', function () {
 		});
 
 		it('stores the renderer instance', function(){
-			nxt.FakeRenderer = function() { this.method = function(data) { return data.cellar; } };
+			nxt.FakeRenderer = { method: function(data) { return data.cellar; } };
 			var data = { cellar: 'door' };
 			var command = new nxt.Command('Fake', 'method', data);
 			var domContext = { container: document.createElement('div') };
 			command.run(domContext);
-			command.renderer.should.be.an.instanceof(nxt.FakeRenderer);
+			command.renderer.should.equal(nxt.FakeRenderer);
 		});
 	});
 });
