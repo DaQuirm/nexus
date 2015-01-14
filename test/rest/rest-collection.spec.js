@@ -2,8 +2,8 @@ describe('nx.RestCollection', function() {
 
 	var url = 'http://localhost/users/';
 
-	var UserModel = function (options) {
-		nx.RestDocument.call(this, { url: url, data: options.data });
+	var UserModel = function (data) {
+		nx.RestDocument.call(this, { url: url, data: data });
 	};
 	nx.Utils.mixin(UserModel.prototype, nx.RestDocument.prototype);
 
