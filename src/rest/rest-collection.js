@@ -12,7 +12,7 @@ nx.RestCollection = function(options) {
 		},
 		function (items) {
 			return items.map(function (item) {
-				return new _this.options.item({ data: item, url: _this.options.url });
+				return new _this.options.item(item);
 			});
 		}
 	);
