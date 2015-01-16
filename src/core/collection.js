@@ -8,6 +8,9 @@ nx.Collection = function (options) {
 	this.onsync.add(function (items) {
 		_this.event.value = new nxt.Command('Content', 'reset', { items: items });
 	});
+
+	this.length = new nx.Cell({ value: this.items.length });
+	this.length['<-'](this, function (items) { return items.length; });
 };
 
 nx.Utils.mixin(nx.Collection.prototype, nx.Cell.prototype);
