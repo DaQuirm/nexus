@@ -48,6 +48,23 @@ describe('nx.Collection', function() {
 		});
 	});
 
+	describe('length', function () {
+		it('is an nx.Cell that stores current collection length', function () {
+			var collection = new nx.Collection({ items: [1,2] });
+			collection.length.value.should.equal(2);
+			collection.append(3,4);
+			collection.length.value.should.equal(4);
+
+			collection = new nx.Collection({ items: [1,2,3,4,5] });
+			collection.length.value.should.equal(5);
+			collection.remove(2,4);
+			collection.length.value.should.equal(3);
+
+			collection.value = [1,2];
+			collection.length.value.should.equal(2);
+		});
+	});
+
 	describe('append', function() {
 		it('appends items to the end', function() {
 			var collection = new nx.Collection({ items: [1,2] });
