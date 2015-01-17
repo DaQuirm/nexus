@@ -107,21 +107,17 @@ nxt.Collection = function () {
 };
 
 nxt.ValueBinding = function (cell, conversion, backConversion) {
-	var locked = false;
+	var lock = { locked: false };
 	var eventCommand = nxt.Event('input', function () {
-		locked = true;
+		lock.locked = true;
 		cell.value = backConversion ? backConversion(this.value) : this.value;
 	});
 
-	var commandCell = new nx.Cell();
-	commandCell.value = nxt.Attr('value', conversion ? conversion(cell.value) : cell.value);
-	cell.onvalue.add(function (value) {
-		if (!locked) {
-			commandCell.value = nxt.Attr('value', conversion ? conversion(value) : value);
-		} else {
-			locked = false;
-		}
+	var commandCell = new nxt.CommandCell();
+	var binding = commandCell.reverseBind(cell, function (value) {
+		return nxt.Attr('value', conversion ? conversion(value) : value);
 	});
+	binding.lock = lock;
 
 	return [eventCommand, commandCell];
 };
