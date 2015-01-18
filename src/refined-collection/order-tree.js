@@ -63,7 +63,6 @@ nx.OrderTree.prototype.insert = function (value) {
 	var current = this.root;
 	var direction = null;
 	var compareResult;
-	var rank = 0;
 	while (current !== null) {
 		target = current;
 		current.rank++;
@@ -76,12 +75,65 @@ nx.OrderTree.prototype.insert = function (value) {
 
 			case nx.OrderTree.ComparisonResult.MORE:
 				direction = nx.OrderTree.Direction.RIGHT;
-				rank += current.rank - 1;
 				break;
 		}
 		current = current[direction];
 	}
 	var node = target[direction] = new nx.OrderTreeNode(value);
 	node.parent = target;
+	return this.rank(node);
+};
+
+nx.OrderTree.prototype.find = function (value) {
+	var current = this.root;
+	var compareResult, direction;
+	while (current !== null && current.data !== value) {
+		compareResult = Math.sign(this.comparator(value, current.data));
+		switch (compareResult) {
+			case nx.OrderTree.ComparisonResult.LESS:
+			case nx.OrderTree.ComparisonResult.EQUAL:
+				direction = nx.OrderTree.Direction.LEFT;
+				break;
+
+			case nx.OrderTree.ComparisonResult.MORE:
+				direction = nx.OrderTree.Direction.RIGHT;
+				break;
+		}
+		current = current[direction];
+	}
+	return current;
+};
+
+nx.OrderTree.prototype._replaceParent = function (node, child) {
+	if (node === node.parent.left) {
+		node.parent.left = child;
+	} else {
+		node.parent.right = child;
+	}
+};
+
+nx.OrderTree.prototype.remove = function (node) {
+	var current = node;
+	var rank = this.rank(node);
+
+	while (current !== this.root) {
+		current.rank--;
+		current = current.parent;
+	}
+
+	if (node.left !== null && node.right !== null) {
+		current = node.right;
+		while (current.left !== null) {
+			current = current.left;
+		}
+		node.data = current.data;
+		this.remove(current);
+	} else if (node.left !== null) {
+		this._replaceParent(node, node.left);
+	} else if (node.right !== null) {
+		this._replaceParent(node, node.right);
+	} else {
+		this._replaceParent(node, null);
+	}
 	return rank;
 };

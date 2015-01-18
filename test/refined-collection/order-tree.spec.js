@@ -88,4 +88,31 @@ describe('nx.OrderTree', function () {
 		});
 	});
 
+	describe('find', function () {
+		it('finds a tree node by its value', function () {
+			var values = [4, 3, 0, 5, 1, 2];
+			var tree = new nx.OrderTree(values, comparator);
+			var node = tree.find(0)
+			node.data.should.equal(0);
+			should.not.exist(node.left);
+			node.right.data.should.equal(1);
+			node.rank.should.equal(3);
+		});
+	});
+
+	describe('remove', function () {
+		it('removes an item from tree', function () {
+			var values = [4, 3, 0, 5, 1, 2];
+			var tree = new nx.OrderTree(values, comparator);
+			tree.remove(tree.find(4));
+			tree.list().should.deep.equal([0, 1, 2, 3, 5]);
+		});
+
+		it('returns removed item\'s rank', function () {
+			var values = [4, 3, 0, 5, 1, 2];
+			var tree = new nx.OrderTree(values, comparator);
+			var rank = tree.remove(tree.find(0));
+			rank.should.equal(0);
+		});
+	});
 });
