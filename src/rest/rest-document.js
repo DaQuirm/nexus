@@ -4,7 +4,6 @@ nx.RestDocument = function(options) {
 };
 
 nx.Utils.mixin(nx.RestDocument.prototype, nx.AjaxModel.prototype);
-nx.RestDocument.prototype.constructor = nx.RestDocument;
 
 nx.RestDocument.prototype.request = function(options) {
 	nx.AjaxModel.prototype.request.call(this, {
