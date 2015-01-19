@@ -4,15 +4,17 @@ nxt.CommandCellModel = {
 
 	enter: function (cell) {
 		var queue = [cell];
-		while (queue.length > 0) {
-			var item = queue.shift();
-			for (var index = 0; index < item.children.length; index++) {
-				item.children[index].unbind();
-				queue.push(item.children[index]);
-			}
-		}
 
-		cell.children = [];
+		if (cell.cleanup) {
+			while (queue.length > 0) {
+				var item = queue.shift();
+				for (var index = 0; index < item.children.length; index++) {
+					item.children[index].unbind();
+					queue.push(item.children[index]);
+				}
+			}
+			cell.children = [];
+		}
 
 		if (this.cellStack.length > 0) {
 			var stackTop = this.cellStack[this.cellStack.length - 1];

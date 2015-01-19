@@ -7,6 +7,13 @@ describe('nxt.CommandCell', function () {
 			commandCell.children.should.be.an.instanceOf(Array);
 			commandCell.children.should.be.empty;
 		});
+
+		it('stores the `cleanup` options as a property, true by default', function () {
+			var commandCell = new nxt.CommandCell();
+			commandCell.cleanup.should.equal(true);
+			var commandCell = new nxt.CommandCell({ cleanup: false });
+			commandCell.cleanup.should.equal(false);
+		});
 	});
 
 	describe('reverseBind', function () {

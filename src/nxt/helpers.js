@@ -56,7 +56,7 @@ nxt.Collection = function () {
 	var collection = arguments[0];
 	var conversion = arguments[1];
 	var events = [].slice.call(arguments, 2);
-	var commandCell = new nxt.CommandCell();
+	var commandCell = new nxt.CommandCell({ cleanup: false });
 	collection.event.value = new nxt.Command('Content', 'reset', { items: collection.items });
 	commandCell.reverseBind(collection.event, function(command) {
 		if (typeof command !== 'undefined') {
