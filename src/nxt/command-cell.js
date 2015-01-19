@@ -1,5 +1,7 @@
 nxt.CommandCell = function(options) {
+	options = options || { cleanup: true };
 	nx.Cell.call(this, options);
+	this.cleanup = options.cleanup;
 	this.children = [];
 };
 

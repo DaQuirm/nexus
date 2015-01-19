@@ -90,6 +90,35 @@ describe('nxt.CommandCellModel', function () {
 			cell.value = 'cellar door';
 			child.value.should.equal(command);
 		});
+
+		it('doesn\'t perform cleanup if cell has the `cleanup` option set', function () {
+			var root = new nxt.CommandCell();
+			var parent = new nxt.CommandCell({ cleanup: false });
+			var child = new nxt.CommandCell();
+
+			var cell = new nx.Cell({ value: '' });
+
+			model.enter(root);
+			model.enter(parent);
+
+			child.reverseBind(cell, nxt.Text);
+
+			model.exit(parent);
+			model.exit(root);
+
+			model.enter(parent);
+
+			cell.value = 'cellar door';
+			child.value.should.deep.equal(nxt.Text('cellar door'));
+
+			model.exit(parent);
+
+			model.enter(root);
+			var command = child.value;
+			cell.value = 'silence';
+			child.value.should.equal(command);
+			model.exit(root);
+		});
 	});
 
 	describe('exit', function () {
