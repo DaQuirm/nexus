@@ -1,11 +1,12 @@
 nxt.ClassRenderer = {
 
-	add: function (data, domContext) {
+	render: function (data, domContext) {
 		domContext.container.classList.add(data.name);
+		return data.name;
 	},
 
-	remove: function (data, domContext) {
-		domContext.container.classList.remove(data.name);
+	unrender: function (domContext) {
+		domContext.container.classList.remove(domContext.content);
 	}
 
 };
