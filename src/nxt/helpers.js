@@ -5,13 +5,8 @@ nxt.Attr = function(name, value) {
 	return new nxt.Command('Attr', 'render', data);
 };
 
-nxt.Class = function(name, set) {
-	if (typeof set === 'undefined') {
-		set = true;
-	}
-	return set
-		? new nxt.Command('Class', 'add', { name: name })
-		: new nxt.Command('Class', 'remove', { name: name });
+nxt.Class = function(name) {
+	return new nxt.Command('Class', 'render', { name: name });
 };
 
 nxt.Text = function(text) {

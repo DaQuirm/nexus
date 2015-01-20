@@ -29,22 +29,10 @@ describe('nxt helpers', function() {
 	});
 
 	describe('nxt.Class', function() {
-		it('creates a class-toggling command based on class name and a boolean value', function () {
-			var command = nxt.Class('cellar-door', true);
-			command.type.should.equal('Class');
-			command.method.should.equal('add');
-			command.data.should.deep.equal({ name: 'cellar-door' });
-
-			command = nxt.Class('cellar-door', false);
-			command.type.should.equal('Class');
-			command.method.should.equal('remove');
-			command.data.should.deep.equal({ name: 'cellar-door' });
-		});
-
-		it('adds a class to the class list by default', function () {
+		it('creates a class-toggling command based on class name', function () {
 			var command = nxt.Class('cellar-door');
 			command.type.should.equal('Class');
-			command.method.should.equal('add');
+			command.method.should.equal('render');
 			command.data.should.deep.equal({ name: 'cellar-door' });
 		});
 	});
