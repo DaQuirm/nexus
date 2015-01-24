@@ -16,7 +16,10 @@ nx.FilterRefinement.prototype._filterItems = function (items) {
 };
 
 nx.FilterRefinement.prototype.append = function (data) {
-	this.refined.append.apply(this.refined, this._filterItems(data.items));
+	var filteredItems = this._filterItems(data.items);
+	if (filteredItems.length > 0) {
+		this.refined.append.apply(this.refined, filteredItems);
+	}
 };
 
 nx.FilterRefinement.prototype.reset = function (data) {
@@ -44,5 +47,7 @@ nx.FilterRefinement.prototype.insertBefore = function (data) {
 
 nx.FilterRefinement.prototype.remove = function (data) {
 	var filteredItems = this._filterItems(data.items);
-	this.refined.remove.apply(this.refined, filteredItems);
+	if (filteredItems.length > 0) {
+		this.refined.remove.apply(this.refined, filteredItems);
+	}
 };
