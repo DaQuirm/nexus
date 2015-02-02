@@ -287,4 +287,19 @@ describe('nxt helpers', function() {
 		});
 	});
 
+	describe('nxt.Style', function() {
+		it('creates a style name-value command', function() {
+			var command = nxt.Style({
+				color: 'red',
+				background: 'black'
+			});
+			command.type.should.equal('Style');
+			command.method.should.equal('render');
+			command.data.should.deep.equal({
+				color: 'red',
+				background: 'black'
+			});
+		});
+	});
+
 });
