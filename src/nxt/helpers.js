@@ -116,3 +116,7 @@ nxt.ValueBinding = function (cell, conversion, backConversion) {
 
 	return [eventCommand, commandCell];
 };
+
+nxt.Style = function (data) {
+	return new nxt.Command('Style', 'render', data);
+};
