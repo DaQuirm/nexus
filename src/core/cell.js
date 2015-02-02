@@ -42,6 +42,18 @@ nx.Cell.prototype['->'] = function (cell, conversion) {
 };
 
 nx.Cell.prototype['<-'] = function (cell, conversion) {
+	var values;
+	var _this = this;
+	if (Array.isArray(cell)) {
+		values = new Array(cell.length);
+		return cell.map(function (cell, index) {
+			values[index] = cell.value;
+			return cell['->'](_this, function(value) {
+				values[index] = value;
+				return conversion.apply(null, values);
+			});
+		});
+	}
 	return cell['->'](this, conversion);
 };
 
