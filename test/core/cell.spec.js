@@ -125,6 +125,33 @@ describe('nx.Cell', function () {
 			date.value = { year:1985, month:'October', day:26 };
 			year.value.should.equal(1985);
 		});
+
+		it('accept an array of cells for a merging one-way binding', function () {
+			var day = new nx.Cell({ value: 26 });
+			var month = new nx.Cell({ value: 'October' });
+			var year = new nx.Cell({ value: 1985 });
+
+			var date = new nx.Cell();
+			date['<-']([day, month, year], function (day, month, year) {
+				return { day: day, month: month, year: year }
+			});
+
+			date.value.should.deep.equal({
+				day: 26,
+				month: 'October',
+				year: 1985
+			});
+
+			year.value = 2015;
+			day.value = 27;
+
+			date.value.should.deep.equal({
+				day: 27,
+				month: 'October',
+				year: 2015
+			});
+
+		});
 	});
 
 	describe('onvalue', function () {
