@@ -15,7 +15,6 @@ describe('nxt.StyleRenderer', function() {
 	describe('render', function() {
 		it('sets styles of DOM element', function() {
 			renderer.render(nxt.Style(style).data, domContext);
-			console.log(domContext)
 			domContext.container.style.fontSize.should.equal('15px');
 			domContext.container.style.background.should.equal('red');
 		});
