@@ -81,6 +81,23 @@ nxt.ContentRenderer = {
 		return this.render(data, domContext);
 	},
 
+	swap: function (data, domContext) {
+		data.indexes.sort(function (a,b) { return a - b; });
+		var firstIndex = data.indexes[0];
+		var secondIndex = data.indexes[1];
+		var firstNode = domContext.content[firstIndex];
+		var secondNode = domContext.content[secondIndex];
+		var sibling = null;
+		if (data.indexes[1] < domContext.content.length - 1) {
+			sibling = domContext.content[secondIndex + 1];
+		}
+		domContext.container.insertBefore(secondNode, firstNode);
+		domContext.container.insertBefore(firstNode, sibling);
+		domContext.content[firstIndex] = secondNode;
+		domContext.content[secondIndex] = firstNode;
+		return domContext.content;
+	},
+
 	get: function (data, domContext) {
 		data.next(domContext.content);
 		return domContext.content;

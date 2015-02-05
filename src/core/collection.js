@@ -64,3 +64,13 @@ nx.Collection.prototype.insertBefore = function(beforeItem, items) {
 nx.Collection.prototype.reset = function(items) {
 	this.items = items || [];
 };
+
+nx.Collection.prototype.swap = function(firstItem, secondItem) {
+	var firstIndex = this.items.indexOf(firstItem);
+	var secondIndex = this.items.indexOf(secondItem);
+	this.items[firstIndex] = secondItem;
+	this.items[secondIndex] = firstItem;
+	this.event.value = new nxt.Command('Content', 'swap', {
+		indexes: [firstIndex, secondIndex]
+	});
+};

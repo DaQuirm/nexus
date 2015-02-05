@@ -138,6 +138,22 @@ describe('nx.Collection', function() {
 		});
 	});
 
+	describe('swap', function () {
+		it('swaps two items in the collection', function () {
+			var collection = new nx.Collection({ items: [1, 2, 3, 4, 5] });
+			collection.swap(2, 4);
+			collection.items.should.deep.equal([1, 4, 3, 2, 5]);
+		});
+
+		it('assigns the `swap` command to the event cell', function() {
+			var collection = new nx.Collection({ items: [1, 2, 3, 4, 5] });
+			collection.swap(2, 4);
+			collection.event.value.should.deep.equal(
+				new nxt.Command('Content', 'swap', { indexes: [1, 3] })
+			);
+		});
+	});
+
 	// additional tests for the inherited bind method
 	describe('bind', function() {
 		var fib = function(value) {

@@ -245,6 +245,25 @@ describe('nxt.ContentRenderer', function() {
 		});
 	});
 
+	describe('swap', function () {
+		it('swaps two content items by their indexes', function () {
+			var content = renderer.render({
+				items: [
+					nxt.Element('div', nxt.Text('roll')),
+					nxt.Element('div', nxt.Text(' & ')),
+					nxt.Element('div', nxt.Text('rock'))
+				]
+			}, domContext);
+			domContext = { container: element, content: content };
+			content = renderer.swap({ indexes: [0, 2] }, domContext);
+			content.length.should.equal(3);
+			content[0].textContent.should.equal('rock');
+			content[1].textContent.should.equal(' & ');
+			content[2].textContent.should.equal('roll');
+			domContext.container.textContent.should.equal('rock & roll');
+		});
+	});
+
 	describe('get', function () {
 		it('passes renderer\'s content to a command callback', function (done) {
 			var container = document.createElement('ul');
