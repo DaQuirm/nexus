@@ -32,12 +32,16 @@ module.exports = function(grunt) {
 			build: {
 				src: '<%= paths.build_file %>',
 				dest: '',
-				wrapper: ['(function() {\n\t\'use strict\';\n', '\n})();\n']
+				options: {
+					wrapper: ['(function() {\n\t\'use strict\';\n', '\n})();\n']
+				}
 			},
 			build_dev: {
 				src: '<%= paths.build_dev_file %>',
 				dest: '',
-				wrapper: ['(function() {\n\t\'use strict\';\n', '\n})();\n']
+				options: {
+					wrapper: ['(function() {\n\t\'use strict\';\n', '\n})();\n']
+				}
 			}
 		},
 		uglify: {

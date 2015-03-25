@@ -1,27 +1,31 @@
 (function() {
 	'use strict';
-window.nx = window.nx || {};
-window.nx.Utils = window.nx.Utils || {};
 
-nx.Utils.interpolateString = function(string, props) {
-	var matches = string.match(/[^{\}]+(?=\})/g);
-	if (matches) {
-		matches.forEach(function(match) {
-			string = string.replace('{'+match+'}', props[match]);
+/* since utils comes first in the build, create namespaces here */
+window.nx = {};
+window.nxt = {};
+
+window.nx.Utils = {
+
+	interpolateString: function (string, props) {
+		var matches = string.match(/[^{\}]+(?=\})/g);
+		if (matches) {
+			matches.forEach(function(match) {
+				string = string.replace('{'+match+'}', props[match]);
+			});
+		}
+		return string;
+	},
+
+	mixin: function (target, source) {
+		var keys = Object.getOwnPropertyNames(source);
+		keys.forEach(function (key) {
+			var desc = Object.getOwnPropertyDescriptor(source, key);
+			Object.defineProperty(target, key, desc);
 		});
 	}
-	return string;
-};
 
-nx.Utils.mixin = function(target, source) {
-	var keys = Object.getOwnPropertyNames(source);
-	keys.forEach(function (key) {
-		var desc = Object.getOwnPropertyDescriptor(source, key);
-		Object.defineProperty(target, key, desc);
-	});
 };
-
-window.nx = window.nx || {};
 
 nx.AsyncStatus = {
 	LOADING: 1,
@@ -81,54 +85,44 @@ nx.AjaxModel.prototype.request = function(options) {
 	_this.status.value = nx.AsyncStatus.LOADING;
 };
 
-window.nx = window.nx || {};
-
-nx.Binding = function(source, target, mode, sourceConversion, targetConversion) {
+nx.Binding = function (source, target, conversion) {
 	var _this = this;
-	this.mode = mode;
-	this.locked = false;
 
-	if (mode === '<->' && sourceConversion instanceof nx.Mapping) {
-		targetConversion = targetConversion || sourceConversion.inverse();
-	} else if (mode === '<-') {
-		targetConversion = targetConversion || sourceConversion;
-	}
+	this.source = source;
+	this.target = target;
 
-	if (mode !== '<-') { // -> or <->
-		source.onvalue.add(function(value) {
-			_this.sync(target, value, sourceConversion);
-		});
-	}
-	if (mode !== '->') { // <- or <->
-		target.onvalue.add(function(value) {
-			_this.sync(source, value, targetConversion);
-		});
-	}
+	this.conversion = conversion;
 };
 
-nx.Binding.prototype.sync = function(recipient, value, conversion) {
-	if (this.mode === '<->') {
-		if (this.locked) {
-			this.locked = false;
+nx.Binding.prototype.sync = function () {
+	if (typeof this.lock !== 'undefined') {
+		if (this.lock.locked) {
+			this.lock.locked = false;
 			return;
 		} else {
-			this.locked = true;
+			this.lock.locked = true;
 		}
 	}
-	if (typeof conversion !== 'undefined') {
-		if (conversion instanceof nx.Mapping) {
-			value = conversion.map(value, recipient.value);
-		} else if (typeof conversion === 'function') {
-			value = conversion(value);
+
+	var value = this.source.value;
+	if (typeof this.conversion !== 'undefined') {
+		if (this.conversion instanceof nx.Mapping) {
+			value = this.conversion.map(value, this.target.value);
+		} else if (typeof this.conversion === 'function') {
+			value = this.conversion(value);
 		}
-	} else {
-		value = value;
 	}
-	recipient.value = value;
-	recipient.onsync.trigger(value);
+	this.target.value = value;
+	this.target.onsync.trigger(value);
 };
 
-window.nx = window.nx || {};
+nx.Binding.prototype.pair = function (binding) {
+	return this.lock = binding.lock = { locked: false };
+};
+
+nx.Binding.prototype.unbind = function () {
+	delete this.source.bindings[this.index];
+};
 
 nx.Cell = function(options) {
 	options = options || {};
@@ -136,6 +130,9 @@ nx.Cell = function(options) {
 	if (typeof options.value !== 'undefined') {
 		this._value = options.value;
 	}
+
+	this._bindingIndex = 0;
+	this.bindings = {};
 
 	this.onvalue = new nx.Event();
 	this.onsync = new nx.Event();
@@ -147,34 +144,63 @@ nx.Cell = function(options) {
 
 Object.defineProperty(nx.Cell.prototype, 'value', {
 	enumerable : true,
-	get: function() { return this._value; },
-	set: function(value) {
+	get: function () { return this._value; },
+	set: function (value) {
 		this._value = value;
 		this.onvalue.trigger(value);
+		for (var index in this.bindings) {
+			this.bindings[index].sync();
+		}
 	}
 });
 
-nx.Cell.prototype.bind = function(target, mode, sourceConversion, targetConversion) {
-	var binding = new nx.Binding(
-		this,
-		target,
-		mode,
-		sourceConversion,
-		targetConversion
-	);
-	if (mode === '<-') {
-		binding.sync(this, target.value, sourceConversion);
-	} else {
-		binding.sync(target, this.value, sourceConversion);
-	}
+nx.Cell.prototype._createBinding = function (cell, conversion) {
+	var binding = new nx.Binding(this, cell, conversion);
+	binding.index = this._bindingIndex;
+	this.bindings[this._bindingIndex++] = binding;
 	return binding;
+};
+
+nx.Cell.prototype['->'] = function (cell, conversion) {
+	var binding = this._createBinding(cell, conversion);
+	binding.sync();
+	return binding;
+};
+
+nx.Cell.prototype['<-'] = function (cell, conversion) {
+	var values;
+	var _this = this;
+	if (Array.isArray(cell)) {
+		values = new Array(cell.length);
+		return cell.map(function (cell, index) {
+			values[index] = cell.value;
+			return cell['->'](_this, function(value) {
+				values[index] = value;
+				return conversion.apply(null, values);
+			});
+		});
+	}
+	return cell['->'](this, conversion);
+};
+
+nx.Cell.prototype['<->'] = function (cell, conversion, backConversion) {
+	if (conversion instanceof nx.Mapping) {
+		backConversion = backConversion || conversion.inverse();
+	}
+	var binding = this._createBinding(cell, conversion);
+	var backBinding = cell._createBinding(this, backConversion);
+	binding.pair(backBinding);
+	binding.sync();
+	return [binding, backBinding];
+};
+
+nx.Cell.prototype.bind = function(cell, mode, conversion, backConversion) {
+	this[mode](cell, conversion, backConversion);
 };
 
 nx.Cell.prototype.set = function(value) {
 	this._value = value;
 };
-
-window.nx = window.nx || {};
 
 nx.Collection = function (options) {
 	options = options || {};
@@ -186,6 +212,9 @@ nx.Collection = function (options) {
 	this.onsync.add(function (items) {
 		_this.event.value = new nxt.Command('Content', 'reset', { items: items });
 	});
+
+	this.length = new nx.Cell({ value: this.items.length });
+	this.length['<-'](this, function (items) { return items.length; });
 };
 
 nx.Utils.mixin(nx.Collection.prototype, nx.Cell.prototype);
@@ -236,11 +265,19 @@ nx.Collection.prototype.insertBefore = function(beforeItem, items) {
 	});
 };
 
-nx.Collection.prototype.removeAll = function() {
-	this.items = [];
+nx.Collection.prototype.reset = function(items) {
+	this.items = items || [];
 };
 
-window.nx = window.nx || {};
+nx.Collection.prototype.swap = function(firstItem, secondItem) {
+	var firstIndex = this.items.indexOf(firstItem);
+	var secondIndex = this.items.indexOf(secondItem);
+	this.items[firstIndex] = secondItem;
+	this.items[secondIndex] = firstItem;
+	this.event.value = new nxt.Command('Content', 'swap', {
+		indexes: [firstIndex, secondIndex]
+	});
+};
 
 nx.Event = function() {
 	this.handlers = {};
@@ -263,13 +300,11 @@ nx.Event.prototype.remove = function(name) {
 	delete this.handlers[name];
 };
 
-window.nx = window.nx || {};
-
-nx.Mapping = function(pattern) {
+nx.Mapping = function (pattern) {
 	this.pattern = pattern;
 };
 
-nx.Mapping.prototype.map = function(source, target) {
+nx.Mapping.prototype.map = function (source, target) {
 	if (typeof this.pattern !== 'undefined') {
 		for (var item in this.pattern) {
 			if (item === '_' && typeof target !== 'undefined') {
@@ -286,7 +321,7 @@ nx.Mapping.prototype.map = function(source, target) {
 	}
 };
 
-nx.Mapping.prototype.inverse = function() {
+nx.Mapping.prototype.inverse = function () {
 	var inversePattern = {};
 	for (var item in this.pattern) {
 		inversePattern[this.pattern[item]] = item;
@@ -294,7 +329,73 @@ nx.Mapping.prototype.inverse = function() {
 	return new nx.Mapping(inversePattern);
 };
 
-window.nxt = window.nxt || {};
+nxt.CommandBinding = function(source, target, conversion) {
+	nx.Binding.call(this, source, target, conversion);
+	this.index = source._bindingIndex;
+	source.bindings[source._bindingIndex++] = this;
+};
+
+nx.Utils.mixin(nxt.CommandBinding.prototype, nx.Binding.prototype);
+
+nxt.CommandBinding.prototype.sync = function () {
+	nxt.CommandCellModel.enter(this.target);
+	nx.Binding.prototype.sync.call(this);
+	nxt.CommandCellModel.exit();
+};
+
+
+nxt.CommandCellModel = {
+
+	cellStack: [],
+
+	enter: function (cell) {
+		var queue = [cell];
+
+		if (cell.cleanup) {
+			while (queue.length > 0) {
+				var item = queue.shift();
+				for (var index = 0; index < item.children.length; index++) {
+					item.children[index].unbind();
+					queue.push(item.children[index]);
+				}
+			}
+			cell.children = [];
+		}
+
+		if (this.cellStack.length > 0) {
+			var stackTop = this.cellStack[this.cellStack.length - 1];
+			stackTop.children.push(cell);
+		}
+
+		this.cellStack.push(cell);
+	},
+
+	exit: function () {
+		this.cellStack.pop();
+	}
+
+};
+
+nxt.CommandCell = function(options) {
+	options = options || { cleanup: true };
+	nx.Cell.call(this, options);
+	this.cleanup = options.cleanup;
+	this.children = [];
+};
+
+nx.Utils.mixin(nxt.CommandCell.prototype, nx.Cell.prototype);
+
+nxt.CommandCell.prototype.reverseBind = function (cell, conversion) {
+	this._binding = new nxt.CommandBinding(cell, this, conversion);
+	this._binding.sync();
+	return this._binding;
+};
+
+nxt.CommandCell.prototype.unbind = function () {
+	if (typeof this._binding !== 'undefined') {
+		this._binding.unbind();
+	}
+};
 
 nxt.Command = function(type, method, data) {
     this.type = type;
@@ -303,14 +404,12 @@ nxt.Command = function(type, method, data) {
 };
 
 nxt.Command.prototype.run = function() {
-	this.renderer = new nxt[this.type + 'Renderer']();
+	this.renderer = nxt[this.type + 'Renderer'];
 	return this.renderer[this.method].apply(
 		this.renderer,
 		[this.data].concat([].slice.apply(arguments))
 	);
 };
-
-window.nxt = window.nxt || {};
 
 nxt.ContentRegion = function(domContext) {
 	this.domContext = domContext;
@@ -346,8 +445,9 @@ nxt.ContentRegion.prototype.update = function(state) {
 		if (noCommand) {
 			state.domContext.content = state.renderer.unrender(state.domContext);
 			state.visible = false;
+			delete state.renderer;
 		}
-		else if (!(state.renderer instanceof nxt[state.command.type+'Renderer'])) {
+		else if (state.renderer !== nxt[state.command.type+'Renderer']) {
 			state.domContext.content = state.renderer.unrender(state.domContext);
 		}
 	}
@@ -357,7 +457,7 @@ nxt.ContentRegion.prototype.update = function(state) {
 		if (typeof state.renderer.visible === 'function') {
 			state.visible = state.renderer.visible(state.domContext.content);
 		} else {
-			state.visible = nxt.NodeRenderer.prototype.visible(state.domContext.content);
+			state.visible = nxt.NodeRenderer.visible(state.domContext.content);
 		}
 	}
 	var insertReference;
@@ -374,103 +474,115 @@ nxt.ContentRegion.prototype.update = function(state) {
 	}
 };
 
-window.nxt = window.nxt || {};
+nxt.ContentRenderer = {
 
-nxt.ContentRenderer = function() {};
+	render: function (data, domContext) {
+		var cells = [];
+		var contentItems = [];
+		var _this = this;
 
-nxt.ContentRenderer.prototype.render = function(data, domContext) {
-	this.regions = [];
-	var cells = [];
-	var contentItems = [];
-	var _this = this;
-
-	data.items.forEach(function (command) {
-		if (command !== undefined) {
-			if (!(command instanceof nx.Cell)) {
-				var content = command.run(domContext);
-				contentItems.push(content);
-				if (cells.length > 0) { // dynamic content followed by static content
-					var regionContext = { container: domContext.container };
-					// only DOM-visible items can serve as an insert reference
-					var renderer = new nxt[command.type + 'Renderer']();
-					if (nxt.NodeRenderer.prototype.visible(content)) {
-						regionContext.insertReference = content;
+		data.items.forEach(function (command) {
+			if (command !== undefined) {
+				if (command instanceof nxt.Command) {
+					var content = command.run(domContext);
+					contentItems.push(content);
+					if (cells.length > 0) { // dynamic content followed by static content
+						var regionContext = { container: domContext.container };
+						// only DOM-visible items can serve as an insert reference
+						var renderer = nxt[command.type + 'Renderer'];
+						if (nxt.NodeRenderer.visible(content)) {
+							regionContext.insertReference = content;
+						}
+						_this.createRegion(regionContext, cells);
+						cells = [];
 					}
-					_this.createRegion(regionContext, cells);
-					cells = [];
+				} else { // command is really a cell
+					cells.push(command);
 				}
-			} else {
-				cells.push(command);
 			}
-		}
-	});
-
-	if (cells.length > 0) {
-		// no need for an insert reference as these cells' content is appended by default
-		this.createRegion({ container: domContext.container, insertReference: domContext.insertReference }, cells);
-	}
-	return contentItems;
-};
-
-nxt.ContentRenderer.prototype.createRegion = function(domContext, cells) {
-	var newRegion = new nxt.ContentRegion(domContext);
-	for (var itemIndex = 0; itemIndex < cells.length; itemIndex++) {
-		newRegion.add(cells[itemIndex]);
-	}
-	this.regions.push(newRegion);
-};
-
-nxt.ContentRenderer.prototype.append = function(data, domContext) {
-	return (domContext.content || []).concat(
-		this.render(data, {
-			container: domContext.container,
-			insertReference: domContext.insertReference
-		})
-	);
-};
-
-nxt.ContentRenderer.prototype.insertBefore = function(data, domContext) {
-	data.items.forEach(function (item, index) {
-		var content = item.run({
-			container: domContext.container,
-			insertReference: domContext.content[data.insertIndex + index]
 		});
-		domContext.content.splice(data.insertIndex + index, 0, content);
-	});
-	return domContext.content;
-};
 
-nxt.ContentRenderer.prototype.remove = function(data, domContext) {
-	data.indexes
-		.sort(function (a,b) { return a - b; })
-		.forEach(function (removeIndex, index) {
-			domContext.container.removeChild(domContext.content[removeIndex - index]);
-			domContext.content.splice(removeIndex - index, 1);
-		});
-	return domContext.content;
-};
-
-nxt.ContentRenderer.prototype.reset = function(data, domContext) {
-	var firstChild;
-	if (typeof domContext.content !== 'undefined') {
-		for (var index = 0; index < domContext.content.length; index++) {
-			domContext.container.removeChild(domContext.content[index]);
+		if (cells.length > 0) {
+			// no need for an insert reference as these cells' content is appended by default
+			this.createRegion({ container: domContext.container, insertReference: domContext.insertReference }, cells);
 		}
-		delete domContext.content;
+		return contentItems;
+	},
+
+	createRegion: function (domContext, cells) {
+		var newRegion = new nxt.ContentRegion(domContext);
+		for (var itemIndex = 0; itemIndex < cells.length; itemIndex++) {
+			newRegion.add(cells[itemIndex]);
+		}
+		return newRegion;
+	},
+
+	append: function (data, domContext) {
+		return (domContext.content || []).concat(
+			this.render(data, {
+				container: domContext.container,
+				insertReference: domContext.insertReference
+			})
+		);
+	},
+
+	insertBefore: function (data, domContext) {
+		data.items.forEach(function (item, index) {
+			var content = item.run({
+				container: domContext.container,
+				insertReference: domContext.content[data.insertIndex + index]
+			});
+			domContext.content.splice(data.insertIndex + index, 0, content);
+		});
+		return domContext.content;
+	},
+
+	remove: function (data, domContext) {
+		data.indexes
+			.sort(function (a,b) { return a - b; })
+			.forEach(function (removeIndex, index) {
+				domContext.container.removeChild(domContext.content[removeIndex - index]);
+				domContext.content.splice(removeIndex - index, 1);
+			});
+		return domContext.content;
+	},
+
+	reset: function (data, domContext) {
+		if (typeof domContext.content !== 'undefined') {
+			for (var index = 0; index < domContext.content.length; index++) {
+				domContext.container.removeChild(domContext.content[index]);
+			}
+			delete domContext.content;
+		}
+		return this.render(data, domContext);
+	},
+
+	swap: function (data, domContext) {
+		data.indexes.sort(function (a,b) { return a - b; });
+		var firstIndex = data.indexes[0];
+		var secondIndex = data.indexes[1];
+		var firstNode = domContext.content[firstIndex];
+		var secondNode = domContext.content[secondIndex];
+		var sibling = null;
+		if (data.indexes[1] < domContext.content.length - 1) {
+			sibling = domContext.content[secondIndex + 1];
+		}
+		domContext.container.insertBefore(secondNode, firstNode);
+		domContext.container.insertBefore(firstNode, sibling);
+		domContext.content[firstIndex] = secondNode;
+		domContext.content[secondIndex] = firstNode;
+		return domContext.content;
+	},
+
+	get: function (data, domContext) {
+		data.next(domContext.content);
+		return domContext.content;
+	},
+
+	visible: function (content) {
+		return content.some(nxt.NodeRenderer.visible);
 	}
-	return this.render(data, domContext);
 };
-
-nxt.ContentRenderer.prototype.get = function(data, domContext) {
-	data.next(domContext.content);
-	return domContext.content;
-};
-
-nxt.ContentRenderer.prototype.visible = function(content) {
-	return content.some(nxt.NodeRenderer.prototype.visible);
-};
-
-window.nxt = window.nxt || {};
 
 nxt.Attr = function(name, value) {
 	var data = (typeof name === 'string')
@@ -479,13 +591,8 @@ nxt.Attr = function(name, value) {
 	return new nxt.Command('Attr', 'render', data);
 };
 
-nxt.Class = function(name, set) {
-	if (typeof set === 'undefined') {
-		set = true;
-	}
-	return set
-		? new nxt.Command('Class', 'add', { name: name })
-		: new nxt.Command('Class', 'remove', { name: name });
+nxt.Class = function(name) {
+	return new nxt.Command('Class', 'render', { name: name });
 };
 
 nxt.Text = function(text) {
@@ -511,15 +618,14 @@ nxt.Element = function() {
 	var node = document.createElement(name);
 	if (args.length > 1) {
 		var content = args.slice(1);
-		var contentRenderer = new nxt.ContentRenderer();
-		contentRenderer.render({ items: content }, { container: node });
+		nxt.ContentRenderer.render({ items: content }, { container: node });
 	}
 	return new nxt.Command('Node', 'render', { node: node });
 };
 
-nxt.Binding = function(cell, conversion, mode) {
-	var commandCell = new nx.Cell();
-	cell.bind(commandCell, '->', conversion);
+nxt.Binding = function(cell, conversion) {
+	var commandCell = new nxt.CommandCell();
+	commandCell.reverseBind(cell, conversion);
 	return commandCell;
 };
 
@@ -531,9 +637,9 @@ nxt.Collection = function () {
 	var collection = arguments[0];
 	var conversion = arguments[1];
 	var events = [].slice.call(arguments, 2);
-	var commandCell = new nx.Cell();
+	var commandCell = new nxt.CommandCell({ cleanup: false });
 	collection.event.value = new nxt.Command('Content', 'reset', { items: collection.items });
-	collection.event.bind(commandCell, '->', function(command) {
+	commandCell.reverseBind(collection.event, function(command) {
 		if (typeof command !== 'undefined') {
 			command.data.items = command.data.items.map(conversion);
 		}
@@ -581,82 +687,128 @@ nxt.Collection = function () {
 	}
 };
 
-window.nxt = window.nxt || {};
+nxt.ValueBinding = function (cell, conversion, backConversion) {
+	var lock = { locked: false };
+	var eventCommand = nxt.Event('input', function () {
+		lock.locked = true;
+		cell.value = backConversion ? backConversion(this.value) : this.value;
+	});
 
-nxt.AttrRenderer = function() {};
+	var commandCell = new nxt.CommandCell();
+	var binding = commandCell.reverseBind(cell, function (value) {
+		return nxt.Attr('value', conversion ? conversion(value) : value);
+	});
+	binding.lock = lock;
 
-nxt.AttrRenderer.prototype.render = function(data, domContext) {
-	var attrMap = {};
-	if (typeof data.items !== 'undefined') {
-		for (var key in data.items) {
-			domContext.container.setAttribute(key, data.items[key]);
-		}
-		attrMap = data.items;
-	} else {
-		domContext.container.setAttribute(data.name, data.value);
-		attrMap[data.name] = data.value;
-	}
-	return attrMap;
+	return [eventCommand, commandCell];
 };
 
-nxt.AttrRenderer.prototype.unrender = function(domContext) {
-	for (var key in domContext.content) {
-		domContext.container.removeAttribute(key);
-	}
+nxt.Style = function (data) {
+	return new nxt.Command('Style', 'render', data);
 };
 
-window.nxt = window.nxt || {};
+nxt.AttrRenderer = {
 
-nxt.ClassRenderer = function() {};
-
-nxt.ClassRenderer.prototype.add = function(data, domContext) {
-	domContext.container.classList.add(data.name);
-};
-
-nxt.ClassRenderer.prototype.remove = function(data, domContext) {
-	domContext.container.classList.remove(data.name);
-};
-
-window.nxt = window.nxt || {};
-
-nxt.EventRenderer = function() {};
-
-nxt.EventRenderer.prototype.add = function(data, domContext) {
-	domContext.container.addEventListener(data.name, data.handler);
-	return data;
-};
-
-nxt.EventRenderer.prototype.unrender = function(domContext) {
-	domContext.container.removeEventListener(domContext.content.name, domContext.content.handler);
-};
-
-window.nxt = window.nxt || {};
-
-nxt.NodeRenderer = function() {};
-
-nxt.NodeRenderer.prototype.render = function(data, domContext) {
-	if (typeof domContext.content !== 'undefined') {
-		domContext.container.replaceChild(data.node, domContext.content);
-	} else {
-		if (typeof domContext.insertReference !== 'undefined') {
-			domContext.container.insertBefore(data.node, domContext.insertReference);
+	render: function (data, domContext) {
+		var attrMap = {};
+		if (typeof data.items !== 'undefined') {
+			for (var key in data.items) {
+				if (key === 'value') {
+					domContext.container.value = data.items[key];
+				} else {
+					domContext.container.setAttribute(key, data.items[key]);
+				}
+			}
+			attrMap = data.items;
 		} else {
-			domContext.container.appendChild(data.node);
+			if (data.name === 'value') {
+				domContext.container.value = data.value;
+			}
+			else {
+				domContext.container.setAttribute(data.name, data.value);
+			}
+			attrMap[data.name] = data.value;
+		}
+		return attrMap;
+	},
+
+	unrender: function (domContext) {
+		for (var key in domContext.content) {
+			domContext.container.removeAttribute(key);
 		}
 	}
-	return data.node;
 };
 
-nxt.NodeRenderer.prototype.visible = function(content) {
-	return typeof content !== 'undefined'
-		&& (content.nodeType === Node.ELEMENT_NODE || content.nodeType === Node.TEXT_NODE);
+nxt.ClassRenderer = {
+
+	render: function (data, domContext) {
+		domContext.container.classList.add(data.name);
+		return data.name;
+	},
+
+	unrender: function (domContext) {
+		domContext.container.classList.remove(domContext.content);
+	}
+
 };
 
-nxt.NodeRenderer.prototype.unrender = function(domContext) {
-	domContext.container.removeChild(domContext.content);
+nxt.EventRenderer = {
+
+	add: function (data, domContext) {
+		domContext.container.addEventListener(data.name, data.handler);
+		return data;
+	},
+
+	unrender: function (domContext) {
+		domContext.container.removeEventListener(domContext.content.name, domContext.content.handler);
+	}
+
 };
 
-window.nx = window.nx || {};
+nxt.NodeRenderer = {
+
+	render: function (data, domContext) {
+		if (typeof domContext.content !== 'undefined') {
+			domContext.container.replaceChild(data.node, domContext.content);
+		} else {
+			if (typeof domContext.insertReference !== 'undefined') {
+				domContext.container.insertBefore(data.node, domContext.insertReference);
+			} else {
+				domContext.container.appendChild(data.node);
+			}
+		}
+		return data.node;
+	},
+
+	visible: function (content) {
+		return typeof content !== 'undefined'
+			&& (content.nodeType === Node.ELEMENT_NODE || content.nodeType === Node.TEXT_NODE);
+	},
+
+	unrender: function (domContext) {
+		domContext.container.removeChild(domContext.content);
+	}
+
+};
+
+nxt.StyleRenderer = {
+
+	render: function (data, domContext) {
+		for (var key in data) {
+			domContext.container.style.setProperty(key, data[key]);
+		}
+		return data;
+	},
+
+	unrender: function (domContext) {
+		for (var key in domContext.content) {
+			domContext
+				.container
+				.style
+				.removeProperty(key);
+		}
+	}
+};
 
 nx.RestCollection = function(options) {
 	nx.Collection.call(this, options);
@@ -672,7 +824,7 @@ nx.RestCollection = function(options) {
 		},
 		function (items) {
 			return items.map(function (item) {
-				return new _this.options.item({ data: item, url: _this.options.url });
+				return new _this.options.item(item);
 			});
 		}
 	);
@@ -717,8 +869,6 @@ nx.RestCollection.prototype.remove = function (doc, done) {
 	});
 };
 
-window.nx = window.nx || {};
-
 nx.RestDocument = function(options) {
 	nx.AjaxModel.call(this, options);
 	this.options = options;
@@ -746,5 +896,6 @@ nx.RestDocument.prototype.save = function(done) {
 nx.RestDocument.prototype.remove = function(done) {
 	this.request({ method: 'delete', success: done });
 };
+
 
 })();
