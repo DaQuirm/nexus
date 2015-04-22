@@ -56,7 +56,10 @@ describe('nx.Cell', function () {
 	});
 
 	describe('binding methods', function () {
-		it('connect a cell to another cell and keeps their value synchronized', function () {
+
+		var they = it;
+
+		they('connect a cell to another cell and keeps their value synchronized', function () {
 			var p = new nx.Cell();
 			var q = new nx.Cell();
 			p['<->'](q);
@@ -66,25 +69,32 @@ describe('nx.Cell', function () {
 			p.value.should.equal('echo');
 		});
 
-		it('return an nx.Binding instance', function () {
+		they('return an nx.Binding instance', function () {
 			var p = new nx.Cell();
 			var q = new nx.Cell();
 			var binding = p['->'](q);
 			binding.should.be.an.instanceof(nx.Binding);
 		});
 
-		it('sync cell values from source to target for one-way bindings', function () {
-			var p = new nx.Cell({value:'cellar door'});
-			var q = new nx.Cell();
+		they('don\'t sync cells by default', function () {
+			var p = new nx.Cell({ value: 'cellar door' });
+			var q = new nx.Cell({ value: 'default' });
 			p['->'](q);
+			q.value.should.equal('default');
+		});
+
+		they('sync cell values from source to target for one-way bindings (->>)', function () {
+			var p = new nx.Cell({ value: 'cellar door' });
+			var q = new nx.Cell();
+			p['->>'](q);
 			q.value.should.equal('cellar door');
 			p = new nx.Cell();
 			q = new nx.Cell({value:'cellar door'});
-			p['<-'](q);
+			p['<<-'](q);
 			p.value.should.equal('cellar door');
 		});
 
-		it('syncs cell values from source to target for two-way bindings', function () {
+		they('syncs cell values from source to target for two-way bindings', function () {
 			var p = new nx.Cell({value:'cellar door'});
 			var q = new nx.Cell({value:'test'});
 			p['<->'](q);
@@ -92,7 +102,7 @@ describe('nx.Cell', function () {
 			p.value.should.equal('cellar door');
 		});
 
-		it('accept two converter functions for two-way bindings', function () {
+		they('accept two converter functions for two-way bindings', function () {
 			var seconds = new nx.Cell();
 			var minutes = new nx.Cell();
 			seconds['<->'](
@@ -106,7 +116,7 @@ describe('nx.Cell', function () {
 			minutes.value.should.equal(4);
 		});
 
-		it('accept a data mapping for one-way bindings', function () {
+		they('accept a data mapping for one-way bindings', function () {
 			var date = new nx.Cell();
 			var year = new nx.Cell();
 			date['<-'](year, new nx.Mapping({ '_':'year' }));
@@ -115,7 +125,7 @@ describe('nx.Cell', function () {
 			date.value.year.should.equal(2015);
 		});
 
-		it('invert the data mapping if only one is passed for a two-way binding', function () {
+		they('invert the data mapping if only one is passed for a two-way binding', function () {
 			var date = new nx.Cell();
 			var year = new nx.Cell();
 			date.value = {};
@@ -126,13 +136,13 @@ describe('nx.Cell', function () {
 			year.value.should.equal(1985);
 		});
 
-		it('accept an array of cells for a merging one-way binding', function () {
+		they('accept an array of cells for a merging one-way binding', function () {
 			var day = new nx.Cell({ value: 26 });
 			var month = new nx.Cell({ value: 'October' });
 			var year = new nx.Cell({ value: 1985 });
 
 			var date = new nx.Cell();
-			date['<-']([day, month, year], function (day, month, year) {
+			date['<<-']([day, month, year], function (day, month, year) {
 				return { day: day, month: month, year: year }
 			});
 

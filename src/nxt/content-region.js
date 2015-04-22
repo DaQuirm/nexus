@@ -20,7 +20,7 @@ nxt.ContentRegion.prototype.add = function(commandCell) {
 		action: function(state) { _this.update(state); }
 	});
 
-	commandCell.bind(cell, '->', new nx.Mapping({ '_': 'command' }));
+	commandCell.bind(cell, '->>', new nx.Mapping({ '_': 'command' }));
 	this.cells.push(cell);
 };
 
