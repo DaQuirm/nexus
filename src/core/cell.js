@@ -35,13 +35,13 @@ nx.Cell.prototype._createBinding = function (cell, conversion) {
 	return binding;
 };
 
-nx.Cell.prototype['->'] = function (cell, conversion) {
+nx.Cell.prototype['->'] = function (cell, conversion, sync) {
 	var binding = this._createBinding(cell, conversion);
-	binding.sync();
+	sync && binding.sync();
 	return binding;
 };
 
-nx.Cell.prototype['<-'] = function (cell, conversion) {
+nx.Cell.prototype['<-'] = function (cell, conversion, sync) {
 	var values;
 	var _this = this;
 	if (Array.isArray(cell)) {
@@ -51,10 +51,18 @@ nx.Cell.prototype['<-'] = function (cell, conversion) {
 			return cell['->'](_this, function(value) {
 				values[index] = value;
 				return conversion.apply(null, values);
-			});
+			}, sync);
 		});
 	}
-	return cell['->'](this, conversion);
+	return cell['->'](this, conversion, sync);
+};
+
+nx.Cell.prototype['->>'] = function (cell, conversion) {
+	return this['->'](cell, conversion, true);
+};
+
+nx.Cell.prototype['<<-'] = function (cell, conversion) {
+	return this['<-'](cell, conversion, true);
 };
 
 nx.Cell.prototype['<->'] = function (cell, conversion, backConversion) {
