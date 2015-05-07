@@ -181,6 +181,9 @@ describe('nxt.ContentRenderer', function() {
 			}, domContext);
 			content.length.should.equal(4);
 			element.textContent.should.equal('cellar door');
+			element.childNodes[1].nodeType.should.equal(Node.TEXT_NODE);
+			element.childNodes[2].nodeType.should.equal(Node.TEXT_NODE);
+
 		});
 	});
 
