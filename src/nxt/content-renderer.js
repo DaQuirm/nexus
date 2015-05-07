@@ -54,9 +54,9 @@ nxt.ContentRenderer = {
 		data.items.forEach(function (item, index) {
 			var content = item.run({
 				container: domContext.container,
-				insertReference: domContext.content[data.insertIndex + index]
+				insertReference: domContext.content[data.index + index]
 			});
-			domContext.content.splice(data.insertIndex + index, 0, content);
+			domContext.content.splice(data.index + index, 0, content);
 		});
 		return domContext.content;
 	},

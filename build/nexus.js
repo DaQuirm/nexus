@@ -161,13 +161,15 @@ nx.Cell.prototype._createBinding = function (cell, conversion) {
 	return binding;
 };
 
-nx.Cell.prototype['->'] = function (cell, conversion) {
+nx.Cell.prototype['->'] = function (cell, conversion, sync) {
 	var binding = this._createBinding(cell, conversion);
-	binding.sync();
+	if (sync) {
+		binding.sync();
+	}
 	return binding;
 };
 
-nx.Cell.prototype['<-'] = function (cell, conversion) {
+nx.Cell.prototype['<-'] = function (cell, conversion, sync) {
 	var values;
 	var _this = this;
 	if (Array.isArray(cell)) {
@@ -177,10 +179,18 @@ nx.Cell.prototype['<-'] = function (cell, conversion) {
 			return cell['->'](_this, function(value) {
 				values[index] = value;
 				return conversion.apply(null, values);
-			});
+			}, sync);
 		});
 	}
-	return cell['->'](this, conversion);
+	return cell['->'](this, conversion, sync);
+};
+
+nx.Cell.prototype['->>'] = function (cell, conversion) {
+	return this['->'](cell, conversion, true);
+};
+
+nx.Cell.prototype['<<-'] = function (cell, conversion) {
+	return this['<-'](cell, conversion, true);
 };
 
 nx.Cell.prototype['<->'] = function (cell, conversion, backConversion) {
@@ -433,7 +443,7 @@ nxt.ContentRegion.prototype.add = function(commandCell) {
 		action: function(state) { _this.update(state); }
 	});
 
-	commandCell.bind(cell, '->', new nx.Mapping({ '_': 'command' }));
+	commandCell.bind(cell, '->>', new nx.Mapping({ '_': 'command' }));
 	this.cells.push(cell);
 };
 
@@ -530,9 +540,9 @@ nxt.ContentRenderer = {
 		data.items.forEach(function (item, index) {
 			var content = item.run({
 				container: domContext.container,
-				insertReference: domContext.content[data.insertIndex + index]
+				insertReference: domContext.content[data.index + index]
 			});
-			domContext.content.splice(data.insertIndex + index, 0, content);
+			domContext.content.splice(data.index + index, 0, content);
 		});
 		return domContext.content;
 	},
