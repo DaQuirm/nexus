@@ -37,7 +37,9 @@ nx.Cell.prototype._createBinding = function (cell, conversion) {
 
 nx.Cell.prototype['->'] = function (cell, conversion, sync) {
 	var binding = this._createBinding(cell, conversion);
-	sync && binding.sync();
+	if (sync) {
+		binding.sync();
+	}
 	return binding;
 };
 
