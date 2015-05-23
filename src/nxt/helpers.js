@@ -110,6 +110,7 @@ nxt.ValueBinding = function (cell, conversion, backConversion) {
 
 	var commandCell = new nxt.CommandCell();
 	var binding = commandCell.reverseBind(cell, function (value) {
+		lock.locked = false; // for continuous binding sync, prevents alternate locking
 		return nxt.Attr('value', conversion ? conversion(value) : value);
 	});
 	binding.lock = lock;

@@ -285,6 +285,15 @@ describe('nxt helpers', function() {
 			input.data.node.dispatchEvent(event);
 			cell.value.should.equal('cellar');
 		});
+
+		it('updates properly when a bound cell is continuously updated', function () {
+			var cell = new nx.Cell();
+			var input = nxt.Element('input', nxt.ValueBinding(cell));
+			cell.value = 'cellar';
+			input.data.node.value.should.equal('cellar');
+			cell.value += ' door';
+			input.data.node.value.should.equal('cellar door');
+		});
 	});
 
 	describe('nxt.Style', function() {
