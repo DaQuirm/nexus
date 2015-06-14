@@ -5,8 +5,8 @@ nx.Utils = {
 	interpolateString: function (string, props) {
 		var matches = string.match(/[^{\}]+(?=\})/g);
 		if (matches) {
-			matches.forEach(function(match) {
-				string = string.replace('{'+match+'}', props[match]);
+			matches.forEach(function (match) {
+				string = string.replace('{' + match + '}', props[match]);
 			});
 		}
 		return string;

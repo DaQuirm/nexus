@@ -7,7 +7,7 @@ var nxt = {
 	CommandCellModel: require('./command-cell-model')
 };
 
-nxt.CommandBinding = function(source, target, conversion) {
+nxt.CommandBinding = function (source, target, conversion) {
 	nx.Binding.call(this, source, target, conversion);
 	this.index = source._bindingIndex;
 	source.bindings[source._bindingIndex++] = this;

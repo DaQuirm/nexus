@@ -9,7 +9,6 @@ module.exports = {
 		root: [path.join(__dirname, 'lib')]
 	},
 
-
 	entry: {
 		'nexus': './src/nexus.js',
 		'nexus-node': './src/nexus-node.js',
@@ -27,6 +26,16 @@ module.exports = {
 		new webpack.ResolverPlugin(
 			new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"])
 		)
-	]
+	],
+
+	eslint: {
+		configFile: './.eslintrc'
+	},
+
+	module: {
+		loaders: [
+			{ test: /\.js$/, loader: 'strict-loader!eslint-loader', exclude: /lib/ }
+		]
+	}
 };
 

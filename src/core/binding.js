@@ -34,7 +34,8 @@ nx.Binding.prototype.sync = function () {
 };
 
 nx.Binding.prototype.pair = function (binding) {
-	return this.lock = binding.lock = { locked: false };
+	this.lock = binding.lock = { locked: false };
+	return this.lock;
 };
 
 nx.Binding.prototype.unbind = function () {

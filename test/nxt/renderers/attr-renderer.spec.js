@@ -3,7 +3,7 @@ var nxt = {
 	AttrRenderer: require('../../../src/nxt/renderers').AttrRenderer
 };
 
-describe('nxt.AttrRenderer', function() {
+describe('nxt.AttrRenderer', function () {
 	'use strict';
 
 	var renderer = nxt.AttrRenderer;
@@ -13,13 +13,13 @@ describe('nxt.AttrRenderer', function() {
 		domContext = { container: document.createElement('a') };
 	});
 
-	describe('render', function() {
-		it('sets an attribute of a DOM element', function() {
+	describe('render', function () {
+		it('sets an attribute of a DOM element', function () {
 			renderer.render(nxt.Attr('class', 'large-text').data, domContext);
 			domContext.container.getAttribute('class').should.equal('large-text');
 		});
 
-		it('sets an array of attributes of a DOM element passed as an object literal', function() {
+		it('sets an array of attributes of a DOM element passed as an object literal', function () {
 			renderer.render(nxt.Attr({
 				'class': 'large-text',
 				'id': 'awesomest-link-ever'
@@ -46,7 +46,7 @@ describe('nxt.AttrRenderer', function() {
 	});
 
 	describe('unrender', function () {
-		it('unsets attributes of the container', function() {
+		it('unsets attributes of the container', function () {
 			domContext.content = renderer.render(nxt.Attr('data-type', 'large-text').data, domContext);
 			domContext.container.getAttribute('data-type').should.equal('large-text');
 			renderer.unrender(domContext);

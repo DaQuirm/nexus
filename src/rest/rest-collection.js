@@ -5,7 +5,7 @@ var nx = {
 	Utils: require('../core/utils')
 };
 
-nx.RestCollection = function(options) {
+nx.RestCollection = function (options) {
 	nx.Collection.call(this, options);
 	nx.AjaxModel.call(this, options);
 	this.options = options;
@@ -29,7 +29,7 @@ nx.Utils.mixin(nx.RestCollection.prototype, nx.Collection.prototype);
 nx.Utils.mixin(nx.RestCollection.prototype, nx.AjaxModel.prototype);
 nx.RestCollection.prototype.constructor = nx.RestCollection;
 
-nx.RestCollection.prototype.request = function(options) {
+nx.RestCollection.prototype.request = function (options) {
 	var _this = this;
 	nx.AjaxModel.prototype.request.call(this, {
 		url: this.options.url,
@@ -42,7 +42,7 @@ nx.RestCollection.prototype.request = function(options) {
 	});
 };
 
-nx.RestCollection.prototype.create = function(doc, done) {
+nx.RestCollection.prototype.create = function (doc, done) {
 	nx.RestDocument.prototype.request.call(doc, {
 		url: this.options.url,
 		method: 'post',
@@ -50,7 +50,7 @@ nx.RestCollection.prototype.create = function(doc, done) {
 	});
 };
 
-nx.RestCollection.prototype.retrieve = function(done) {
+nx.RestCollection.prototype.retrieve = function (done) {
 	this.request({ method: 'get', success: done });
 };
 

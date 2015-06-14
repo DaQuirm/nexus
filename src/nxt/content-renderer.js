@@ -71,7 +71,7 @@ nxt.ContentRenderer = {
 
 	remove: function (data, domContext) {
 		data.indexes
-			.sort(function (a,b) { return a - b; })
+			.sort(function (a, b) { return a - b; })
 			.forEach(function (removeIndex, index) {
 				domContext.container.removeChild(domContext.content[removeIndex - index]);
 				domContext.content.splice(removeIndex - index, 1);
@@ -90,7 +90,7 @@ nxt.ContentRenderer = {
 	},
 
 	swap: function (data, domContext) {
-		data.indexes.sort(function (a,b) { return a - b; });
+		data.indexes.sort(function (a, b) { return a - b; });
 		var firstIndex = data.indexes[0];
 		var secondIndex = data.indexes[1];
 		var firstNode = domContext.content[firstIndex];

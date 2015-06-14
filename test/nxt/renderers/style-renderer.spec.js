@@ -3,7 +3,7 @@ var nxt = {
 	StyleRenderer: require('../../../src/nxt/renderers').StyleRenderer
 };
 
-describe('nxt.StyleRenderer', function() {
+describe('nxt.StyleRenderer', function () {
 	'use strict';
 
 	var renderer = nxt.StyleRenderer;
@@ -17,8 +17,8 @@ describe('nxt.StyleRenderer', function() {
 		domContext = { container: document.createElement('div') };
 	});
 
-	describe('render', function() {
-		it('sets styles of DOM element', function() {
+	describe('render', function () {
+		it('sets styles of DOM element', function () {
 			renderer.render(nxt.Style(style).data, domContext);
 			domContext.container.style.fontSize.should.equal('15px');
 			domContext.container.style.background.should.equal('red');

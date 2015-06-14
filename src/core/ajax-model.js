@@ -9,7 +9,7 @@ nx.AsyncStatus = {
 	ERROR: 3
 };
 
-nx.AjaxModel = function(options) {
+nx.AjaxModel = function (options) {
 	options = options || {};
 
 	this.data = new nx.Cell();
@@ -21,7 +21,7 @@ nx.AjaxModel = function(options) {
 	}
 };
 
-nx.AjaxModel.prototype.request = function(options) {
+nx.AjaxModel.prototype.request = function (options) {
 	var _this = this;
 	var url = nx.Utils.interpolateString(options.url, this.data.value);
 	this.xhr = new XMLHttpRequest();
@@ -31,7 +31,7 @@ nx.AjaxModel.prototype.request = function(options) {
 	this.xhr.onload = function (evt) {
 		var handler, data;
 
-		if (this.responseType === "json") {
+		if (this.responseType === 'json') {
 			data = this.response;
 		} else if (this.responseText) {
 			data = JSON.parse(this.responseText);

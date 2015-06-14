@@ -15,7 +15,9 @@ var nxt = {
 describe('nxt.Command', function () {
 
 	describe('constructor', function () {
+		/* eslint-disable max-len */
 		it('creates a command object with a certain type, method corresponding to a renderer method and arguments', function () {
+		/* eslint-enable */
 			var data = { cellar: 'door' };
 			var command = new nxt.Command('renderer', 'method', data);
 			command.method.should.equal('method');
@@ -41,7 +43,7 @@ describe('nxt.Command', function () {
 			content.should.equal('door');
 		});
 
-		it('stores the renderer reference', function(){
+		it('stores the renderer reference', function () {
 			var data = { cellar: 'door' };
 			var command = new nxt.Command('Fake', 'method', data);
 			var domContext = { container: document.createElement('div') };

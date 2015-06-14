@@ -4,18 +4,18 @@ var nxt = {
 	ContentRenderer: require('./content-renderer')
 };
 
-nxt.Attr = function(name, value) {
+nxt.Attr = function (name, value) {
 	var data = (typeof name === 'string')
 		? { name: name, value: typeof value === 'undefined' ? '' : value }
 		: { items: name };
 	return new nxt.Command('Attr', 'render', data);
 };
 
-nxt.Class = function(name) {
+nxt.Class = function (name) {
 	return new nxt.Command('Class', 'render', { name: name });
 };
 
-nxt.Text = function(text) {
+nxt.Text = function (text) {
 	if (typeof text === 'undefined') {
 		return undefined;
 	}
@@ -25,13 +25,13 @@ nxt.Text = function(text) {
 	});
 };
 
-nxt.Event = function(name, handler) {
+nxt.Event = function (name, handler) {
 	return new nxt.Command('Event', 'add', { name: name, handler: handler });
 };
 
-nxt.Element = function() {
+nxt.Element = function () {
 	var args = [].slice.call(arguments);
-	args = args.reduce(function(acc, item) {
+	args = args.reduce(function (acc, item) {
 		return acc.concat(item);
 	}, []);
 	var name = args[0];
@@ -43,13 +43,13 @@ nxt.Element = function() {
 	return new nxt.Command('Node', 'render', { node: node });
 };
 
-nxt.Binding = function(cell, conversion) {
+nxt.Binding = function (cell, conversion) {
 	var commandCell = new nxt.CommandCell();
 	commandCell.reverseBind(cell, conversion);
 	return commandCell;
 };
 
-nxt.ItemEvent = function(name, handlers) {
+nxt.ItemEvent = function (name, handlers) {
 	return { name: name, handlers: handlers };
 };
 

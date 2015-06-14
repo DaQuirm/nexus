@@ -15,13 +15,15 @@ describe('nxt.CommandCell', function () {
 		it('creates an array for children cells', function () {
 			var commandCell = new nxt.CommandCell();
 			commandCell.children.should.be.an.instanceOf(Array);
+			/* eslint-disable no-unused-expressions */
 			commandCell.children.should.be.empty;
+			/* eslint-enable */
 		});
 
 		it('stores the `cleanup` options as a property, true by default', function () {
 			var commandCell = new nxt.CommandCell();
 			commandCell.cleanup.should.equal(true);
-			var commandCell = new nxt.CommandCell({ cleanup: false });
+			commandCell = new nxt.CommandCell({ cleanup: false });
 			commandCell.cleanup.should.equal(false);
 		});
 	});

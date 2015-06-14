@@ -7,7 +7,7 @@ var nxt = _.assign(
 	require('../../../src/nxt/helpers')
 );
 
-describe('nxt.NodeRenderer', function() {
+describe('nxt.NodeRenderer', function () {
 	'use strict';
 
 	var renderer = nxt.NodeRenderer;
@@ -17,21 +17,25 @@ describe('nxt.NodeRenderer', function() {
 		domContext = { container: document.createElement('div') };
 	});
 
-	describe('render', function() {
-		it('appends an element to the container if there is no insert reference and no previously rendered content', function() {
+	describe('render', function () {
+		/* eslint-disable max-len */
+		it('appends an element to the container if there is no insert reference and no previously rendered content', function () {
+		/* eslint-enable */
 			var data = nxt.Element('span', nxt.Text('cellar door')).data;
 			renderer.render(data, domContext);
 			domContext.container.childNodes.length.should.equal(1);
 			domContext.container.textContent.should.equal('cellar door');
 		});
 
-		it('appends a text node to an element if there is no insert reference and no previously rendered content', function() {
+		/* eslint-disable max-len */
+		it('appends a text node to an element if there is no insert reference and no previously rendered content', function () {
+		/* eslint-enable */
 			renderer.render(nxt.Text('cellar door').data, domContext);
 			domContext.container.childNodes.length.should.equal(1);
 			domContext.container.textContent.should.equal('cellar door');
 		});
 
-		it('returns created node', function() {
+		it('returns created node', function () {
 			var content = renderer.render(new nxt.Element('span', new nxt.Text('cellar door')).data, domContext);
 			content.nodeType.should.equal(Node.ELEMENT_NODE);
 			content.nodeName.toLowerCase().should.equal('span');
@@ -39,7 +43,7 @@ describe('nxt.NodeRenderer', function() {
 			content.parentElement.should.equal(domContext.container);
 		});
 
-		it('replaces previously rendered content if it is present', function() {
+		it('replaces previously rendered content if it is present', function () {
 			var content = renderer.render(nxt.Element('span', nxt.Text('before')).data, domContext);
 			domContext.container.textContent.should.equal('before');
 			domContext.content = content;
@@ -47,7 +51,7 @@ describe('nxt.NodeRenderer', function() {
 			domContext.container.textContent.should.equal('after');
 		});
 
-		it('inserts an element node before another node if an insert reference has been set', function() {
+		it('inserts an element node before another node if an insert reference has been set', function () {
 			var movieNode = document.createElement('span');
 			movieNode.textContent = 'Lethal Weapon II';
 			domContext.container.appendChild(movieNode);
@@ -85,7 +89,7 @@ describe('nxt.NodeRenderer', function() {
 	});
 
 	describe('unrender', function () {
-		it('removes nodes from the container', function() {
+		it('removes nodes from the container', function () {
 			var data = nxt.Element('span', nxt.Text('cellar door')).data;
 			domContext.content = renderer.render(data, domContext);
 			domContext.container.childNodes.length.should.equal(1);

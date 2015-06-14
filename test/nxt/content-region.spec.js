@@ -8,13 +8,13 @@ var nx = {
 var nxt = _.assign(
 	{
 		Command: require('../../src/nxt/command'),
-		ContentRegion: require('../../src/nxt/content-region'),
+		ContentRegion: require('../../src/nxt/content-region')
 	},
 	require('../../src/nxt/renderers'),
 	require('../../src/nxt/helpers')
 );
 
-describe('nxt.ContentRegion', function() {
+describe('nxt.ContentRegion', function () {
 	'use strict';
 
 	var element;
@@ -27,16 +27,18 @@ describe('nxt.ContentRegion', function() {
 		region = new nxt.ContentRegion(domContext);
 	});
 
-	describe('constructor', function() {
-		it('creates a new content region based on a DOM context', function() {
+	describe('constructor', function () {
+		it('creates a new content region based on a DOM context', function () {
 			region.domContext.should.deep.equal(domContext);
 			region.cells.should.be.an.instanceof(Array);
+			/* eslint-disable no-unused-expressions */
 			region.cells.should.be.empty;
+			/* eslint-enable */
 		});
 	});
 
-	describe('add', function() {
-		it('binds and maps a content cell to a new cell in the cell collection', function() {
+	describe('add', function () {
+		it('binds and maps a content cell to a new cell in the cell collection', function () {
 			var cell;
 			for (var index = 0; index < 3; index++) {
 				cell = new nx.Cell();
@@ -67,7 +69,7 @@ describe('nxt.ContentRegion', function() {
 		it('runs cell\'s command and updates the renderer field', function () {
 			var data = { node: document.createElement('div') };
 			var command = new nxt.Command('Node', 'render', data);
-			var domContext = { container: element };
+			domContext = { container: element };
 			var runSpy = sinon.spy(command, 'run');
 			var cell = new nx.Cell({
 				value: {
@@ -77,6 +79,7 @@ describe('nxt.ContentRegion', function() {
 					visible: false
 				}
 			});
+
 			region.update(cell.value);
 			runSpy.should.have.been.calledWith(domContext);
 			element.childNodes.length.should.equal(1);
@@ -86,9 +89,6 @@ describe('nxt.ContentRegion', function() {
 		it('updates cell\'s DOM context with rendered content', function () {
 			var data = { node: document.createElement('div') };
 			var command = new nxt.Command('Node', 'render', data);
-			var domContext = {
-				container: element
-			};
 			var cell = new nx.Cell({
 				value: {
 					index: 0,
@@ -97,6 +97,10 @@ describe('nxt.ContentRegion', function() {
 					visible: false
 				}
 			});
+			domContext = {
+				container: element
+			};
+
 			region.update(cell.value);
 			cell.value.domContext.content.should.equal(data.node);
 		});
@@ -104,9 +108,6 @@ describe('nxt.ContentRegion', function() {
 		it('updates cell\'s visibility', function () {
 			var data = { node: document.createElement('div') };
 			var command = new nxt.Command('Node', 'render', data);
-			var domContext = {
-				container: element
-			};
 			var cell = new nx.Cell({
 				value: {
 					index: 0,
@@ -115,6 +116,10 @@ describe('nxt.ContentRegion', function() {
 					visible: false
 				}
 			});
+
+			domContext = {
+				container: element
+			};
 			region.update(cell.value);
 			cell.value.visible.should.equal(true);
 			cell.value = {
@@ -126,12 +131,9 @@ describe('nxt.ContentRegion', function() {
 			cell.value.visible.should.equal(false);
 		});
 
-		it('considers content invisible if the renderer has no `visible` method', function() {
+		it('considers content invisible if the renderer has no `visible` method', function () {
 			var data = { name: 'class', value: 'cellar-door' };
 			var command = new nxt.Command('Attr', 'render', data);
-			var domContext = {
-				container: element
-			};
 			var cell = new nx.Cell({
 				value: {
 					index: 0,
@@ -140,11 +142,15 @@ describe('nxt.ContentRegion', function() {
 					visible: false
 				}
 			});
+
+			domContext = {
+				container: element
+			};
 			region.update(cell.value);
 			cell.value.visible.should.equal(false);
 		});
 
-		it('calls the unrender method of the previous renderer if command calls a different renderer', function() {
+		it('calls the unrender method of the previous renderer if command calls a different renderer', function () {
 			var cell = new nx.Cell();
 			region.add(cell);
 			var data = { node: document.createElement('div') };
@@ -155,12 +161,14 @@ describe('nxt.ContentRegion', function() {
 			cell.value = new nxt.Command('Attr', 'render', data);
 			region.cells[0].value.renderer.should.equal(nxt.AttrRenderer);
 			region.cells[0].value.visible.should.equal(false);
+			/* eslint-disable no-unused-expressions */
 			spy.should.have.been.called;
+			/* eslint-enable */
 			spy.getCall(0).args[0].container.should.equal(domContext.container);
 			spy.restore();
 		});
 
-		it('calls the unrender method of the previous renderer if command is undefined', function() {
+		it('calls the unrender method of the previous renderer if command is undefined', function () {
 			var cell = new nx.Cell();
 			region.add(cell);
 			var data = { node: document.createElement('div') };
@@ -169,27 +177,35 @@ describe('nxt.ContentRegion', function() {
 			var spy = sinon.spy(region.cells[0].value.renderer, 'unrender');
 			data = { name: 'class', value: 'cellar door' };
 			cell.value = undefined;
+			/* eslint-disable no-unused-expressions */
 			spy.should.have.been.called;
+			/* eslint-enable */
 			spy.getCall(0).args[0].container.should.equal(domContext.container);
 			region.cells[0].value.visible.should.equal(false);
 			// no need for a spy.restore() call because renderer is removed
 		});
 
-		it('calls the unrender method of the event renderer if command is undefined', function() {
+		it('calls the unrender method of the event renderer if command is undefined', function () {
 			var cell = new nx.Cell();
 			region.add(cell);
 			var data = { name: 'click', handler: sinon.spy() };
 			cell.value = new nxt.Command('Event', 'add', data);
 			region.cells[0].value.renderer.should.equal(nxt.EventRenderer);
 			domContext.container.click();
+			/* eslint-disable no-unused-expressions */
 			data.handler.should.have.been.calledOnce;
+			/* eslint-enable */
 			var spy = sinon.spy(region.cells[0].value.renderer, 'unrender');
 			cell.value = undefined;
+			/* eslint-disable no-unused-expressions */
 			spy.should.have.been.called;
+			/* eslint-enable */
 			spy.getCall(0).args[0].container.should.equal(domContext.container);
 			region.cells[0].value.visible.should.equal(false);
 			domContext.container.click();
+			/* eslint-disable no-unused-expressions */
 			data.handler.should.have.been.calledOnce;
+			/* eslint-enable */
 			// no need for a spy.restore() call because renderer is removed
 		});
 
@@ -202,17 +218,21 @@ describe('nxt.ContentRegion', function() {
 			data = { name: 'class', value: 'cellar door' };
 			cell.value = undefined;
 			should.not.exist(region.cells[0].value.renderer);
+			/* eslint-disable no-unused-expressions */
 			(function () {
 				cell.value = undefined;
 			}).should.not.throw;
+			/* eslint-enable */
 		});
 	});
 
+	/* eslint-disable max-len */
 	it('keeps track of items\' visibility and updates insert references so that items are rendered in the correct order', function () {
+	/* eslint-enable */
 		var first = new nx.Cell();
 		var second = new nx.Cell();
 		var between = new nx.Cell();
-		var addCell = function(cell) {
+		var addCell = function (cell) {
 			region.add(nxt.Binding(cell, nxt.Text));
 		};
 		addCell(first);
@@ -239,7 +259,7 @@ describe('nxt.ContentRegion', function() {
 		cell.value = 'roll';
 		element.childNodes.length.should.equal(1);
 		element.textContent.should.equal('roll');
-		collection.append('r','o','c','k');
+		collection.append('r', 'o', 'c', 'k');
 		element.childNodes.length.should.equal(5);
 		element.textContent.should.equal('rockroll');
 		between.value = ' & ';
@@ -257,7 +277,7 @@ describe('nxt.ContentRegion', function() {
 		cell.value = 'rock';
 		element.childNodes.length.should.equal(3);
 		element.textContent.should.equal('rockro');
-		collection.append('l','l');
+		collection.append('l', 'l');
 		element.childNodes.length.should.equal(5);
 		element.textContent.should.equal('rockroll');
 		between.value = ' & ';
@@ -272,7 +292,7 @@ describe('nxt.ContentRegion', function() {
 			container: element,
 			insertReference: exclamationMark
 		});
-		var addCell = function(cell) {
+		var addCell = function (cell) {
 			region.add(nxt.Binding(cell, nxt.Text));
 		};
 		var first = new nx.Cell();
@@ -294,7 +314,7 @@ describe('nxt.ContentRegion', function() {
 	});
 
 	it('updates cells\' domContexts based on content and visibility changes of a certain element', function () {
-		var converter = function(value) {
+		var converter = function (value) {
 			if (value !== 'off') {
 				return nxt.Text(value);
 			}
@@ -307,7 +327,9 @@ describe('nxt.ContentRegion', function() {
 			region.add(commandCell);
 		}
 
+		/* eslint-disable no-unused-expressions */
 		element.textContent.should.be.empty;
+		/* eslint-enable */
 		cells[1].value = 'b';
 		region.cells[0].value.domContext.insertReference.should.equal(region.cells[1].value.domContext.content);
 		should.not.exist(region.cells[1].value.domContext.insertReference);
@@ -341,7 +363,9 @@ describe('nxt.ContentRegion', function() {
 		should.not.exist(region.cells[1].value.domContext.insertReference);
 		should.not.exist(region.cells[2].value.domContext.insertReference);
 		should.not.exist(region.cells[3].value.domContext.insertReference);
+		/* eslint-disable no-unused-expressions */
 		element.textContent.should.be.empty;
+		/* eslint-enable */
 		cells[3].value = 'd';
 		region.cells[0].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
 		region.cells[1].value.domContext.insertReference.should.equal(region.cells[3].value.domContext.content);
@@ -366,7 +390,7 @@ describe('nxt.ContentRegion', function() {
 		region = new nxt.ContentRegion({
 			container: element
 		});
-		var addCell = function(cell) {
+		var addCell = function (cell) {
 			region.add(nxt.Binding(cell, nxt.Text));
 		};
 		var first = new nx.Cell();

@@ -5,12 +5,10 @@ nxt.NodeRenderer = {
 	render: function (data, domContext) {
 		if (typeof domContext.content !== 'undefined') {
 			domContext.container.replaceChild(data.node, domContext.content);
+		} else if (typeof domContext.insertReference !== 'undefined') {
+			domContext.container.insertBefore(data.node, domContext.insertReference);
 		} else {
-			if (typeof domContext.insertReference !== 'undefined') {
-				domContext.container.insertBefore(data.node, domContext.insertReference);
-			} else {
-				domContext.container.appendChild(data.node);
-			}
+			domContext.container.appendChild(data.node);
 		}
 		return data.node;
 	},

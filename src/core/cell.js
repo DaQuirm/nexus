@@ -4,7 +4,7 @@ var nx = {
 	Mapping: require('./mapping')
 };
 
-nx.Cell = function(options) {
+nx.Cell = function (options) {
 	options = options || {};
 
 	if (typeof options.value !== 'undefined') {
@@ -49,20 +49,20 @@ nx.Cell.prototype['->'] = function (cell, conversion, sync) {
 	return binding;
 };
 
-nx.Cell.prototype['<-'] = function (cell, conversion, sync) {
+nx.Cell.prototype['<-'] = function (arg, conversion, sync) {
 	var values;
 	var _this = this;
-	if (Array.isArray(cell)) {
-		values = new Array(cell.length);
-		return cell.map(function (cell, index) {
+	if (Array.isArray(arg)) {
+		values = new Array(arg.length);
+		return arg.map(function (cell, index) {
 			values[index] = cell.value;
-			return cell['->'](_this, function(value) {
+			return cell['->'](_this, function (value) {
 				values[index] = value;
 				return conversion.apply(null, values);
 			}, sync);
 		});
 	}
-	return cell['->'](this, conversion, sync);
+	return arg['->'](this, conversion, sync);
 };
 
 nx.Cell.prototype['->>'] = function (cell, conversion) {
@@ -84,11 +84,11 @@ nx.Cell.prototype['<->'] = function (cell, conversion, backConversion) {
 	return [binding, backBinding];
 };
 
-nx.Cell.prototype.bind = function(cell, mode, conversion, backConversion) {
+nx.Cell.prototype.bind = function (cell, mode, conversion, backConversion) {
 	this[mode](cell, conversion, backConversion);
 };
 
-nx.Cell.prototype.set = function(value) {
+nx.Cell.prototype.set = function (value) {
 	this._value = value;
 };
 

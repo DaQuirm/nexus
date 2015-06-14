@@ -16,7 +16,7 @@ describe('nx.Cell', function () {
 		});
 
 		it('can be initialized with the `value` option', function () {
-			var cell = new nx.Cell({ value:'cellar door' });
+			var cell = new nx.Cell({value: 'cellar door' });
 			cell.value.should.equal('cellar door');
 		});
 
@@ -34,7 +34,7 @@ describe('nx.Cell', function () {
 		it('accepts a compare function for comparing values');
 	});
 
-	describe('value',function () {
+	describe('value', function () {
 		it('creates an interface for the cell value', function () {
 			var cell = new nx.Cell();
 			cell.value = 'cellar door';
@@ -58,7 +58,9 @@ describe('nx.Cell', function () {
 			});
 			p.onvalue.add(handler);
 			p.set('cellar door');
+			/* eslint-disable no-unused-expressions */
 			handler.should.not.have.been.called;
+			/* eslint-enable */
 		});
 	});
 
@@ -144,14 +146,23 @@ describe('nx.Cell', function () {
 		});
 
 		they('accept an array of cells for a merging one-way binding', function () {
-			var day = new nx.Cell({ value: 26 });
-			var month = new nx.Cell({ value: 'October' });
-			var year = new nx.Cell({ value: 1985 });
+			var today = {
+				day:   new nx.Cell({ value: 26 }),
+				month: new nx.Cell({ value: 'October' }),
+				year:  new nx.Cell({ value: 1985 })
+			};
 
 			var date = new nx.Cell();
-			date['<<-']([day, month, year], function (day, month, year) {
-				return { day: day, month: month, year: year }
-			});
+			date['<<-'](
+				[
+					today.day,
+					today.month,
+					today.year
+				],
+				function (day, month, year) {
+					return { day: day, month: month, year: year };
+				}
+			);
 
 			date.value.should.deep.equal({
 				day: 26,
@@ -159,8 +170,8 @@ describe('nx.Cell', function () {
 				year: 1985
 			});
 
-			year.value = 2015;
-			day.value = 27;
+			today.year.value = 2015;
+			today.day.value = 27;
 
 			date.value.should.deep.equal({
 				day: 27,
@@ -177,14 +188,18 @@ describe('nx.Cell', function () {
 			p.onvalue.should.be.an.instanceof(nx.Event);
 		});
 
+		/* eslint-disable max-len */
 		it('is triggered when value is set and the new value is passed to the event handlers as an argument', function () {
+		/* eslint-enable */
 			var p = new nx.Cell();
-			var handler = sinon.spy(function (value){
+			var handler = sinon.spy(function (value) {
 				value.should.equal('cellar door');
 			});
 			p.onvalue.add(handler);
 			p.value = 'cellar door';
+			/* eslint-disable no-unused-expressions */
 			handler.should.have.been.called;
+			/* eslint-enable */
 		});
 	});
 
@@ -205,7 +220,9 @@ describe('nx.Cell', function () {
 			var handler = sinon.spy();
 			p.onsync.add(handler);
 			p.value = 'cellar door';
+			/* eslint-disable no-unused-expressions */
 			handler.should.not.have.been.called;
+			/* eslint-enable */
 		});
 	});
 });
