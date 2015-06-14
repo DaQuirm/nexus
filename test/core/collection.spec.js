@@ -66,12 +66,6 @@ describe('nx.Collection', function() {
 	});
 
 	describe('append', function() {
-		it('appends items to the end', function() {
-			var collection = new nx.Collection({ items: [1,2] });
-			collection.append(3,4);
-			collection.items.should.deep.equal([1,2,3,4]);
-		});
-
 		it('assigns the `append` command to the event cell', function() {
 			var collection = new nx.Collection({ items: [1,2] });
 			collection.append(3,4);
@@ -83,12 +77,6 @@ describe('nx.Collection', function() {
 	});
 
 	describe('remove', function() {
-		it('removes items by reference', function() {
-			var collection = new nx.Collection({ items: [1,2,3,4,5] });
-			collection.remove(2,4);
-			collection.items.should.deep.equal([1,3,5]);
-		});
-
 		it('assigns the `remove` command to the event cell', function() {
 			var collection = new nx.Collection({ items: [1,2,3,4,5] });
 			collection.remove(2,4);
@@ -100,12 +88,6 @@ describe('nx.Collection', function() {
 	});
 
 	describe('insertBefore', function() {
-		it('inserts item(s) before an item in collection', function () {
-			var collection = new nx.Collection({ items: [1,2,4] });
-			collection.insertBefore(4,3);
-			collection.items.should.deep.equal([1,2,3,4]);
-		});
-
 		it('assigns the `insertBefore` command to the event cell', function() {
 			var collection = new nx.Collection({ items: [1,2,4] });
 			collection.insertBefore(4,3);
@@ -117,12 +99,6 @@ describe('nx.Collection', function() {
 	});
 
 	describe('reset', function () {
-		it('replaces all items in the collection', function() {
-			var collection = new nx.Collection({ items: [1,2,3,4,5] });
-			collection.reset([6,7]);
-			collection.items.should.deep.equal([6,7]);
-		});
-
 		it('removes all items in the collection if called with no parameters', function () {
 			var collection = new nx.Collection({ items: [1,2,3,4,5] });
 			collection.reset();
@@ -139,12 +115,6 @@ describe('nx.Collection', function() {
 	});
 
 	describe('swap', function () {
-		it('swaps two items in the collection', function () {
-			var collection = new nx.Collection({ items: [1, 2, 3, 4, 5] });
-			collection.swap(2, 4);
-			collection.items.should.deep.equal([1, 4, 3, 2, 5]);
-		});
-
 		it('assigns the `swap` command to the event cell', function() {
 			var collection = new nx.Collection({ items: [1, 2, 3, 4, 5] });
 			collection.swap(2, 4);

@@ -5,8 +5,11 @@ nx.Collection = function (options) {
 	var _this = this;
 	this.event = new nx.Cell();
 	this.items = options.items || [];
-	this.onsync.add(function (items) {
-		_this.event.value = new nxt.Command('Content', 'reset', { items: items });
+	// this.onsync.add(function (items) {
+	// 	_this.event.value = new nxt.Command('Content', 'reset', { items: items });
+	// });
+	this['->'](this.event, function (items) {
+		return new nxt.Command('Content', 'reset', { items: items });
 	});
 
 	this.length = new nx.Cell({ value: this.items.length });
@@ -21,7 +24,7 @@ Object.defineProperty(nx.Collection.prototype, 'items', {
 	get: function() { return this.value; },
 	set: function(items) {
 		this.value = items;
-		this.event.value = new nxt.Command('Content', 'reset', { items: items });
+		// this.event.value = new nxt.Command('Content', 'reset', { items: items });
 	}
 });
 
