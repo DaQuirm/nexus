@@ -52,53 +52,14 @@ nxt.Collection = function () {
 	var conversion = arguments[1];
 	var events = [].slice.call(arguments, 2);
 	var commandCell = new nxt.CommandCell({ cleanup: false });
-	collection.event.value = new nxt.Command('Content', 'reset', { items: collection.items });
-	commandCell.reverseBind(collection.event, function(command) {
+	collection.command.value = new nxt.Command('Content', 'reset', { items: collection.items });
+	commandCell.reverseBind(collection.command, function (command) {
 		if (typeof command !== 'undefined') {
 			command.data.items = command.data.items.map(conversion);
 		}
 		return command;
 	});
-	var delegatedEvents;
-	if (events.length > 0) {
-		delegatedEvents = events.map(function(event) {
-			return nxt.Event(event.name, function(evt) {
-				var target = evt.target;
-				var contentIndex, contentItem;
-				collection.event.value = new nxt.Command('Content', 'get', {
-					items: [], // so that collection's event cell converter doesn't complain
-					next: function(content) {
-						content.some(function(item, index) {
-							var found = item.isEqualNode(target) || item.contains(target);
-							if (found) {
-								contentIndex = index;
-								contentItem = item;
-							}
-							return found;
-						});
-						var selectors = Object.keys(event.handlers);
-						var callMatchingHandlers = function(selector) {
-							if (target.matches(selector)) {
-								event.handlers[selector].call(
-									null,
-									evt,
-									collection.items[contentIndex]
-								);
-							}
-						};
-						while (!contentItem.isEqualNode(target)) {
-							selectors.forEach(callMatchingHandlers);
-							target = target.parentNode;
-						}
-						selectors.forEach(callMatchingHandlers);
-					}
-				});
-			});
-		});
-		return [commandCell].concat(delegatedEvents);
-	} else {
-		return commandCell;
-	}
+	return commandCell;
 };
 
 nxt.ValueBinding = function (cell, conversion, backConversion) {

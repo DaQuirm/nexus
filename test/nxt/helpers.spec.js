@@ -179,7 +179,7 @@ describe('nxt helpers', function() {
 			);
 		});
 
-		it('returns a command cell and event commands if item event handlers are passed', function () {
+		it.skip('returns a command cell and event commands if item event handlers are passed', function () {
 			var collection = new nx.Collection({ items: ['1', '2', '3'] });
 			var handler = function(evt, item) {};
 			var converter = function(item) {
@@ -207,7 +207,7 @@ describe('nxt helpers', function() {
 			items[2].method.should.deep.equal('add');
 		});
 
-		it('attaches delegated item event handlers', function(done) {
+		it.skip('attaches delegated item event handlers', function(done) {
 			var domContext = {
 				container: document.createElement('ul')
 			};
