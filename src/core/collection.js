@@ -1,3 +1,13 @@
+var nx = {
+	ArrayTransform: require('./array-transform'),
+	Cell: require('./cell'),
+	Utils: require('./utils')
+};
+
+var nxt = {
+	Command: require('../nxt/command')
+};
+
 nx.Collection = function (options) {
 	options = options || {};
 	nx.Cell.call(this);
@@ -66,3 +76,5 @@ nx.Collection.prototype.swap = function (firstItem, secondItem) {
 		indexes: [firstIndex, secondIndex]
 	});
 };
+
+module.exports = nx.Collection;

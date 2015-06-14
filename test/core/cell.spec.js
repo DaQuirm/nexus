@@ -1,3 +1,10 @@
+var nx = {
+	Binding: require('../../src/core/binding'),
+	Cell: require('../../src/core/cell'),
+	Event: require('../../src/core/event'),
+	Mapping: require('../../src/core/mapping')
+};
+
 describe('nx.Cell', function () {
 	'use strict';
 

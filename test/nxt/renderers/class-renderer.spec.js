@@ -1,3 +1,8 @@
+var nxt = {
+	Class: require('../../../src/nxt/helpers').Class,
+	ClassRenderer: require('../../../src/nxt/renderers').ClassRenderer
+};
+
 describe('nxt.ClassRenderer', function() {
 	'use strict';
 

@@ -1,3 +1,5 @@
+var nxt = {};
+
 nxt.AttrRenderer = {
 
 	render: function (data, domContext) {
@@ -29,3 +31,5 @@ nxt.AttrRenderer = {
 		}
 	}
 };
+
+module.exports = nxt.AttrRenderer;

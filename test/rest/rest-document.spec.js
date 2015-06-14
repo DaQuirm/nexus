@@ -1,3 +1,8 @@
+var nx = {
+	Cell: require('../../src/core/cell'),
+	RestDocument: require('../../src/rest/rest-document')
+};
+
 describe('nx.RestDocument', function() {
 
 	var model, xhr, server;

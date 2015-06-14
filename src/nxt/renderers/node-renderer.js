@@ -1,3 +1,5 @@
+var nxt = {};
+
 nxt.NodeRenderer = {
 
 	render: function (data, domContext) {
@@ -23,3 +25,5 @@ nxt.NodeRenderer = {
 	}
 
 };
+
+module.exports = nxt.NodeRenderer;

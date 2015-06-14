@@ -1,3 +1,5 @@
+var nx = {};
+
 nx.Mapping = function (pattern) {
 	this.pattern = pattern;
 };
@@ -26,3 +28,5 @@ nx.Mapping.prototype.inverse = function () {
 	}
 	return new nx.Mapping(inversePattern);
 };
+
+module.exports = nx.Mapping;

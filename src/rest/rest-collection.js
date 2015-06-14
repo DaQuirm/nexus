@@ -1,3 +1,10 @@
+var nx = {
+	AjaxModel: require('../core/ajax-model').AjaxModel,
+	Collection: require('../core/collection'),
+	RestDocument: require('./rest-document'),
+	Utils: require('../core/utils')
+};
+
 nx.RestCollection = function(options) {
 	nx.Collection.call(this, options);
 	nx.AjaxModel.call(this, options);
@@ -56,3 +63,5 @@ nx.RestCollection.prototype.remove = function (doc, done) {
 		}
 	});
 };
+
+module.exports = nx.RestCollection;

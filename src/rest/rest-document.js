@@ -1,3 +1,8 @@
+var nx = {
+	AjaxModel: require('../core/ajax-model').AjaxModel,
+	Utils: require('../core/utils')
+};
+
 nx.RestDocument = function(options) {
 	nx.AjaxModel.call(this, options);
 	this.options = options;
@@ -25,3 +30,5 @@ nx.RestDocument.prototype.save = function(done) {
 nx.RestDocument.prototype.remove = function(done) {
 	this.request({ method: 'delete', success: done });
 };
+
+module.exports = nx.RestDocument;

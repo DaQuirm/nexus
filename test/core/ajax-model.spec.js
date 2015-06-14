@@ -1,3 +1,12 @@
+var _ = require('lodash');
+
+var nx = _.assign(
+	{
+		Cell: require('../../src/core/cell')
+	},
+	require('../../src/core/ajax-model')
+);
+
 describe('nx.AjaxModel', function() {
 
 	var model;

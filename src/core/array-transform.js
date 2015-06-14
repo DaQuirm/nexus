@@ -1,3 +1,5 @@
+var nx = {};
+
 nx.ArrayTransform = function (array, command) {
 	return nx.ArrayTransform[command.method](array, command.data);
 };
@@ -32,3 +34,5 @@ nx.ArrayTransform.swap = function (array, data) {
 	array[data.indexes[1]] = temp;
 	return array;
 };
+
+module.exports = nx.ArrayTransform;

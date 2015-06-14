@@ -1,3 +1,12 @@
+var nx = {
+	Cell: require('../../src/core/cell'),
+	Collection: require('../../src/core/collection')
+};
+
+var nxt = {
+	Command: require('../../src/nxt/command')
+};
+
 describe('nx.Collection', function () {
 	'use strict';
 

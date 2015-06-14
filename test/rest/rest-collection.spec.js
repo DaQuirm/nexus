@@ -1,3 +1,9 @@
+var nx = {
+	RestCollection: require('../../src/rest/rest-collection'),
+	RestDocument: require('../../src/rest/rest-document'),
+	Utils: require('../../src/core/utils')
+};
+
 describe('nx.RestCollection', function() {
 
 	var url = 'http://localhost/users/';

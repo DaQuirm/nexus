@@ -1,3 +1,5 @@
+var nx = {};
+
 nx.Event = function() {
 	this.handlers = {};
 	this._nameIndex = 0;
@@ -18,3 +20,5 @@ nx.Event.prototype.add = function(handler, name) {
 nx.Event.prototype.remove = function(name) {
 	delete this.handlers[name];
 };
+
+module.exports = nx.Event;

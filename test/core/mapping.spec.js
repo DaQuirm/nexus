@@ -1,3 +1,7 @@
+var nx = {
+	Mapping: require('../../src/core/mapping')
+};
+
 describe('nx.Mapping', function() {
 	'use strict';
 

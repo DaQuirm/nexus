@@ -1,3 +1,8 @@
+var nx = {
+	Binding: require('../../src/core/binding'),
+	Cell: require('../../src/core/cell'),
+};
+
 describe('nx.Binding', function () {
 	'use strict';
 

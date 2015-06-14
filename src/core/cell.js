@@ -1,3 +1,9 @@
+var nx = {
+	Binding: require('./binding'),
+	Event:   require('./event'),
+	Mapping: require('./mapping')
+};
+
 nx.Cell = function(options) {
 	options = options || {};
 
@@ -85,3 +91,5 @@ nx.Cell.prototype.bind = function(cell, mode, conversion, backConversion) {
 nx.Cell.prototype.set = function(value) {
 	this._value = value;
 };
+
+module.exports = nx.Cell;

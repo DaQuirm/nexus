@@ -1,3 +1,8 @@
+var nxt = {
+	Attr: require('../../../src/nxt/helpers').Attr,
+	AttrRenderer: require('../../../src/nxt/renderers').AttrRenderer
+};
+
 describe('nxt.AttrRenderer', function() {
 	'use strict';
 

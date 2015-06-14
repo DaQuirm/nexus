@@ -1,3 +1,8 @@
+var nxt = {
+	Event: require('../../../src/nxt/helpers').Event,
+	EventRenderer: require('../../../src/nxt/renderers').EventRenderer
+};
+
 describe('nxt.EventRenderer', function() {
 	'use strict';
 

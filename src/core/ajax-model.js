@@ -1,3 +1,8 @@
+var nx = {
+	Cell: require('./cell'),
+	Utils: require('./utils')
+};
+
 nx.AsyncStatus = {
 	LOADING: 1,
 	DONE: 2,
@@ -55,3 +60,9 @@ nx.AjaxModel.prototype.request = function(options) {
 	}
 	_this.status.value = nx.AsyncStatus.LOADING;
 };
+
+module.exports = {
+	AjaxModel: nx.AjaxModel,
+	AsyncStatus: nx.AsyncStatus
+};
+

@@ -1,3 +1,10 @@
+var nx = {
+	Cell: require('../core/cell'),
+	Mapping: require('../core/mapping')
+};
+
+var nxt = require('./renderers');
+
 nxt.ContentRegion = function(domContext) {
 	this.domContext = domContext;
 	this.cells = [];
@@ -60,3 +67,5 @@ nxt.ContentRegion.prototype.update = function(state) {
 		if (this.cells[index].value.visible) { break; }
 	}
 };
+
+module.exports = nxt.ContentRegion;

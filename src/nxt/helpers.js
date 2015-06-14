@@ -1,3 +1,9 @@
+var nxt = {
+	Command: require('./command'),
+	CommandCell: require('./command-cell'),
+	ContentRenderer: require('./content-renderer')
+};
+
 nxt.Attr = function(name, value) {
 	var data = (typeof name === 'string')
 		? { name: name, value: typeof value === 'undefined' ? '' : value }
@@ -81,4 +87,17 @@ nxt.ValueBinding = function (cell, conversion, backConversion) {
 
 nxt.Style = function (data) {
 	return new nxt.Command('Style', 'render', data);
+};
+
+module.exports = {
+	Attr:         nxt.Attr,
+	Class:        nxt.Class,
+	Text:         nxt.Text,
+	Event:        nxt.Event,
+	Element:      nxt.Element,
+	Binding:      nxt.Binding,
+	ItemEvent:    nxt.ItemEvent,
+	Collection:   nxt.Collection,
+	ValueBinding: nxt.ValueBinding,
+	Style:        nxt.Style
 };

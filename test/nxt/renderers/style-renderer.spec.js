@@ -1,3 +1,8 @@
+var nxt = {
+	Style: require('../../../src/nxt/helpers').Style,
+	StyleRenderer: require('../../../src/nxt/renderers').StyleRenderer
+};
+
 describe('nxt.StyleRenderer', function() {
 	'use strict';
 

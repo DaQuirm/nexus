@@ -1,3 +1,5 @@
+var nxt = require('./renderers');
+
 nxt.Command = function(type, method, data) {
     this.type = type;
     this.method = method;
@@ -11,3 +13,5 @@ nxt.Command.prototype.run = function() {
 		[this.data].concat([].slice.apply(arguments))
 	);
 };
+
+module.exports = nxt.Command;

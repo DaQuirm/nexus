@@ -1,3 +1,18 @@
+var _ = require('lodash');
+
+var nx = {
+	Cell: require('../../src/core/cell'),
+	Collection: require('../../src/core/collection')
+};
+
+var nxt = _.assign(
+	{
+		ContentRenderer: require('../../src/nxt/content-renderer')
+	},
+	require('../../src/nxt/renderers'),
+	require('../../src/nxt/helpers')
+);
+
 describe('nxt helpers', function() {
 	'use strict';
 

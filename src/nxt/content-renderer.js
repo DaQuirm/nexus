@@ -1,3 +1,7 @@
+var nxt = require('./renderers');
+nxt.Command = require('./command');
+nxt.ContentRegion = require('./content-region');
+
 nxt.ContentRenderer = {
 
 	render: function (data, domContext) {
@@ -111,3 +115,5 @@ nxt.ContentRenderer = {
 		return content.some(nxt.NodeRenderer.visible);
 	}
 };
+
+module.exports = nxt.ContentRenderer;

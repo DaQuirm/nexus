@@ -1,3 +1,7 @@
+var nx = {
+	Mapping: require('./mapping')
+};
+
 nx.Binding = function (source, target, conversion) {
 	var _this = this;
 
@@ -36,3 +40,5 @@ nx.Binding.prototype.pair = function (binding) {
 nx.Binding.prototype.unbind = function () {
 	delete this.source.bindings[this.index];
 };
+
+module.exports = nx.Binding;

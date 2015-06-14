@@ -1,3 +1,7 @@
+var nx = {
+	Utils: require('../../src/core/utils')
+};
+
 describe('Utils', function() {
 
 	describe('interpolateString', function() {

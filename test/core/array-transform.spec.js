@@ -1,3 +1,11 @@
+var nx = {
+	ArrayTransform: require('../../src/core/array-transform')
+};
+
+var nxt = {
+	Command: require('../../src/nxt/command')
+};
+
 describe('nx.ArrayTransform', function () {
 
 	describe('append', function () {

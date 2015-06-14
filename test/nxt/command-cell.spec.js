@@ -1,3 +1,13 @@
+var nx = {
+	Cell: require('../../src/core/cell')
+};
+
+var nxt = {
+	CommandBinding: require('../../src/nxt/command-binding'),
+	CommandCell: require('../../src/nxt/command-cell'),
+	Text: require('../../src/nxt/helpers').Text
+};
+
 describe('nxt.CommandCell', function () {
 	'use strict';
 

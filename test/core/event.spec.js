@@ -1,3 +1,7 @@
+var nx = {
+	Event: require('../../src/core/event')
+};
+
 describe('nx.Event', function() {
 	'use strict';
 

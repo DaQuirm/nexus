@@ -1,3 +1,13 @@
+var nx = {
+	Binding: require('../../src/core/binding')
+};
+
+var nxt = {
+	CommandBinding: require('../../src/nxt/command-binding'),
+	CommandCell: require('../../src/nxt/command-cell'),
+	CommandCellModel: require('../../src/nxt/command-cell-model')
+};
+
 describe('nxt.CommandBinding', function () {
 	'use strict';
 
