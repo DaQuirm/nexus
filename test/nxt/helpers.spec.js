@@ -158,8 +158,8 @@ describe('nxt helpers', function () {
 	describe('nxt.ItemEvent', function () {
 		it('creates a delegated event object', function () {
 			var handlerMap = {
-				'li': function (evt, item) {},
-				'a': function (evt, item) {}
+				'li': function () {},
+				'a': function () {}
 			};
 			var command = nxt.ItemEvent('click', handlerMap);
 			command.handlers.should.deep.equal(handlerMap);
@@ -198,7 +198,7 @@ describe('nxt helpers', function () {
 
 		it.skip('returns a command cell and event commands if item event handlers are passed', function () {
 			var collection = new nx.Collection({ items: ['1', '2', '3'] });
-			var handler = function (evt, item) {};
+			var handler = function () {};
 			var converter = function (item) {
 				return nxt.Element('li',
 					nxt.Element('span',

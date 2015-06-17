@@ -11,7 +11,6 @@ nxt.ContentRegion = function (domContext) {
 };
 
 nxt.ContentRegion.prototype.add = function (commandCell) {
-	var index = this.cells.length;
 	var _this = this;
 	var cell = new nx.Cell({
 		value: {
@@ -34,7 +33,6 @@ nxt.ContentRegion.prototype.add = function (commandCell) {
 nxt.ContentRegion.prototype.update = function (state) {
 	var hasRenderer = typeof state.renderer !== 'undefined';
 	var noCommand = typeof state.command === 'undefined';
-	var wasVisible = state.visible;
 	if (hasRenderer) {
 		if (noCommand) {
 			state.domContext.content = state.renderer.unrender(state.domContext);

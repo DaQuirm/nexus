@@ -28,7 +28,7 @@ nx.AjaxModel.prototype.request = function (options) {
 	this.xhr.open(options.method, url, true);
 	this.xhr.responseType = (!window.chrome) ? 'json' : 'text';
 
-	this.xhr.onload = function (evt) {
+	this.xhr.onload = function () {
 		var handler, data;
 
 		if (this.responseType === 'json') {

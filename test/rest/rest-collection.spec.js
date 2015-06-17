@@ -6,7 +6,7 @@ var nx = {
 
 describe('nx.RestCollection', function () {
 
-	var model, xhr, server;
+	var xhr, server;
 	var url = 'http://localhost/users/';
 
 	var UserModel = function (data) {
@@ -16,7 +16,6 @@ describe('nx.RestCollection', function () {
 
 	beforeEach(function () {
 		xhr = sinon.useFakeXMLHttpRequest();
-		model = new nx.RestDocument({ url: url });
 		server = sinon.fakeServer.create();
 	});
 
@@ -105,7 +104,7 @@ describe('nx.RestCollection', function () {
 				{ 'Content-Type': 'application/json' },
 				JSON.stringify(response)
 			]);
-			collection.retrieve(function (items) {
+			collection.retrieve(function () {
 				collection.items.should.have.length(2);
 				collection.items[1].data.value.should.deep.equal(response[1]);
 				done();

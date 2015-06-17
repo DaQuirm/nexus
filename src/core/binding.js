@@ -3,8 +3,6 @@ var nx = {
 };
 
 nx.Binding = function (source, target, conversion) {
-	var _this = this;
-
 	this.source = source;
 	this.target = target;
 

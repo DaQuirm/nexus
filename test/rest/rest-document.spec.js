@@ -74,7 +74,7 @@ describe('nx.RestDocument', function () {
 				{ 'Content-Type': 'application/json' },
 				JSON.stringify(response)
 			]);
-			model.retrieve(function (data) {
+			model.retrieve(function () {
 				model.data.value.should.deep.equal(response);
 				done();
 			});

@@ -115,7 +115,6 @@ describe('nxt.ContentRenderer', function () {
 		});
 
 		it('skips undefined items', function () {
-			var cell = new nx.Cell();
 			renderer.render({
 				items: [
 					void 0,

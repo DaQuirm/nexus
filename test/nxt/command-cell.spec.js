@@ -48,7 +48,7 @@ describe('nxt.CommandCell', function () {
 		it('removes the binding ', function () {
 			var cell = new nx.Cell({ value: 'cellar door' });
 			var commandCell = new nxt.CommandCell();
-			var binding = commandCell.reverseBind(cell, nxt.Text);
+			commandCell.reverseBind(cell, nxt.Text);
 			var command = commandCell.value;
 			commandCell.unbind();
 			cell.value = 'woooo';

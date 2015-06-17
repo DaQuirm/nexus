@@ -17,7 +17,6 @@ nxt.ContentRenderer = {
 					if (cells.length > 0) { // dynamic content followed by static content
 						var regionContext = { container: domContext.container };
 						// only DOM-visible items can serve as an insert reference
-						var renderer = nxt[command.type + 'Renderer'];
 						if (nxt.NodeRenderer.visible(content)) {
 							regionContext.insertReference = content;
 						}
