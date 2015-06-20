@@ -28,7 +28,6 @@ nx.Binding.prototype.sync = function () {
 		}
 	}
 	this.target.value = value;
-	this.target.onsync.trigger(value);
 };
 
 nx.Binding.prototype.pair = function (binding) {

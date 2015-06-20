@@ -202,27 +202,4 @@ describe('nx.Cell', function () {
 			/* eslint-enable */
 		});
 	});
-
-	describe('onsync', function () {
-		it('is triggered when cell is synced with another cell', function () {
-			var p = new nx.Cell();
-			var q = new nx.Cell();
-			p['->'](q);
-			var handler = sinon.spy();
-			q.onsync.add(handler);
-			p.value = 'cellar door';
-			handler.should.have.been.calledWith('cellar door');
-
-		});
-
-		it('is not triggered when cell value is set', function () {
-			var p = new nx.Cell();
-			var handler = sinon.spy();
-			p.onsync.add(handler);
-			p.value = 'cellar door';
-			/* eslint-disable no-unused-expressions */
-			handler.should.not.have.been.called;
-			/* eslint-enable */
-		});
-	});
 });

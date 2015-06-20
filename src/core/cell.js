@@ -15,7 +15,6 @@ nx.Cell = function (options) {
 	this.bindings = {};
 
 	this.onvalue = new nx.Event();
-	this.onsync = new nx.Event();
 
 	if (typeof options.action !== 'undefined') {
 		this.onvalue.add(options.action);
