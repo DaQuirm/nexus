@@ -6,16 +6,9 @@
     "type": "git",
     "url": "https://github.com/DaQuirm/nexus.git"
   },
-  "dependencies": {},
   "devDependencies": {
     "eslint": "^0.22.1",
     "eslint-loader": "^0.12.0",
-    "grunt": "^0.4.5",
-    "grunt-contrib-concat": "^0.5.1",
-    "grunt-contrib-jshint": "^0.11.0",
-    "grunt-contrib-uglify": "^0.8.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-wrap": "^0.3.0",
     "inject-loader": "^2.0.0",
     "jscs": "^1.13.1",
     "jscs-loader": "^0.1.0",
