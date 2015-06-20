@@ -5,9 +5,16 @@ An MVVM-based client application framework
 
 ### Installation
 
+Bower
 ```
-$ bower i nexus#0.4.0-alpha.0
+$ bower i nexus#0.4.0-alpha.3
 ```
+
+Node.js
+```
+$ npm i nexus-node
+```
+
 
 ### Example
 
