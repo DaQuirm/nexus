@@ -17,6 +17,8 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-wrap": "^0.3.0",
     "inject-loader": "^2.0.0",
+    "jscs": "^1.13.1",
+    "jscs-loader": "^0.1.0",
     "node-libs-browser": "^0.5.2",
     "strict-loader": "^0.1.2",
     "webpack": "^1.9.11"

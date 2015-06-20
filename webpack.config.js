@@ -32,9 +32,11 @@ module.exports = {
 		configFile: './.eslintrc'
 	},
 
+	jscs: require('./jscs.json'),
+
 	module: {
 		loaders: [
-			{ test: /\.js$/, loader: 'strict-loader!eslint-loader', exclude: /lib/ }
+			{ test: /\.js$/, loader: 'strict-loader!eslint-loader!jscs-loader', exclude: /lib/ }
 		]
 	}
 };

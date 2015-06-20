@@ -16,7 +16,7 @@ describe('nx.Cell', function () {
 		});
 
 		it('can be initialized with the `value` option', function () {
-			var cell = new nx.Cell({value: 'cellar door' });
+			var cell = new nx.Cell({ value: 'cellar door' });
 			cell.value.should.equal('cellar door');
 		});
 
@@ -98,14 +98,14 @@ describe('nx.Cell', function () {
 			p['->>'](q);
 			q.value.should.equal('cellar door');
 			p = new nx.Cell();
-			q = new nx.Cell({value:'cellar door'});
+			q = new nx.Cell({ value:'cellar door' });
 			p['<<-'](q);
 			p.value.should.equal('cellar door');
 		});
 
 		they('syncs cell values from source to target for two-way bindings', function () {
-			var p = new nx.Cell({value:'cellar door'});
-			var q = new nx.Cell({value:'test'});
+			var p = new nx.Cell({ value:'cellar door' });
+			var q = new nx.Cell({ value:'test' });
 			p['<->'](q);
 			q.value.should.equal('cellar door');
 			p.value.should.equal('cellar door');

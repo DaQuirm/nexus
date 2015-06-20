@@ -21,7 +21,7 @@ describe('nx.AjaxModel', function () {
 		});
 
 		it('initializes the data cell using the options parameter', function () {
-			model = new nx.AjaxModel({ data: { cellar: 'door' }});
+			model = new nx.AjaxModel({ data: { cellar: 'door' } });
 			model.data.value.should.deep.equal({ cellar: 'door' });
 		});
 	});
