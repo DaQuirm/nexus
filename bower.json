@@ -1,7 +1,7 @@
 {
   "name": "nexus",
-  "version": "0.4.0-alpha.2",
-  "main": "build/nexus.js",
+  "version": "0.4.0-alpha.3",
+  "main": "dist/nexus.js",
   "homepage": "https://github.com/DaQuirm/nexus",
   "authors": [
     "DaQuirm <leo.daquirm@gmail.com>"
