@@ -1,7 +1,7 @@
 {
   "name": "nexus",
-  "version": "0.4.0-alpha.3",
-  "main": "dist/nexus.js",
+  "version": "0.4.0-alpha.4",
+  "main": "src/nexus.js",
   "homepage": "https://github.com/DaQuirm/nexus",
   "authors": [
     "DaQuirm <leo.daquirm@gmail.com>"
@@ -20,7 +20,6 @@
     "**/.*",
     "node_modules",
     "lib",
-    "src",
     "test",
     "demos",
     "test.html"

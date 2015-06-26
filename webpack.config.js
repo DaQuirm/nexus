@@ -11,7 +11,6 @@ module.exports = {
 
 	entry: {
 		'nexus': './src/nexus.js',
-		'nexus-node': './src/nexus-node.js',
 		'nexus-test': './test/nexus-test.js'
 	},
 

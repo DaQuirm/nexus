@@ -1,12 +1,12 @@
 {
   "name": "nexus-node",
-  "version": "0.4.0-alpha.3",
+  "version": "0.4.0-alpha.4",
   "author": "DaQuirm <leo.daquirm@gmail.com>",
   "repository": {
     "type": "git",
     "url": "https://github.com/DaQuirm/nexus.git"
   },
-  "main": "dist/nexus-node.js",
+  "main": "src/nexus-node.js",
   "devDependencies": {
     "eslint": "^0.22.1",
     "eslint-loader": "^0.12.0",
