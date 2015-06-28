@@ -3,7 +3,7 @@
 ### Epic
 * Command Cell Model (fixes major un-rendering issues)
 * All renderers are now stateless
-* `nx.Cell bindings are lazy by default (with their syncing counterparts)
+* `nx.Cell` bindings are lazy by default (with their syncing counterparts)
 * Refactored `nx.Collection` to be controlled by an external command source
 * All modules are now CommonJS-compliant
 
