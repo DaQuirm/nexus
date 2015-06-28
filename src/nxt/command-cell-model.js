@@ -1,3 +1,5 @@
+var nxt = {};
+
 nxt.CommandCellModel = {
 
 	cellStack: [],
@@ -29,3 +31,5 @@ nxt.CommandCellModel = {
 	}
 
 };
+
+module.exports = nxt.CommandCellModel;

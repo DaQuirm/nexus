@@ -1,3 +1,7 @@
+var nxt = require('./renderers');
+nxt.Command = require('./command');
+nxt.ContentRegion = require('./content-region');
+
 nxt.ContentRenderer = {
 
 	render: function (data, domContext) {
@@ -13,7 +17,6 @@ nxt.ContentRenderer = {
 					if (cells.length > 0) { // dynamic content followed by static content
 						var regionContext = { container: domContext.container };
 						// only DOM-visible items can serve as an insert reference
-						var renderer = nxt[command.type + 'Renderer'];
 						if (nxt.NodeRenderer.visible(content)) {
 							regionContext.insertReference = content;
 						}
@@ -51,19 +54,23 @@ nxt.ContentRenderer = {
 	},
 
 	insertBefore: function (data, domContext) {
-		data.items.forEach(function (item, index) {
-			var content = item.run({
+		var insertReference = domContext.content[data.index];
+		var content = data.items.map(function (item) {
+			return item.run({
 				container: domContext.container,
-				insertReference: domContext.content[data.insertIndex + index]
+				insertReference: insertReference
 			});
-			domContext.content.splice(data.insertIndex + index, 0, content);
 		});
+		[].splice.apply(
+			domContext.content,
+			[data.index, 0].concat(content)
+		);
 		return domContext.content;
 	},
 
 	remove: function (data, domContext) {
 		data.indexes
-			.sort(function (a,b) { return a - b; })
+			.sort(function (a, b) { return a - b; })
 			.forEach(function (removeIndex, index) {
 				domContext.container.removeChild(domContext.content[removeIndex - index]);
 				domContext.content.splice(removeIndex - index, 1);
@@ -82,7 +89,7 @@ nxt.ContentRenderer = {
 	},
 
 	swap: function (data, domContext) {
-		data.indexes.sort(function (a,b) { return a - b; });
+		data.indexes.sort(function (a, b) { return a - b; });
 		var firstIndex = data.indexes[0];
 		var secondIndex = data.indexes[1];
 		var firstNode = domContext.content[firstIndex];
@@ -107,3 +114,5 @@ nxt.ContentRenderer = {
 		return content.some(nxt.NodeRenderer.visible);
 	}
 };
+
+module.exports = nxt.ContentRenderer;

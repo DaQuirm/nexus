@@ -1,4 +1,18 @@
-describe('nxt.ContentRenderer', function() {
+var _ = require('lodash');
+
+var nx = {
+	Cell: require('../../src/core/cell')
+};
+
+var nxt = _.assign(
+	{
+		ContentRegion: require('../../src/nxt/content-region')
+	},
+	require('../../src/nxt/renderers'),
+	require('../../src/nxt/helpers')
+);
+
+describe('nxt.ContentRenderer', function () {
 	'use strict';
 
 	var element;
@@ -10,8 +24,8 @@ describe('nxt.ContentRenderer', function() {
 		domContext = { container: element };
 	});
 
-	describe('render', function() {
-		it('uses content renderers to append static items to the container', function() {
+	describe('render', function () {
+		it('uses content renderers to append static items to the container', function () {
 			renderer.render({
 				items: [
 					nxt.Element('span'),
@@ -27,7 +41,7 @@ describe('nxt.ContentRenderer', function() {
 			element.getAttribute('class').should.equal('container');
 		});
 
-		it('passes its domContext container to the renderers', function() {
+		it('passes its domContext container to the renderers', function () {
 			var span = document.createElement('span');
 			element.appendChild(span);
 			domContext = { container: element, insertReference: span };
@@ -45,19 +59,21 @@ describe('nxt.ContentRenderer', function() {
 				items: [
 					nxt.Attr('class', 'container'),
 					nxt.Element('div'),
-					nxt.Binding(cell, function(value) { return value; }),
-					nxt.Binding(cell, function(value) { return value; }),
+					nxt.Binding(cell, function (value) { return value; }),
+					nxt.Binding(cell, function (value) { return value; }),
 					nxt.Element('div'),
-					nxt.Binding(cell, function(value) { return value; }),
+					nxt.Binding(cell, function (value) { return value; }),
 					nxt.Element('div'),
 					nxt.Element('div'),
-					nxt.Binding(cell, function(value) { return value; }),
-					nxt.Binding(cell, function(value) { return value; }),
-					nxt.Binding(cell, function(value) { return value; })
+					nxt.Binding(cell, function (value) { return value; }),
+					nxt.Binding(cell, function (value) { return value; }),
+					nxt.Binding(cell, function (value) { return value; })
 				]
 			}, domContext);
 			renderer.createRegion.restore();
+			/* eslint-disable no-unused-expressions */
 			spy.should.have.been.calledThrice;
+			/* eslint-enable */
 		});
 
 		it('passes insert reference if a content region is followed by a static item', function () {
@@ -99,7 +115,6 @@ describe('nxt.ContentRenderer', function() {
 		});
 
 		it('skips undefined items', function () {
-			var cell = new nx.Cell();
 			renderer.render({
 				items: [
 					void 0,
@@ -135,7 +150,9 @@ describe('nxt.ContentRenderer', function() {
 	});
 
 	describe('createRegion', function () {
+		/* eslint-disable max-len */
 		it('creates a nxt.ContentRegion instance, adds cells into it and pushes the region to the region array', function () {
+		/* eslint-enable */
 			var cell = new nx.Cell();
 			var cells = [
 				nxt.Binding(cell, nxt.Text),
@@ -181,6 +198,9 @@ describe('nxt.ContentRenderer', function() {
 			}, domContext);
 			content.length.should.equal(4);
 			element.textContent.should.equal('cellar door');
+			element.childNodes[1].nodeType.should.equal(Node.TEXT_NODE);
+			element.childNodes[2].nodeType.should.equal(Node.TEXT_NODE);
+
 		});
 	});
 
@@ -195,7 +215,7 @@ describe('nxt.ContentRenderer', function() {
 			}, domContext);
 			domContext = { container: element, content: content };
 			content = renderer.remove({
-				indexes: [0,2]
+				indexes: [0, 2]
 			}, domContext);
 			content.length.should.equal(1);
 			content[0].nodeName.toLowerCase().should.equal('main');
@@ -231,15 +251,15 @@ describe('nxt.ContentRenderer', function() {
 			var listItem = document.createElement('li');
 			listItem.textContent = 'a';
 			container.appendChild(listItem);
-			var conversion = function(value) {
+			var conversion = function (value) {
 				return nxt.Element('li', nxt.Text(value));
 			};
 			domContext.container = container;
 			domContext.content = renderer.append({
-				items: ['b','c','d'].map(conversion)
+				items: ['b', 'c', 'd'].map(conversion)
 			}, domContext);
 			container.textContent.should.equal('abcd');
-			renderer.reset({ items:[] }, domContext);
+			renderer.reset({ items: [] }, domContext);
 			container.textContent.should.equal('a');
 			container.childNodes.length.should.equal(1);
 		});
@@ -267,16 +287,16 @@ describe('nxt.ContentRenderer', function() {
 	describe('get', function () {
 		it('passes renderer\'s content to a command callback', function (done) {
 			var container = document.createElement('ul');
-			var conversion = function(value) {
+			var conversion = function (value) {
 				return nxt.Element('li', nxt.Text(value));
 			};
 			domContext.container = container;
 			domContext.content = renderer.append({
-				items: ['a','b','c','d'].map(conversion)
+				items: ['a', 'b', 'c', 'd'].map(conversion)
 			}, domContext);
 			container.textContent.should.equal('abcd');
 			renderer.get({
-				next: function(content) {
+				next: function (content) {
 					content.length.should.equal(4);
 					content[0].textContent.should.equal('a');
 					content[1].textContent.should.equal('b');
@@ -301,8 +321,8 @@ describe('nxt.ContentRenderer', function() {
 		it('checks all content items and takes their visibility into consideration', function () {
 			var contentItems = renderer.render({
 				items: [
-					nxt.Event('click', function(){}),
-					nxt.Event('mouseover', function(){})
+					nxt.Event('click', function () {}),
+					nxt.Event('mouseover', function () {})
 				]
 			}, domContext);
 			renderer.visible(contentItems).should.equal(false);

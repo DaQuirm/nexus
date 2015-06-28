@@ -1,3 +1,5 @@
+var nx = {};
+
 nx.Mapping = function (pattern) {
 	this.pattern = pattern;
 };
@@ -8,14 +10,16 @@ nx.Mapping.prototype.map = function (source, target) {
 			if (item === '_' && typeof target !== 'undefined') {
 				target[this.pattern[item]] = source;
 			} else if (this.pattern[item] === '_' && typeof source !== 'undefined') {
-				return target = source[item];
+				target = source[item];
+				return target;
 			} else if (typeof source !== 'undefined' && typeof target !== 'undefined') {
 				target[this.pattern[item]] = source[item];
 			}
 		}
 		return target;
 	} else {
-		return target = source;
+		target = source;
+		return target;
 	}
 };
 
@@ -26,3 +30,5 @@ nx.Mapping.prototype.inverse = function () {
 	}
 	return new nx.Mapping(inversePattern);
 };
+
+module.exports = nx.Mapping;

@@ -1,3 +1,10 @@
+var nx = {
+	Binding: require('../../src/core/binding'),
+	Cell: require('../../src/core/cell'),
+	Event: require('../../src/core/event'),
+	Mapping: require('../../src/core/mapping')
+};
+
 describe('nx.Cell', function () {
 	'use strict';
 
@@ -9,7 +16,7 @@ describe('nx.Cell', function () {
 		});
 
 		it('can be initialized with the `value` option', function () {
-			var cell = new nx.Cell({ value:'cellar door' });
+			var cell = new nx.Cell({ value: 'cellar door' });
 			cell.value.should.equal('cellar door');
 		});
 
@@ -27,7 +34,7 @@ describe('nx.Cell', function () {
 		it('accepts a compare function for comparing values');
 	});
 
-	describe('value',function () {
+	describe('value', function () {
 		it('creates an interface for the cell value', function () {
 			var cell = new nx.Cell();
 			cell.value = 'cellar door';
@@ -51,12 +58,17 @@ describe('nx.Cell', function () {
 			});
 			p.onvalue.add(handler);
 			p.set('cellar door');
+			/* eslint-disable no-unused-expressions */
 			handler.should.not.have.been.called;
+			/* eslint-enable */
 		});
 	});
 
 	describe('binding methods', function () {
-		it('connect a cell to another cell and keeps their value synchronized', function () {
+
+		var they = it;
+
+		they('connect a cell to another cell and keeps their value synchronized', function () {
 			var p = new nx.Cell();
 			var q = new nx.Cell();
 			p['<->'](q);
@@ -66,33 +78,56 @@ describe('nx.Cell', function () {
 			p.value.should.equal('echo');
 		});
 
-		it('return an nx.Binding instance', function () {
+		they('return an nx.Binding instance', function () {
 			var p = new nx.Cell();
 			var q = new nx.Cell();
 			var binding = p['->'](q);
 			binding.should.be.an.instanceof(nx.Binding);
 		});
 
-		it('sync cell values from source to target for one-way bindings', function () {
-			var p = new nx.Cell({value:'cellar door'});
-			var q = new nx.Cell();
+		they('don\'t sync cells by default', function () {
+			var p = new nx.Cell({ value: 'cellar door' });
+			var q = new nx.Cell({ value: 'default' });
 			p['->'](q);
+			q.value.should.equal('default');
+		});
+
+		they('sync cell values from source to target for one-way bindings (->>)', function () {
+			var p = new nx.Cell({ value: 'cellar door' });
+			var q = new nx.Cell();
+			p['->>'](q);
 			q.value.should.equal('cellar door');
 			p = new nx.Cell();
-			q = new nx.Cell({value:'cellar door'});
-			p['<-'](q);
+			q = new nx.Cell({ value:'cellar door' });
+			p['<<-'](q);
 			p.value.should.equal('cellar door');
 		});
 
-		it('syncs cell values from source to target for two-way bindings', function () {
-			var p = new nx.Cell({value:'cellar door'});
-			var q = new nx.Cell({value:'test'});
+		they('do not sync cell values from source to target for two-way bindings (<->)', function () {
+			var p = new nx.Cell({ value:'cellar door' });
+			var q = new nx.Cell({ value:'test' });
 			p['<->'](q);
-			q.value.should.equal('cellar door');
 			p.value.should.equal('cellar door');
+			q.value.should.not.equal('cellar door');
 		});
 
-		it('accept two converter functions for two-way bindings', function () {
+		they('sync cell values from source to target for two-way bindings (<->>)', function () {
+			var p = new nx.Cell({ value:'cellar door' });
+			var q = new nx.Cell({ value:'test' });
+			p['<->>'](q);
+			p.value.should.equal('cellar door');
+			q.value.should.equal('cellar door');
+		});
+
+		they('sync cell values from target to source for two-way bindings (<<->)', function () {
+			var p = new nx.Cell({ value:'cellar door' });
+			var q = new nx.Cell({ value:'test' });
+			p['<<->'](q);
+			p.value.should.equal('test');
+			q.value.should.equal('test');
+		});
+
+		they('accept two converter functions for two-way bindings', function () {
 			var seconds = new nx.Cell();
 			var minutes = new nx.Cell();
 			seconds['<->'](
@@ -106,7 +141,7 @@ describe('nx.Cell', function () {
 			minutes.value.should.equal(4);
 		});
 
-		it('accept a data mapping for one-way bindings', function () {
+		they('accept a data mapping for one-way bindings', function () {
 			var date = new nx.Cell();
 			var year = new nx.Cell();
 			date['<-'](year, new nx.Mapping({ '_':'year' }));
@@ -115,7 +150,7 @@ describe('nx.Cell', function () {
 			date.value.year.should.equal(2015);
 		});
 
-		it('invert the data mapping if only one is passed for a two-way binding', function () {
+		they('invert the data mapping if only one is passed for a two-way binding', function () {
 			var date = new nx.Cell();
 			var year = new nx.Cell();
 			date.value = {};
@@ -126,15 +161,24 @@ describe('nx.Cell', function () {
 			year.value.should.equal(1985);
 		});
 
-		it('accept an array of cells for a merging one-way binding', function () {
-			var day = new nx.Cell({ value: 26 });
-			var month = new nx.Cell({ value: 'October' });
-			var year = new nx.Cell({ value: 1985 });
+		they('accept an array of cells for a merging one-way binding', function () {
+			var today = {
+				day:   new nx.Cell({ value: 26 }),
+				month: new nx.Cell({ value: 'October' }),
+				year:  new nx.Cell({ value: 1985 })
+			};
 
 			var date = new nx.Cell();
-			date['<-']([day, month, year], function (day, month, year) {
-				return { day: day, month: month, year: year }
-			});
+			date['<<-'](
+				[
+					today.day,
+					today.month,
+					today.year
+				],
+				function (day, month, year) {
+					return { day: day, month: month, year: year };
+				}
+			);
 
 			date.value.should.deep.equal({
 				day: 26,
@@ -142,8 +186,8 @@ describe('nx.Cell', function () {
 				year: 1985
 			});
 
-			year.value = 2015;
-			day.value = 27;
+			today.year.value = 2015;
+			today.day.value = 27;
 
 			date.value.should.deep.equal({
 				day: 27,
@@ -160,35 +204,18 @@ describe('nx.Cell', function () {
 			p.onvalue.should.be.an.instanceof(nx.Event);
 		});
 
+		/* eslint-disable max-len */
 		it('is triggered when value is set and the new value is passed to the event handlers as an argument', function () {
+		/* eslint-enable */
 			var p = new nx.Cell();
-			var handler = sinon.spy(function (value){
+			var handler = sinon.spy(function (value) {
 				value.should.equal('cellar door');
 			});
 			p.onvalue.add(handler);
 			p.value = 'cellar door';
+			/* eslint-disable no-unused-expressions */
 			handler.should.have.been.called;
-		});
-	});
-
-	describe('onsync', function () {
-		it('is triggered when cell is synced with another cell', function () {
-			var p = new nx.Cell();
-			var q = new nx.Cell();
-			p['->'](q);
-			var handler = sinon.spy();
-			q.onsync.add(handler);
-			p.value = 'cellar door';
-			handler.should.have.been.calledWith('cellar door');
-
-		});
-
-		it('is not triggered when cell value is set', function () {
-			var p = new nx.Cell();
-			var handler = sinon.spy();
-			p.onsync.add(handler);
-			p.value = 'cellar door';
-			handler.should.not.have.been.called;
+			/* eslint-enable */
 		});
 	});
 });

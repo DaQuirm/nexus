@@ -1,3 +1,8 @@
+var nx = {
+	Binding: require('../../src/core/binding'),
+	Cell: require('../../src/core/cell')
+};
+
 describe('nx.Binding', function () {
 	'use strict';
 
@@ -9,7 +14,7 @@ describe('nx.Binding', function () {
 			binding.should.be.an('object');
 		});
 
-		it('creates a binding for a source cell and a target cell', function() {
+		it('creates a binding for a source cell and a target cell', function () {
 			var source = new nx.Cell();
 			var target = new nx.Cell();
 			var binding = new nx.Binding(source, target);
@@ -18,10 +23,10 @@ describe('nx.Binding', function () {
 			target.value.should.equal('cellar door');
 		});
 
-		it('accepts a converter function for one-way bindings', function() {
+		it('accepts a converter function for one-way bindings', function () {
 			var positive = new nx.Cell();
 			var negative = new nx.Cell();
-			var binding = new nx.Binding(positive, negative, function(value) { return -value; });
+			var binding = new nx.Binding(positive, negative, function (value) { return -value; });
 			positive.value = 1;
 			binding.sync();
 			negative.value.should.equal(-1);

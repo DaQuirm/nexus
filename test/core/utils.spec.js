@@ -1,18 +1,24 @@
-describe('Utils', function() {
+var nx = {
+	Utils: require('../../src/core/utils')
+};
 
-	describe('interpolateString', function() {
-		it('substitutes paramaters in curly braces with the object literal\'s field values converting them to strings', function() {
-			nx.Utils.interpolateString('{a}{b}{c}', { a:1, b:2, c:3 })
+describe('Utils', function () {
+
+	describe('interpolateString', function () {
+		/* eslint-disable max-len */
+		it('substitutes paramaters in curly braces with the object literal\'s field values converting them to strings', function () {
+		/* eslint-enable */
+			nx.Utils.interpolateString('{a}{b}{c}', { a: 1, b: 2, c: 3 })
 				.should.equal('123');
 			nx.Utils.interpolateString('rock {amp} roll', { amp: '&' })
 				.should.equal('rock & roll');
 		});
 
-		it('doesn\'t fail when the string contains no curly-braced placeholders', function() {
+		it('doesn\'t fail when the string contains no curly-braced placeholders', function () {
 			var string = 'cellar door';
-			nx.Utils.interpolateString(string, { a:1, b:2, c:3 })
+			nx.Utils.interpolateString(string, { a: 1, b: 2, c: 3 })
 				.should.equal(string);
-		})
+		});
 	});
 
 	describe('mixin', function () {

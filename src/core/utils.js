@@ -1,14 +1,12 @@
-/* since utils comes first in the build, create namespaces here */
-window.nx = {};
-window.nxt = {};
+var nx = {};
 
-window.nx.Utils = {
+nx.Utils = {
 
 	interpolateString: function (string, props) {
 		var matches = string.match(/[^{\}]+(?=\})/g);
 		if (matches) {
-			matches.forEach(function(match) {
-				string = string.replace('{'+match+'}', props[match]);
+			matches.forEach(function (match) {
+				string = string.replace('{' + match + '}', props[match]);
 			});
 		}
 		return string;
@@ -23,3 +21,5 @@ window.nx.Utils = {
 	}
 
 };
+
+module.exports = nx.Utils;

@@ -1,3 +1,13 @@
+var nx = {
+	Cell: require('../../src/core/cell')
+};
+
+var nxt = {
+	CommandCell: require('../../src/nxt/command-cell'),
+	CommandCellModel: require('../../src/nxt/command-cell-model'),
+	Text: require('../../src/nxt/helpers').Text
+};
+
 describe('nxt.CommandCellModel', function () {
 	'use strict';
 
@@ -10,7 +20,9 @@ describe('nxt.CommandCellModel', function () {
 	describe('cellStack', function () {
 		it('is an array to store activated command cells', function () {
 			model.cellStack.should.be.an.instanceOf(Array);
+			/* eslint-disable no-unused-expressions */
 			model.cellStack.should.be.empty;
+			/* eslint-enable */
 		});
 	});
 
@@ -127,7 +139,9 @@ describe('nxt.CommandCellModel', function () {
 			model.enter(cell);
 			model.exit();
 			model.cellStack.should.have.property('length', 0);
+			/* eslint-disable no-unused-expressions */
 			model.cellStack.should.be.empty;
+			/* eslint-enable */
 		});
 	});
 });

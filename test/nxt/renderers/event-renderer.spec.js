@@ -1,4 +1,9 @@
-describe('nxt.EventRenderer', function() {
+var nxt = {
+	Event: require('../../../src/nxt/helpers').Event,
+	EventRenderer: require('../../../src/nxt/renderers').EventRenderer
+};
+
+describe('nxt.EventRenderer', function () {
 	'use strict';
 
 	var element;
@@ -10,12 +15,14 @@ describe('nxt.EventRenderer', function() {
 		domContext = { container: element };
 	});
 
-	describe('add', function() {
-		it('attaches an event handler to the element', function() {
+	describe('add', function () {
+		it('attaches an event handler to the element', function () {
 			var handler = sinon.spy();
 			renderer.add(nxt.Event('click', handler).data, domContext);
 			element.click();
+			/* eslint-disable no-unused-expressions */
 			handler.should.have.been.called;
+			/* eslint-enable */
 		});
 
 		it('returns event handler and event name', function () {
@@ -31,7 +38,9 @@ describe('nxt.EventRenderer', function() {
 			domContext.content = renderer.add(nxt.Event('click', handler).data, domContext);
 			renderer.unrender(domContext);
 			element.click();
+			/* eslint-disable no-unused-expressions */
 			handler.should.not.have.been.called;
+			/* eslint-enable */
 		});
 	});
 });

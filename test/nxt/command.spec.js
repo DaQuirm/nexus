@@ -1,7 +1,23 @@
+var FakeRenderer = {
+	method: sinon.spy(function (data) {
+		return data.cellar;
+	})
+};
+
+var nxt = {
+	Command: require('inject!../../src/nxt/command')({
+		'./renderers': {
+			FakeRenderer: FakeRenderer
+		}
+	})
+};
+
 describe('nxt.Command', function () {
 
 	describe('constructor', function () {
+		/* eslint-disable max-len */
 		it('creates a command object with a certain type, method corresponding to a renderer method and arguments', function () {
+		/* eslint-enable */
 			var data = { cellar: 'door' };
 			var command = new nxt.Command('renderer', 'method', data);
 			command.method.should.equal('method');
@@ -12,18 +28,14 @@ describe('nxt.Command', function () {
 
 	describe('run', function () {
 		it('calls the appropriate renderer method, passing data and its arguments', function () {
-			nxt.FakeRenderer = {
-				method: sinon.spy()
-			};
 			var data = { cellar: 'door' };
 			var command = new nxt.Command('Fake', 'method', data);
 			var domContext = { container: document.createElement('div') };
 			command.run(domContext);
-			nxt.FakeRenderer.method.should.have.been.calledWith(data, domContext);
+			FakeRenderer.method.should.have.been.calledWith(data, domContext);
 		});
 
 		it('returns content rendered by the renderer', function () {
-			nxt.FakeRenderer = { method: function(data) { return data.cellar; } };
 			var data = { cellar: 'door' };
 			var command = new nxt.Command('Fake', 'method', data);
 			var domContext = { container: document.createElement('div') };
@@ -31,13 +43,12 @@ describe('nxt.Command', function () {
 			content.should.equal('door');
 		});
 
-		it('stores the renderer instance', function(){
-			nxt.FakeRenderer = { method: function(data) { return data.cellar; } };
+		it('stores the renderer reference', function () {
 			var data = { cellar: 'door' };
 			var command = new nxt.Command('Fake', 'method', data);
 			var domContext = { container: document.createElement('div') };
 			command.run(domContext);
-			command.renderer.should.equal(nxt.FakeRenderer);
+			command.renderer.should.equal(FakeRenderer);
 		});
 	});
 });

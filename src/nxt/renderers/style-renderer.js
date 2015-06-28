@@ -1,3 +1,5 @@
+var nxt = {};
+
 nxt.StyleRenderer = {
 
 	render: function (data, domContext) {
@@ -16,3 +18,5 @@ nxt.StyleRenderer = {
 		}
 	}
 };
+
+module.exports = nxt.StyleRenderer;

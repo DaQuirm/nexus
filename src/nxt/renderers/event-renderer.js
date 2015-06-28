@@ -1,3 +1,5 @@
+var nxt = {};
+
 nxt.EventRenderer = {
 
 	add: function (data, domContext) {
@@ -10,3 +12,5 @@ nxt.EventRenderer = {
 	}
 
 };
+
+module.exports = nxt.EventRenderer;

@@ -1,0 +1,5 @@
+{
+	"emitErrors": true,
+
+	"requireSpacesInsideObjectBrackets": "all"
+}

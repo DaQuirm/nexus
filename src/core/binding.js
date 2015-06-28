@@ -1,6 +1,8 @@
-nx.Binding = function (source, target, conversion) {
-	var _this = this;
+var nx = {
+	Mapping: require('./mapping')
+};
 
+nx.Binding = function (source, target, conversion) {
 	this.source = source;
 	this.target = target;
 
@@ -26,13 +28,15 @@ nx.Binding.prototype.sync = function () {
 		}
 	}
 	this.target.value = value;
-	this.target.onsync.trigger(value);
 };
 
 nx.Binding.prototype.pair = function (binding) {
-	return this.lock = binding.lock = { locked: false };
+	this.lock = binding.lock = { locked: false };
+	return this.lock;
 };
 
 nx.Binding.prototype.unbind = function () {
 	delete this.source.bindings[this.index];
 };
+
+module.exports = nx.Binding;

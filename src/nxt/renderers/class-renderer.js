@@ -1,3 +1,5 @@
+var nxt = {};
+
 nxt.ClassRenderer = {
 
 	render: function (data, domContext) {
@@ -10,3 +12,5 @@ nxt.ClassRenderer = {
 	}
 
 };
+
+module.exports = nxt.ClassRenderer;

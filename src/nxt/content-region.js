@@ -1,10 +1,16 @@
-nxt.ContentRegion = function(domContext) {
+var nx = {
+	Cell:    require('../core/cell'),
+	Mapping: require('../core/mapping')
+};
+
+var nxt = require('./renderers');
+
+nxt.ContentRegion = function (domContext) {
 	this.domContext = domContext;
 	this.cells = [];
 };
 
-nxt.ContentRegion.prototype.add = function(commandCell) {
-	var index = this.cells.length;
+nxt.ContentRegion.prototype.add = function (commandCell) {
 	var _this = this;
 	var cell = new nx.Cell({
 		value: {
@@ -12,29 +18,28 @@ nxt.ContentRegion.prototype.add = function(commandCell) {
 			// copying domContext, because its `content` and `renderer` fields
 			// are different for each cell
 			domContext: {
-				container: this.domContext.container,
+				container:       this.domContext.container,
 				insertReference: this.domContext.insertReference
 			},
 			visible: false
 		},
-		action: function(state) { _this.update(state); }
+		action: function (state) { _this.update(state); }
 	});
 
-	commandCell.bind(cell, '->', new nx.Mapping({ '_': 'command' }));
+	commandCell.bind(cell, '->>', new nx.Mapping({ '_': 'command' }));
 	this.cells.push(cell);
 };
 
-nxt.ContentRegion.prototype.update = function(state) {
+nxt.ContentRegion.prototype.update = function (state) {
 	var hasRenderer = typeof state.renderer !== 'undefined';
 	var noCommand = typeof state.command === 'undefined';
-	var wasVisible = state.visible;
 	if (hasRenderer) {
 		if (noCommand) {
 			state.domContext.content = state.renderer.unrender(state.domContext);
 			state.visible = false;
 			delete state.renderer;
 		}
-		else if (state.renderer !== nxt[state.command.type+'Renderer']) {
+		else if (state.renderer !== nxt[state.command.type + 'Renderer']) {
 			state.domContext.content = state.renderer.unrender(state.domContext);
 		}
 	}
@@ -53,10 +58,13 @@ nxt.ContentRegion.prototype.update = function(state) {
 			? state.domContext.content[0]
 			: state.domContext.content; // cell's content will serve as an insert reference
 	} else {
-		insertReference = state.domContext.insertReference; // item's right visible neighbor will serve as an insert reference
+		// item's right visible neighbor will serve as an insert reference
+		insertReference = state.domContext.insertReference;
 	}
 	for (var index = state.index - 1; index >= 0; index--) {
 		this.cells[index].value.domContext.insertReference = insertReference;
 		if (this.cells[index].value.visible) { break; }
 	}
 };
+
+module.exports = nxt.ContentRegion;

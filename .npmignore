@@ -1,0 +1,12 @@
+demos
+dist
+lib
+test
+.bowerrc
+.editorconfig
+.eslintrc
+.gitignore
+bower.json
+jscs.json
+test.html
+webpack.config.js

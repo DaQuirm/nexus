@@ -1,10 +1,15 @@
+var nx = {
+	Cell: require('./cell'),
+	Utils: require('./utils')
+};
+
 nx.AsyncStatus = {
 	LOADING: 1,
 	DONE: 2,
 	ERROR: 3
 };
 
-nx.AjaxModel = function(options) {
+nx.AjaxModel = function (options) {
 	options = options || {};
 
 	this.data = new nx.Cell();
@@ -16,17 +21,17 @@ nx.AjaxModel = function(options) {
 	}
 };
 
-nx.AjaxModel.prototype.request = function(options) {
+nx.AjaxModel.prototype.request = function (options) {
 	var _this = this;
 	var url = nx.Utils.interpolateString(options.url, this.data.value);
 	this.xhr = new XMLHttpRequest();
 	this.xhr.open(options.method, url, true);
 	this.xhr.responseType = (!window.chrome) ? 'json' : 'text';
 
-	this.xhr.onload = function (evt) {
+	this.xhr.onload = function () {
 		var handler, data;
 
-		if (this.responseType === "json") {
+		if (this.responseType === 'json') {
 			data = this.response;
 		} else if (this.responseText) {
 			data = JSON.parse(this.responseText);
@@ -55,3 +60,9 @@ nx.AjaxModel.prototype.request = function(options) {
 	}
 	_this.status.value = nx.AsyncStatus.LOADING;
 };
+
+module.exports = {
+	AjaxModel: nx.AjaxModel,
+	AsyncStatus: nx.AsyncStatus
+};
+

@@ -1,7 +1,7 @@
 {
   "name": "nexus",
-  "version": "0.4.0-alpha.0",
-  "main": "build/nexus.js",
+  "version": "0.4.0",
+  "main": "src/nexus.js",
   "homepage": "https://github.com/DaQuirm/nexus",
   "authors": [
     "DaQuirm <leo.daquirm@gmail.com>"
@@ -20,14 +20,14 @@
     "**/.*",
     "node_modules",
     "lib",
-    "src",
     "test",
     "demos",
     "test.html"
   ],
-  "dependencies": {
-    "mocha": "~2.1.0",
+  "devDependencies": {
     "chai": "~1.10.0",
+    "lodash": "~3.9.3",
+    "mocha": "~2.1.0",
     "sinon": "http://sinonjs.org/releases/sinon-1.12.2.js",
     "sinon-chai": "~2.6.0"
   }
