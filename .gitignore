@@ -1,4 +1,3 @@
 node_modules
 lib
-dist/*.map
-dist/nexus-test.js
+dist
