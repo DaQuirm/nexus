@@ -7,7 +7,7 @@ An MVVM-based client application framework
 
 Bower
 ```
-$ bower i nexus#0.4.0-alpha.3
+$ bower i nexus
 ```
 
 Node.js
