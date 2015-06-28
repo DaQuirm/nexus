@@ -103,12 +103,28 @@ describe('nx.Cell', function () {
 			p.value.should.equal('cellar door');
 		});
 
-		they('syncs cell values from source to target for two-way bindings', function () {
+		they('do not sync cell values from source to target for two-way bindings (<->)', function () {
 			var p = new nx.Cell({ value:'cellar door' });
 			var q = new nx.Cell({ value:'test' });
 			p['<->'](q);
-			q.value.should.equal('cellar door');
 			p.value.should.equal('cellar door');
+			q.value.should.not.equal('cellar door');
+		});
+
+		they('sync cell values from source to target for two-way bindings (<->>)', function () {
+			var p = new nx.Cell({ value:'cellar door' });
+			var q = new nx.Cell({ value:'test' });
+			p['<->>'](q);
+			p.value.should.equal('cellar door');
+			q.value.should.equal('cellar door');
+		});
+
+		they('sync cell values from target to source for two-way bindings (<<->)', function () {
+			var p = new nx.Cell({ value:'cellar door' });
+			var q = new nx.Cell({ value:'test' });
+			p['<<->'](q);
+			p.value.should.equal('test');
+			q.value.should.equal('test');
 		});
 
 		they('accept two converter functions for two-way bindings', function () {

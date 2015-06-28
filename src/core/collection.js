@@ -17,7 +17,7 @@ nx.Collection = function (options) {
 	this.value = options.items || [];
 
 	this.command = new nx.Cell();
-	this['<->'](
+	this['<->>'](
 		this.command,
 		function (items) {
 			return new nxt.Command('Content', 'reset', { items: items });

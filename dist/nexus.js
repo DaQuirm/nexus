@@ -224,15 +224,27 @@
 		return this['<-'](cell, conversion, true);
 	};
 	
-	nx.Cell.prototype['<->'] = function (cell, conversion, backConversion) {
+	nx.Cell.prototype['<->'] = function (cell, conversion, backConversion, sync) {
 		if (conversion instanceof nx.Mapping) {
 			backConversion = backConversion || conversion.inverse();
 		}
 		var binding = this._createBinding(cell, conversion);
 		var backBinding = cell._createBinding(this, backConversion);
 		binding.pair(backBinding);
-		binding.sync();
+		if (sync === '->') {
+			binding.sync();
+		} else if (sync === '<-') {
+			backBinding.sync();
+		}
 		return [binding, backBinding];
+	};
+	
+	nx.Cell.prototype['<->>'] = function (cell, conversion, backConversion) {
+		this['<->'](cell, conversion, backConversion, '->');
+	};
+	
+	nx.Cell.prototype['<<->'] = function (cell, conversion, backConversion) {
+		this['<->'](cell, conversion, backConversion, '<-');
 	};
 	
 	nx.Cell.prototype.bind = function (cell, mode, conversion, backConversion) {
@@ -428,7 +440,7 @@
 		this.value = options.items || [];
 	
 		this.command = new nx.Cell();
-		this['<->'](
+		this['<->>'](
 			this.command,
 			function (items) {
 				return new nxt.Command('Content', 'reset', { items: items });
