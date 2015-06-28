@@ -76,13 +76,26 @@ describe('nxt helpers', function () {
 
 	describe('nxt.Event', function () {
 		it('creates an event command', function () {
-			var handler = function (evt) {
-				evt.preventDefault();
+			var handler = function (event) {
+				event.preventDefault();
 			};
 			var command = nxt.Event('mouseover', handler);
 			command.type.should.equal('Event');
 			command.method.should.equal('add');
 			command.data.name.should.equal('mouseover');
+		});
+
+		it('links an event to a cell using specified handler-conversion of the original event', function () {
+			var cell = new nx.Cell();
+
+			var command = nxt.Element('div',
+				nxt.Event('click', cell, function (event) {
+					event.type.should.equal('click');
+					return 'cellar door';
+				})
+			);
+			command.data.node.click();
+			cell.value.should.equal('cellar door');
 		});
 	});
 

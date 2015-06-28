@@ -856,6 +856,10 @@
 
 	'use strict';
 	
+	var nx = {
+		Cell: __webpack_require__(2)
+	};
+	
 	var nxt = {
 		Command: __webpack_require__(9),
 		CommandCell: __webpack_require__(19),
@@ -883,7 +887,14 @@
 		});
 	};
 	
-	nxt.Event = function (name, handler) {
+	nxt.Event = function (name, secondArg, thirdArg) {
+		var handler = secondArg;
+		if (secondArg instanceof nx.Cell) {
+			var cell = secondArg;
+			handler = function (event) {
+				cell.value = thirdArg(event);
+			};
+		}
 		return new nxt.Command('Event', 'add', { name: name, handler: handler });
 	};
 	

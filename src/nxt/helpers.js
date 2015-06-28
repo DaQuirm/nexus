@@ -1,3 +1,7 @@
+var nx = {
+	Cell: require('../core/cell')
+};
+
 var nxt = {
 	Command: require('./command'),
 	CommandCell: require('./command-cell'),
@@ -25,7 +29,14 @@ nxt.Text = function (text) {
 	});
 };
 
-nxt.Event = function (name, handler) {
+nxt.Event = function (name, secondArg, thirdArg) {
+	var handler = secondArg;
+	if (secondArg instanceof nx.Cell) {
+		var cell = secondArg;
+		handler = function (event) {
+			cell.value = thirdArg(event);
+		};
+	}
 	return new nxt.Command('Event', 'add', { name: name, handler: handler });
 };
 
