@@ -27,7 +27,6 @@ nx.RestCollection = function (options) {
 
 nx.Utils.mixin(nx.RestCollection.prototype, nx.Collection.prototype);
 nx.Utils.mixin(nx.RestCollection.prototype, nx.AjaxModel.prototype);
-nx.RestCollection.prototype.constructor = nx.RestCollection;
 
 nx.RestCollection.prototype.request = function (options) {
 	var _this = this;
