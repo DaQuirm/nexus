@@ -11,7 +11,7 @@ describe('nx.ArrayTransform', function () {
 	describe('append', function () {
 		it('appends items to the end of an array', function () {
 			var array = [1, 2];
-			var result = nx.ArrayTransform.append(array, { items: [3, 4] });
+			var result = nx.ArrayTransform.append({ items: [3, 4] }, array);
 			result.should.deep.equal([1, 2, 3, 4]);
 		});
 	});
@@ -19,7 +19,7 @@ describe('nx.ArrayTransform', function () {
 	describe('remove', function () {
 		it('removes items by their indexes from an array', function () {
 			var array = [1, 2, 3, 4, 5];
-			var result = nx.ArrayTransform.remove(array, { indexes: [1, 3] });
+			var result = nx.ArrayTransform.remove({ indexes: [1, 3] }, array);
 			result.should.deep.equal([1, 3, 5]);
 		});
 	});
@@ -27,7 +27,7 @@ describe('nx.ArrayTransform', function () {
 	describe('insertBefore', function () {
 		it('inserts items at a position in an array', function () {
 			var array = [1, 2, 4];
-			var result = nx.ArrayTransform.insertBefore(array, { index: 2, items: [3] });
+			var result = nx.ArrayTransform.insertBefore({ index: 2, items: [3] }, array);
 			result.should.deep.equal([1, 2, 3, 4]);
 		});
 	});
@@ -35,7 +35,7 @@ describe('nx.ArrayTransform', function () {
 	describe('reset', function () {
 		it('replaces all items in an array', function () {
 			var array = [1, 2, 3];
-			var result = nx.ArrayTransform.reset(array, { items: [4, 5] });
+			var result = nx.ArrayTransform.reset({ items: [4, 5] }, array);
 			result.should.deep.equal([4, 5]);
 		});
 	});
@@ -43,7 +43,7 @@ describe('nx.ArrayTransform', function () {
 	describe('swap', function () {
 		it('swaps two items in an array using their indexes', function () {
 			var array = [1, 2, 3, 4, 5];
-			var result = nx.ArrayTransform.swap(array, { indexes: [1, 3] });
+			var result = nx.ArrayTransform.swap({ indexes: [1, 3] }, array);
 			result.should.deep.equal([1, 4, 3, 2, 5]);
 		});
 	});
