@@ -30,6 +30,15 @@ describe('nx.Command', function () {
 			commandTarget.method.should.have.been.calledWith(command.data);
 		});
 
+		it('uses target object as `this`', function () {
+			var target = {
+				method: function () {
+					this.should.equal(target);
+				}
+			};
+			command.apply(target);
+		});
+
 		it('returns what the method returns', function () {
 			var result = command.apply(commandTarget);
 			result.should.equal(commandTarget.method(data));
