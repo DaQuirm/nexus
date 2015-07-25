@@ -1,3 +1,8 @@
+## 0.4.2
+
+### Major
+* Fix `nxt.Collection` reset behavior
+
 ## 0.4.1
 
 ### Major
