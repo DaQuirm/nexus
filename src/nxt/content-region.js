@@ -3,7 +3,11 @@ var nx = {
 	Mapping: require('../core/mapping')
 };
 
-var nxt = require('./renderers');
+var renderers = require('./renderers');
+
+var nxt = {
+	NodeRenderer: renderers('NodeRenderer')
+};
 
 nxt.ContentRegion = function (domContext) {
 	this.domContext = domContext;
@@ -39,7 +43,7 @@ nxt.ContentRegion.prototype.update = function (state) {
 			state.visible = false;
 			delete state.renderer;
 		}
-		else if (state.renderer !== nxt[state.command.type + 'Renderer']) {
+		else if (state.renderer !== renderers(state.command.type + 'Renderer')) {
 			state.domContext.content = state.renderer.unrender(state.domContext);
 		}
 	}

@@ -5,11 +5,12 @@ var nx = {
 	Collection: require('../../src/core/collection')
 };
 
+var renderers = require('../../src/nxt/renderers');
+
 var nxt = _.assign(
 	{
-		ContentRenderer: require('../../src/nxt/content-renderer')
+		ContentRenderer: renderers('ContentRenderer')
 	},
-	require('../../src/nxt/renderers'),
 	require('../../src/nxt/helpers')
 );
 

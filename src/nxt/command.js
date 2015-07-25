@@ -3,7 +3,8 @@ var nx = {
 	Utils: require('../core/utils')
 };
 
-var nxt = require('./renderers');
+var renderers = require('./renderers');
+var nxt = {};
 
 nxt.Command = function (type, method, data) {
 	nx.Command.call(this, method, data);
@@ -13,7 +14,7 @@ nxt.Command = function (type, method, data) {
 nx.Utils.mixin(nxt.Command.prototype, nx.Command.prototype);
 
 nxt.Command.prototype.run = function () {
-	this.renderer = nxt[this.type + 'Renderer'];
+	this.renderer = renderers(this.type + 'Renderer');
 	return this.apply.apply(
 		this,
 		[this.renderer].concat([].slice.apply(arguments))

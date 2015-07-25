@@ -5,12 +5,17 @@ var nx = {
 	Collection: require('../../src/core/collection')
 };
 
+var renderers = require('../../src/nxt/renderers');
+
 var nxt = _.assign(
 	{
 		Command: require('../../src/nxt/command'),
-		ContentRegion: require('../../src/nxt/content-region')
+		ContentRegion: require('../../src/nxt/content-region'),
+
+		AttrRenderer: renderers('AttrRenderer'),
+		EventRenderer: renderers('EventRenderer'),
+		NodeRenderer: renderers('NodeRenderer')
 	},
-	require('../../src/nxt/renderers'),
 	require('../../src/nxt/helpers')
 );
 

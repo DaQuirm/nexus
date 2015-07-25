@@ -1,15 +1,16 @@
 var _ = require('lodash');
 
 var nx = {
-	Cell: require('../../src/core/cell')
+	Cell: require('../../../src/core/cell')
 };
 
 var nxt = _.assign(
 	{
-		ContentRegion: require('../../src/nxt/content-region')
+		ContentRegion: require('../../../src/nxt/content-region'),
+		NodeRenderer: require('../../../src/nxt/renderers/node-renderer'),
+		ContentRenderer: require('../../../src/nxt/renderers/content-renderer')
 	},
-	require('../../src/nxt/renderers'),
-	require('../../src/nxt/helpers')
+	require('../../../src/nxt/helpers')
 );
 
 describe('nxt.ContentRenderer', function () {

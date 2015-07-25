@@ -6,8 +6,8 @@ var FakeRenderer = {
 
 var nxt = {
 	Command: require('inject!../../src/nxt/command')({
-		'./renderers': {
-			FakeRenderer: FakeRenderer
+		'./renderers': function () {
+			return FakeRenderer;
 		}
 	})
 };

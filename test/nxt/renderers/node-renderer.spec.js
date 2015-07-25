@@ -2,7 +2,7 @@ var _ = require('lodash');
 
 var nxt = _.assign(
 	{
-		NodeRenderer: require('../../../src/nxt/renderers').NodeRenderer
+		NodeRenderer: require('../../../src/nxt/renderers')('NodeRenderer')
 	},
 	require('../../../src/nxt/helpers')
 );

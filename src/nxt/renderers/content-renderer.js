@@ -1,6 +1,14 @@
-var nxt = require('./renderers');
-nxt.Command = require('./command');
-nxt.ContentRegion = require('./content-region');
+var nx = {
+	Cell:    require('../../core/cell')
+};
+
+var renderers = require('./index');
+
+var nxt = {
+	Command: require('../command'),
+	ContentRegion: require('../content-region'),
+	NodeRenderer: renderers('NodeRenderer')
+};
 
 nxt.ContentRenderer = {
 
@@ -11,7 +19,10 @@ nxt.ContentRenderer = {
 
 		data.items.forEach(function (command) {
 			if (command !== undefined) {
-				if (command instanceof nxt.Command) {
+				// nx.Cell or descendant (e.g. nxt.CommandCell)
+				if (command.constructor === nx.Cell) {
+					cells.push(command);
+				} else {
 					var content = command.run(domContext);
 					contentItems.push(content);
 					if (cells.length > 0) { // dynamic content followed by static content
@@ -23,8 +34,6 @@ nxt.ContentRenderer = {
 						_this.createRegion(regionContext, cells);
 						cells = [];
 					}
-				} else { // command is really a cell
-					cells.push(command);
 				}
 			}
 		});
@@ -111,7 +120,7 @@ nxt.ContentRenderer = {
 	},
 
 	visible: function (content) {
-		return content.some(nxt.NodeRenderer.visible);
+		return content.some(renderers('NodeRenderer').visible);
 	}
 };
 

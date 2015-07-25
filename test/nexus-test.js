@@ -18,7 +18,7 @@ require('./nxt/command-cell-model.spec.js');
 require('./nxt/helpers.spec.js');
 
 /* nxt:Renderers */
-require('./nxt/content-renderer.spec.js');
+require('./nxt/renderers/content-renderer.spec.js');
 require('./nxt/renderers/attr-renderer.spec.js');
 require('./nxt/renderers/class-renderer.spec.js');
 require('./nxt/renderers/node-renderer.spec.js');

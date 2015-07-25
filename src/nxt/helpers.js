@@ -2,10 +2,12 @@ var nx = {
 	Cell: require('../core/cell')
 };
 
+var renderers = require('./renderers');
+
 var nxt = {
 	Command: require('./command'),
 	CommandCell: require('./command-cell'),
-	ContentRenderer: require('./content-renderer')
+	ContentRenderer: renderers('ContentRenderer')
 };
 
 nxt.Attr = function (name, value) {
