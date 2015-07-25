@@ -1,10 +1,7 @@
 var nx = {
 	Cell: require('../../src/core/cell'),
-	Collection: require('../../src/core/collection')
-};
-
-var nxt = {
-	Command: require('../../src/nxt/command')
+	Collection: require('../../src/core/collection'),
+	Command: require('../../src/core/command')
 };
 
 describe('nx.Collection', function () {
@@ -25,11 +22,11 @@ describe('nx.Collection', function () {
 		it('assigns the reset command to the command cell if the `items` option is not empty', function () {
 			var collection = new nx.Collection();
 			collection.command.value.should.deep.equal(
-				new nxt.Command('Content', 'reset', { items: [] })
+				new nx.Command('reset', { items: [] })
 			);
 			collection = new nx.Collection({ items: [1, 2, 3] });
 			collection.command.value.should.deep.equal(
-				new nxt.Command('Content', 'reset', { items: [1, 2, 3] })
+				new nx.Command('reset', { items: [1, 2, 3] })
 			);
 		});
 	});
@@ -39,7 +36,7 @@ describe('nx.Collection', function () {
 			var collection = new nx.Collection({ items: [1, 2, 3] });
 			collection.value = [4, 5];
 			collection.command.value.should.deep.equal(
-				new nxt.Command('Content', 'reset', { items: [4, 5] })
+				new nx.Command('reset', { items: [4, 5] })
 			);
 		});
 	});
@@ -59,7 +56,7 @@ describe('nx.Collection', function () {
 	describe('command', function () {
 		it('is bound to collection\'s value converting commands into new values', function () {
 			var collection = new nx.Collection({ items: [1, 2, 3] });
-			collection.command.value = new nxt.Command('Content', 'remove', { indexes: [1] });
+			collection.command.value = new nx.Command('remove', { indexes: [1] });
 			collection.value.should.deep.equal([1, 3]);
 		});
 	});
@@ -87,7 +84,7 @@ describe('nx.Collection', function () {
 			collection.append(3, 4);
 			collection.items.should.deep.equal([1, 2, 3, 4]);
 			collection.command.value.should.deep.equal(
-				new nxt.Command('Content', 'append', { items: [3, 4] })
+				new nx.Command('append', { items: [3, 4] })
 			);
 		});
 	});
@@ -98,7 +95,7 @@ describe('nx.Collection', function () {
 			collection.remove(2, 4);
 			collection.items.should.deep.equal([1, 3, 5]);
 			collection.command.value.should.deep.equal(
-				new nxt.Command('Content', 'remove', { indexes: [1, 3] })
+				new nx.Command('remove', { indexes: [1, 3] })
 			);
 		});
 	});
@@ -109,7 +106,7 @@ describe('nx.Collection', function () {
 			collection.insertBefore(4, 3);
 			collection.items.should.deep.equal([1, 2, 3, 4]);
 			collection.command.value.should.deep.equal(
-				new nxt.Command('Content', 'insertBefore', { items: [3], index: 2 })
+				new nx.Command('insertBefore', { items: [3], index: 2 })
 			);
 		});
 	});
@@ -119,7 +116,7 @@ describe('nx.Collection', function () {
 			var collection = new nx.Collection({ items: [1, 2, 3, 4] });
 			collection.reset([5, 6]);
 			collection.command.value.should.deep.equal(
-				new nxt.Command('Content', 'reset', { items: [5, 6] })
+				new nx.Command('reset', { items: [5, 6] })
 			);
 		});
 
@@ -127,7 +124,7 @@ describe('nx.Collection', function () {
 			var collection = new nx.Collection({ items: [1, 2, 3, 4, 5] });
 			collection.reset();
 			collection.command.value.should.deep.equal(
-				new nxt.Command('Content', 'reset', { items: [] })
+				new nx.Command('reset', { items: [] })
 			);
 		});
 	});
@@ -137,7 +134,7 @@ describe('nx.Collection', function () {
 			var collection = new nx.Collection({ items: [1, 2, 3, 4, 5] });
 			collection.swap(2, 4);
 			collection.command.value.should.deep.equal(
-				new nxt.Command('Content', 'swap', { indexes: [1, 3] })
+				new nx.Command('swap', { indexes: [1, 3] })
 			);
 		});
 	});
@@ -172,7 +169,7 @@ describe('nx.Collection', function () {
 			collection.bind(cell, '<-', fib);
 			cell.value = 2;
 			collection.command.value.should.deep.equal(
-				new nxt.Command('Content', 'reset', { items: [1, 1] })
+				new nx.Command('reset', { items: [1, 1] })
 			);
 		});
 

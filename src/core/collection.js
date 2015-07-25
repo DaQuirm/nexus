@@ -1,11 +1,8 @@
 var nx = {
 	ArrayTransform: require('./array-transform'),
 	Cell: require('./cell'),
+	Command: require('../../src/core/command'),
 	Utils: require('./utils')
-};
-
-var nxt = {
-	Command: require('../nxt/command')
 };
 
 nx.Collection = function (options) {
@@ -20,7 +17,7 @@ nx.Collection = function (options) {
 	this['<->>'](
 		this.command,
 		function (items) {
-			return new nxt.Command('Content', 'reset', { items: items });
+			return new nx.Command('reset', { items: items });
 		},
 		function (command) {
 			return nx.ArrayTransform(_this.items, command);
@@ -43,7 +40,7 @@ Object.defineProperty(nx.Collection.prototype, 'items', {
 
 nx.Collection.prototype.append = function () {
 	var args = [].slice.call(arguments);
-	this.command.value = new nxt.Command('Content', 'append', { items: args });
+	this.command.value = new nx.Command('append', { items: args });
 };
 
 nx.Collection.prototype.remove = function () {
@@ -52,26 +49,26 @@ nx.Collection.prototype.remove = function () {
 	var indexes = args.map(function (item) {
 		return _this.items.indexOf(item);
 	});
-	this.command.value = new nxt.Command('Content', 'remove', { indexes: indexes });
+	this.command.value = new nx.Command('remove', { indexes: indexes });
 };
 
 nx.Collection.prototype.insertBefore = function (beforeItem, items) {
 	items = Array.isArray(items) ? items : [items];
 	var insertIndex = this.items.indexOf(beforeItem);
-	this.command.value = new nxt.Command('Content', 'insertBefore', {
+	this.command.value = new nx.Command('insertBefore', {
 		items: items,
 		index: insertIndex
 	});
 };
 
 nx.Collection.prototype.reset = function (items) {
-	this.command.value = new nxt.Command('Content', 'reset', { items: items || [] });
+	this.command.value = new nx.Command('reset', { items: items || [] });
 };
 
 nx.Collection.prototype.swap = function (firstItem, secondItem) {
 	var firstIndex = this.items.indexOf(firstItem);
 	var secondIndex = this.items.indexOf(secondItem);
-	this.command.value = new nxt.Command('Content', 'swap', {
+	this.command.value = new nx.Command('swap', {
 		indexes: [firstIndex, secondIndex]
 	});
 };
