@@ -215,6 +215,9 @@ describe('nxt helpers', function () {
 			var commandCell = new nxt.Collection(collection, converter);
 			collection.append('1');
 			var command = collection.command.value;
+			commandCell.value.should.deep.equal(
+				new nxt.Command('Content', command.method, { items: command.data.items.map(converter) })
+			);
 			command.data.items.should.deep.equal(['1']);
 		});
 
@@ -229,6 +232,9 @@ describe('nxt helpers', function () {
 			var commandCell = new nxt.Collection(collection, converter);
 			collection.command.value.should.deep.equal(
 				new nx.Command('reset', { items: collection.items })
+			);
+			commandCell.value.should.deep.equal(
+				new nxt.Command('Content', 'reset', { items: collection.items.map(converter) })
 			);
 		});
 

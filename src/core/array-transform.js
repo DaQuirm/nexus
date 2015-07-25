@@ -24,7 +24,7 @@ nx.ArrayTransform.insertBefore = function (data, array) {
 	return array;
 };
 
-nx.ArrayTransform.reset = function (data, array) {
+nx.ArrayTransform.reset = function (data) {
 	return data.items;
 };
 
