@@ -9,6 +9,7 @@ var renderers = require('../../src/nxt/renderers');
 
 var nxt = _.assign(
 	{
+		Command: require('../../src/nxt/command'),
 		ContentRenderer: renderers('ContentRenderer')
 	},
 	require('../../src/nxt/helpers')
