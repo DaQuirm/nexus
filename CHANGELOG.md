@@ -1,3 +1,9 @@
+## 0.4.1
+
+### Major
+* Introduce and use nxt-independent `nx.Command` for collection commands
+* Fix command transformation by `nxt.Collection`
+
 ## 0.4.0
 
 ### Epic
