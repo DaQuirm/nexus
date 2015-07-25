@@ -71,8 +71,8 @@ nxt.Collection = function () {
 	var collection = arguments[0];
 	var conversion = arguments[1];
 	var commandCell = new nxt.CommandCell({ cleanup: false });
-	collection.command.value = new nx.Command('reset', { items: collection.items });
-	commandCell.reverseBind(collection.command, function (command) {
+
+	var commandConverter = function (command) {
 		var data = {};
 		for (var key in command.data) {
 			if (key !== 'items') {
@@ -82,7 +82,12 @@ nxt.Collection = function () {
 			}
 		}
 		return new nxt.Command('Content', command.method, data);
-	});
+	};
+
+	commandCell.reverseBind(collection.command, commandConverter);
+	commandCell.value = commandConverter(
+		new nx.Command('reset', { items: collection.items })
+	);
 	return commandCell;
 };
 

@@ -230,7 +230,7 @@ describe('nxt helpers', function () {
 			collection.append('3');
 			collection.insertBefore('3', '2');
 			var commandCell = new nxt.Collection(collection, converter);
-			collection.command.value.should.deep.equal(
+			collection.command.value.should.not.deep.equal(
 				new nx.Command('reset', { items: collection.items })
 			);
 			commandCell.value.should.deep.equal(
