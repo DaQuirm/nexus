@@ -1,5 +1,6 @@
 var nx = {
-	Cell: require('../core/cell')
+	Cell: require('../core/cell'),
+	Command: require('../core/command')
 };
 
 var renderers = require('./renderers');
@@ -70,12 +71,17 @@ nxt.Collection = function () {
 	var collection = arguments[0];
 	var conversion = arguments[1];
 	var commandCell = new nxt.CommandCell({ cleanup: false });
-	collection.command.value = new nxt.Command('Content', 'reset', { items: collection.items });
+	collection.command.value = new nx.Command('reset', { items: collection.items });
 	commandCell.reverseBind(collection.command, function (command) {
-		if (typeof command !== 'undefined') {
-			command.data.items = command.data.items.map(conversion);
+		var data = {};
+		for (var key in command.data) {
+			if (key !== 'items') {
+				data[key] = command.data[key];
+			} else {
+				data.items = command.data.items.map(conversion);
+			}
 		}
-		return command;
+		return new nxt.Command('Content', command.method, data);
 	});
 	return commandCell;
 };

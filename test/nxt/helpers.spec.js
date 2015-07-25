@@ -2,7 +2,8 @@ var _ = require('lodash');
 
 var nx = {
 	Cell: require('../../src/core/cell'),
-	Collection: require('../../src/core/collection')
+	Collection: require('../../src/core/collection'),
+	Command: require('../../src/core/command')
 };
 
 var renderers = require('../../src/nxt/renderers');
@@ -197,6 +198,26 @@ describe('nxt helpers', function () {
 			textCommand.data.node.nodeValue.should.equal('cellar door');
 		});
 
+		it('transforms regular commands into nxt commands', function () {
+			var collection = new nx.Collection();
+			var converter = function (item) { return nxt.Text(item); };
+			var commandCell = new nxt.Collection(collection, converter);
+			collection.append('1');
+			var command = collection.command.value;
+			commandCell.value.should.deep.equal(
+				new nxt.Command('Content', command.method, { items: command.data.items.map(converter) })
+			);
+		});
+
+		it('doesn\'t modify original command data', function () {
+			var collection = new nx.Collection();
+			var converter = function (item) { return nxt.Text(item); };
+			var commandCell = new nxt.Collection(collection, converter);
+			collection.append('1');
+			var command = collection.command.value;
+			command.data.items.should.deep.equal(['1']);
+		});
+
 		/* eslint-disable max-len */
 		it('assigns a `reset` command to the event cell to make the first rendering include all collection items', function () {
 		/* eslint-enable */
@@ -206,8 +227,8 @@ describe('nxt helpers', function () {
 			collection.append('3');
 			collection.insertBefore('3', '2');
 			var commandCell = new nxt.Collection(collection, converter);
-			commandCell.value.should.deep.equal(
-				new nxt.Command('Content', 'reset', { items: ['1', '2', '3'].map(converter) })
+			collection.command.value.should.deep.equal(
+				new nx.Command('reset', { items: collection.items })
 			);
 		});
 
