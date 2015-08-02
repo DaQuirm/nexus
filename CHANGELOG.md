@@ -1,3 +1,8 @@
+## 0.4.3
+
+### Major
+* Add `nx.Command` to nexus-node API
+
 ## 0.4.2
 
 ### Major
