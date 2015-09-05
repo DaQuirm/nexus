@@ -12,6 +12,7 @@ nxt.Command = function (type, method, data) {
 };
 
 nx.Utils.mixin(nxt.Command.prototype, nx.Command.prototype);
+nxt.Command.prototype.constructor = nxt.Command;
 
 nxt.Command.prototype.run = function () {
 	this.renderer = renderers(this.type + 'Renderer');

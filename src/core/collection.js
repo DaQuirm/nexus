@@ -29,6 +29,7 @@ nx.Collection = function (options) {
 };
 
 nx.Utils.mixin(nx.Collection.prototype, nx.Cell.prototype);
+nx.Collection.prototype.constructor = nx.Collection;
 
 Object.defineProperty(nx.Collection.prototype, 'items', {
 	enumerable : true,
