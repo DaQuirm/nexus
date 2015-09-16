@@ -1,3 +1,9 @@
+## 0.4.5
+* Made binding locking more flexible
+
+## 0.4.4
+* Restored constructor chaining to allow CoffeeScript inheritance
+
 ## 0.4.3
 
 ### Major
