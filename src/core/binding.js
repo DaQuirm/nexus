@@ -5,18 +5,13 @@ var nx = {
 nx.Binding = function (source, target, conversion) {
 	this.source = source;
 	this.target = target;
-
+	this.locked = false;
 	this.conversion = conversion;
 };
 
 nx.Binding.prototype.sync = function () {
-	if (typeof this.lock !== 'undefined') {
-		if (this.lock.locked) {
-			this.lock.locked = false;
-			return;
-		} else {
-			this.lock.locked = true;
-		}
+	if (this.locked) {
+		return;
 	}
 
 	var value = this.source.value;
@@ -31,8 +26,16 @@ nx.Binding.prototype.sync = function () {
 };
 
 nx.Binding.prototype.pair = function (binding) {
-	this.lock = binding.lock = { locked: false };
-	return this.lock;
+	this.twin = binding;
+	binding.twin = this;
+};
+
+nx.Binding.prototype.lock = function () {
+	this.locked = true;
+};
+
+nx.Binding.prototype.unlock = function () {
+	this.locked = false;
 };
 
 nx.Binding.prototype.unbind = function () {

@@ -23,6 +23,13 @@ describe('nx.Binding', function () {
 			target.value.should.equal('cellar door');
 		});
 
+		it('sets `locked` to false', function () {
+			var p = new nx.Cell();
+			var q = new nx.Cell();
+			var binding = new nx.Binding(p, q);
+			binding.locked.should.equal(false);
+		});
+
 		it('accepts a converter function for one-way bindings', function () {
 			var positive = new nx.Cell();
 			var negative = new nx.Cell();
@@ -34,14 +41,29 @@ describe('nx.Binding', function () {
 	});
 
 	describe('pair', function () {
-		it('creates a shared lock object for two bindings', function () {
+		it('adds mutual references to two bindings', function () {
 			var p = new nx.Cell();
 			var q = new nx.Cell();
 			var firstBinding = new nx.Binding(p, q);
 			var secondBinding = new nx.Binding(q, p);
-			var lock = firstBinding.pair(secondBinding);
-			lock.should.be.an('object');
-			lock.locked.should.equal(false);
+			firstBinding.pair(secondBinding);
+			firstBinding.twin.should.equal(secondBinding);
+			secondBinding.twin.should.equal(firstBinding);
+		});
+	});
+
+	describe('lock/unlock', function () {
+		var they = it;
+		they('activate or deactivate binding\'s syncing', function () {
+			var p = new nx.Cell({ value: '?' });
+			var q = new nx.Cell({ value: '!' });
+			var binding = new nx.Binding(p, q);
+			binding.lock();
+			binding.sync();
+			q.value.should.equal('!').and.should.not.equal(p.value);
+			binding.unlock();
+			binding.sync();
+			q.value.should.equal(p.value);
 		});
 	});
 
