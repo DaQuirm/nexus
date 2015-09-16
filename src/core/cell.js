@@ -28,7 +28,15 @@ Object.defineProperty(nx.Cell.prototype, 'value', {
 		this._value = value;
 		this.onvalue.trigger(value);
 		for (var index in this.bindings) {
-			this.bindings[index].sync();
+			var binding = this.bindings[index];
+			var hasTwin = typeof binding.twin !== 'undefined';
+			if (hasTwin) {
+				binding.twin.lock();
+			}
+			binding.sync();
+			if (hasTwin) {
+				binding.twin.unlock();
+			}
 		}
 	}
 });

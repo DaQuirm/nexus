@@ -42,6 +42,29 @@ describe('nx.Cell', function () {
 			var val = cell.value;
 			val.should.equal('cellar door');
 		});
+
+		it('prevents twin bindings from syncing by locking them', function () {
+			var p = new nx.Cell({ value: 'p' });
+			var q = new nx.Cell({ value: 'q' });
+			var conversion = sinon.spy();
+			var backConversion = sinon.spy();
+			p['<->'](q, conversion, backConversion);
+			p.value = '!';
+			/* eslint-disable no-unused-expressions */
+			backConversion.should.not.have.been.called;
+			/* eslint-enable */
+		});
+
+		it('unlocks twin bindings after syncing', function () {
+			var p = new nx.Cell({ value: 'p' });
+			var q = new nx.Cell({ value: 'q' });
+			var conversion = sinon.spy();
+			var backConversion = sinon.spy();
+			var bindings = p['<->'](q, conversion, backConversion);
+			var backBinding = bindings[1];
+			p.value = '!';
+			backBinding.locked.should.equal(false);
+		});
 	});
 
 	describe('set', function () {
