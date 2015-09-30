@@ -11,10 +11,8 @@ nx.Collection = function (options) {
 
 	var _this = this;
 
-	this.value = options.items || [];
-
 	this.command = new nx.Cell();
-	this['<->>'](
+	this['<->>']( // non-lazy because `options.value` can still be used
 		this.command,
 		function (items) {
 			return new nx.Command('reset', { items: items });
@@ -23,6 +21,8 @@ nx.Collection = function (options) {
 			return nx.ArrayTransform(_this.items, command);
 		}
 	);
+
+	this.reset(options.items || []);
 
 	this.length = new nx.Cell({ value: this.items.length });
 	this.length['<-'](this, function (items) { return items.length; });
