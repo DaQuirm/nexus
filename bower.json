@@ -28,7 +28,7 @@
     "chai": "~1.10.0",
     "lodash": "~3.9.3",
     "mocha": "~2.1.0",
-    "sinon": "http://sinonjs.org/releases/sinon-1.12.2.js",
+    "sinon": "http://sinonjs.org/releases/sinon-1.17.1.js",
     "sinon-chai": "~2.6.0"
   }
 }
