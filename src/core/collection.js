@@ -7,18 +7,19 @@ var nx = {
 
 nx.Collection = function (options) {
 	options = options || {};
-	nx.Cell.call(this);
+	nx.Cell.call(this, { value: [] });
 
 	var _this = this;
+	var transform = options.transform || nx.ArrayTransform;
 
 	this.command = new nx.Cell();
-	this['<->>']( // non-lazy because `options.value` can still be used
+	this['<->'](
 		this.command,
 		function (items) {
 			return new nx.Command('reset', { items: items });
 		},
 		function (command) {
-			return nx.ArrayTransform(_this.items, command);
+			return transform(_this.items, command);
 		}
 	);
 

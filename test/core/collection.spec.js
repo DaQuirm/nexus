@@ -1,4 +1,5 @@
 var nx = {
+	ArrayTransform: require('../../src/core/array-transform'),
 	Cell: require('../../src/core/cell'),
 	Collection: require('../../src/core/collection'),
 	Command: require('../../src/core/command')
@@ -28,6 +29,20 @@ describe('nx.Collection', function () {
 			collection.command.value.should.deep.equal(
 				new nx.Command('reset', { items: [1, 2, 3] })
 			);
+		});
+
+		it('can accept an optional transform argument for collection side-effects', function () {
+			// SinonJS extends proxy function and its methods clash with `reset` of nx.ArrayTransform
+			var FakeTransform = sinon.spy(function (array, command) {
+				return nx.ArrayTransform(array, command);
+			});
+			var items = [1, 2, 3];
+			var collection = new nx.Collection({
+				items: items,
+				transform: FakeTransform
+			});
+			collection.remove(1);
+			FakeTransform.should.have.been.calledWith(items, collection.command.value);
 		});
 	});
 
