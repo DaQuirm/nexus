@@ -1,3 +1,6 @@
+## 0.4.8
+* Added nx.Command to client-side API
+
 ## 0.4.7
 * Exposed collection transform for external use
 
