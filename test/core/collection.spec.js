@@ -41,6 +41,7 @@ describe('nx.Collection', function () {
 				items: items,
 				transform: FakeTransform
 			});
+			collection.transform.should.equal(FakeTransform);
 			collection.remove(1);
 			FakeTransform.should.have.been.calledWith(items, collection.command.value);
 		});

@@ -10,7 +10,7 @@ nx.Collection = function (options) {
 	nx.Cell.call(this, { value: [] });
 
 	var _this = this;
-	var transform = options.transform || nx.ArrayTransform;
+	this.transform = options.transform || nx.ArrayTransform;
 
 	this.command = new nx.Cell();
 	this['<->'](
@@ -19,7 +19,7 @@ nx.Collection = function (options) {
 			return new nx.Command('reset', { items: items });
 		},
 		function (command) {
-			return transform(_this.items, command);
+			return _this.transform(_this.items, command);
 		}
 	);
 
