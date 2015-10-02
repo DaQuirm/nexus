@@ -1,3 +1,6 @@
+## 0.4.7
+* Exposed collection transform for external use
+
 ## 0.4.6
 
 ### Major
