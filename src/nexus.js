@@ -1,11 +1,12 @@
 var nx = window.nx = {
 	/* Core */
-	AjaxModel:   require('./core/ajax-model').AjaxModel,
-	AsyncStatus: require('./core/ajax-model').AsyncStatus,
-	Binding:     require('./core/binding'),
-	Cell:        require('./core/cell'),
-	Collection:  require('./core/collection'),
-	Mapping:     require('./core/mapping'),
+	AjaxModel:     require('./core/ajax-model').AjaxModel,
+	AsyncStatus:   require('./core/ajax-model').AsyncStatus,
+	Binding:       require('./core/binding'),
+	Cell:          require('./core/cell'),
+	Collection:    require('./core/collection'),
+	LiveTransform: require('./core/live-transform'),
+	Mapping:       require('./core/mapping'),
 
 	/* REST */
 	RestCollection: require('./rest/rest-collection'),
