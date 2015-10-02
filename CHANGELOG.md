@@ -1,3 +1,10 @@
+## 0.4.6
+
+### Major
+
+* Implemented nx.LiveTransform
+* Removed nx.Cell.set
+
 ## 0.4.5
 * Made binding locking more flexible
 
