@@ -67,26 +67,6 @@ describe('nx.Cell', function () {
 		});
 	});
 
-	describe('set', function () {
-		it('sets cell value', function () {
-			var cell = new nx.Cell();
-			cell.set('cellar door');
-			cell.value.should.equal('cellar door');
-		});
-
-		it('doesn\'t trigger onvalue', function () {
-			var p = new nx.Cell();
-			var handler = sinon.spy(function (value) {
-				value.should.equal('cellar door');
-			});
-			p.onvalue.add(handler);
-			p.set('cellar door');
-			/* eslint-disable no-unused-expressions */
-			handler.should.not.have.been.called;
-			/* eslint-enable */
-		});
-	});
-
 	describe('binding methods', function () {
 
 		var they = it;

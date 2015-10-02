@@ -107,8 +107,4 @@ nx.Cell.prototype.bind = function (cell, mode, conversion, backConversion) {
 	this[mode](cell, conversion, backConversion);
 };
 
-nx.Cell.prototype.set = function (value) {
-	this._value = value;
-};
-
 module.exports = nx.Cell;
