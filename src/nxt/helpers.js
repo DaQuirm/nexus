@@ -1,5 +1,6 @@
 var nx = {
 	Cell: require('../core/cell'),
+	Collection: require('../core/collection'),
 	Command: require('../core/command')
 };
 
@@ -73,15 +74,8 @@ nxt.Collection = function () {
 	var commandCell = new nxt.CommandCell({ cleanup: false });
 
 	var commandConverter = function (command) {
-		var data = {};
-		for (var key in command.data) {
-			if (key !== 'items') {
-				data[key] = command.data[key];
-			} else {
-				data.items = command.data.items.map(conversion);
-			}
-		}
-		return new nxt.Command('Content', command.method, data);
+		command = nx.Collection.mapCommand(command, conversion);
+		return new nxt.Command('Content', command.method, command.data);
 	};
 
 	commandCell.reverseBind(collection.command, commandConverter);

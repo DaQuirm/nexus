@@ -8,6 +8,22 @@ var nx = {
 describe('nx.Collection', function () {
 	'use strict';
 
+	describe('mapCommand', function () {
+		it('clones an nx.Command converting the items with specified converter', function () {
+			var command = new nx.Command('insertBefore', { index: 0, items: [1, 2, 3] });
+			var mappedCommand = nx.Collection.mapCommand(command, function (item) {
+				return -item;
+			});
+			mappedCommand.method.should.equal(command.method);
+			mappedCommand.data.should.deep.equal({
+				index: 0,
+				items: [-1, -2, -3]
+			});
+			mappedCommand.should.not.equal(command);
+			mappedCommand.data.should.not.equal(command.data);
+		});
+	});
+
 	describe('constructor', function () {
 		it('creates a collection instance', function () {
 			var collection = new nx.Collection();

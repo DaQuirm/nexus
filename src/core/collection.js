@@ -29,6 +29,18 @@ nx.Collection = function (options) {
 	this.length['<-'](this, function (items) { return items.length; });
 };
 
+nx.Collection.mapCommand = function (command, conversion) {
+	var data = {};
+	for (var key in command.data) {
+		if (key !== 'items') {
+			data[key] = command.data[key];
+		} else {
+			data.items = command.data.items.map(conversion);
+		}
+	}
+	return new nx.Command(command.method, data);
+};
+
 nx.Utils.mixin(nx.Collection.prototype, nx.Cell.prototype);
 nx.Collection.prototype.constructor = nx.Collection;
 
