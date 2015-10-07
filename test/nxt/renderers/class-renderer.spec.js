@@ -17,8 +17,8 @@ describe('nxt.ClassRenderer', function () {
 	});
 
 	describe('render', function () {
-		it('adds a class to the element\'s class list if the `set` field is true', function () {
-			renderer.render(nxt.Class('large-text', true).data, domContext);
+		it('adds a class to the element\'s class list', function () {
+			renderer.render(nxt.Class('large-text').data, domContext);
 			link.classList.contains('epic-link').should.equal(true);
 			link.classList.contains('large-text').should.equal(true);
 		});
@@ -28,10 +28,18 @@ describe('nxt.ClassRenderer', function () {
 			var content = renderer.render(nxt.Class(className).data, domContext);
 			content.should.deep.equal(className);
 		});
+
+		it('removes previously rendered class', function () {
+			domContext.content = renderer.render(nxt.Class('large-text').data, domContext);
+			renderer.render(nxt.Class('cellar-door').data, domContext);
+			link.classList.contains('epic-link').should.equal(true);
+			link.classList.contains('cellar-door').should.equal(true);
+			link.classList.contains('large-text').should.equal(false);
+		});
 	});
 
 	describe('unrender', function () {
-		it('removes a class from the element\'s class list if the `set` field is false', function () {
+		it('removes a class from the element\'s class list', function () {
 			link.classList.add('epic-link');
 			domContext.content = renderer.render(nxt.Class('large-text').data, domContext);
 			link.classList.contains('large-text').should.equal(true);
