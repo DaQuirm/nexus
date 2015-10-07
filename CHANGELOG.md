@@ -1,3 +1,9 @@
+## 0.4.9
+### Major
+* Fixed ClassRenderer not removing previously rendered class
+
+* Added internal nx.Collection.mapCommand helper
+
 ## 0.4.8
 * Added nx.Command to client-side API
 
