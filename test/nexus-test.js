@@ -5,6 +5,7 @@ require('./core/binding.spec.js');
 require('./core/collection.spec.js');
 require('./core/command.spec.js');
 require('./core/event.spec.js');
+require('./core/identity.spec.js');
 require('./core/live-transform.spec.js');
 require('./core/mapping.spec.js');
 require('./core/cell.spec.js');
