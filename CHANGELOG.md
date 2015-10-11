@@ -1,3 +1,8 @@
+## 0.4.10
+### Major
+* Added draft implementation of refinements:
+  refinement classes and `Filter` refinement
+
 ## 0.4.9
 ### Major
 * Fixed ClassRenderer not removing previously rendered class
