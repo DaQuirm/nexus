@@ -11,14 +11,21 @@ describe('nx.Refinement', function () {
 	describe('constructor', function () {
 		it('accepts `values` item transforming function', function () {
 			var values = function (item) { return [item.name.value]; };
-			var refinement = new nx.Refinement({ values: values	});
+			var refinement = new nx.Refinement({ values: values, source: new nx.Collection() });
 			refinement._values.should.equal(values);
 		});
 
 		it('accepts `values` as cell name arrays', function () {
 			var values = ['name'];
-			var refinement = new nx.Refinement({ values: values	});
+			var refinement = new nx.Refinement({ values: values, source: new nx.Collection() });
 			refinement._values.should.equal(values);
+		});
+
+		it('accepts and stores source collection', function () {
+			var values = ['name'];
+			var source = new nx.Collection();
+			var refinement = new nx.Refinement({ values: values, source: source });
+			refinement._source.should.equal(source);
 		});
 	});
 

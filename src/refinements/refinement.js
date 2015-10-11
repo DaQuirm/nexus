@@ -2,6 +2,7 @@ var nx = {};
 
 nx.Refinement = function (options) {
 	this._values = options.values;
+	this._source = options.source;
 };
 
 nx.Refinement.prototype.values = function (item) {

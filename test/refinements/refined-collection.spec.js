@@ -76,7 +76,7 @@ describe('nx.RefinedCollection', function () {
 	describe('refinement', function () {
 		it.skip('reapplies new refinement when changed', function () {
 			var collection = new nx.Collection({ items: [1, 2, 3, 4, 5] });
-			var refinement = { filter: function (item) { return item & 1; } };
+			refinement = { filter: function (item) { return item & 1; } };
 			var refined = new nx.RefinedCollection(collection, refinement);
 			refined.refinement.value = { filter: function (item) { return item > 2; } };
 			refined.items.should.deep.equal([3, 4, 5]);
@@ -84,7 +84,7 @@ describe('nx.RefinedCollection', function () {
 
 		it.skip('emits a `reset` command when changed', function () {
 			var collection = new nx.Collection({ items: [1, 2, 3, 4, 5] });
-			var refinement = { filter: function (item) { return item & 1; } };
+			refinement = { filter: function (item) { return item & 1; } };
 			var refined = new nx.RefinedCollection(collection, refinement);
 			refined.refinement.value = { filter: function (item) { return item > 2; } };
 			refined.event.value.should.deep.equal(
