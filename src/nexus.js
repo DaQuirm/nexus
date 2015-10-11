@@ -12,7 +12,13 @@ var nx = window.nx = {
 
 	/* REST */
 	RestCollection: require('./rest/rest-collection'),
-	RestDocument:   require('./rest/rest-document')
+	RestDocument:   require('./rest/rest-document'),
+
+	/* Refinements */
+	RefinedCollection: require('./refinements/refined-collection'),
+	Refinement:        require('./refinements/refinement'),
+
+	FilterRefinement:  require('./refinements/filter-refinement')
 };
 
 var nxt = window.nxt = require('./nxt/helpers');

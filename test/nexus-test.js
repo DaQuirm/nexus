@@ -31,3 +31,9 @@ require('./nxt/renderers/style-renderer.spec.js');
 require('./rest/rest-collection.spec.js');
 require('./rest/rest-document.spec.js');
 
+/* Refinements */
+require('./refinements/refined-collection.spec.js');
+require('./refinements/refinement.spec.js');
+
+require('./refinements/filter-refinement.spec.js');
+
