@@ -1,7 +1,7 @@
 var nx = {
 	ArrayTransform: require('./array-transform'),
 	Cell: require('./cell'),
-	Command: require('../../src/core/command'),
+	Command: require('./command'),
 	Utils: require('./utils')
 };
 
