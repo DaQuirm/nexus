@@ -11,29 +11,39 @@ var nx = {
 describe('nx.RefinedCollection', function () {
 	'use strict';
 
+	var refinement;
+
+	beforeEach(function () {
+		refinement = new nx.Refinement({ values: function () {} });
+		refinement.refine = nx.Identity;
+	});
+
 	describe('constructor', function () {
 		it('accepts an nx.Collection source as the first parameter and stores it', function () {
 			var collection = new nx.Collection();
-			var refined = new nx.RefinedCollection(
-				collection,
-				new nx.Refinement({ values: function () {} })
-			);
+			var refined = new nx.RefinedCollection(collection, refinement);
 			refined.source.should.equal(collection);
 		});
 
 		it('accepts a refinement as the second parameter and stores it', function () {
 			var collection = new nx.Collection();
-			var refinement = new nx.Refinement({ values: function () {} });
+
 			var refined = new nx.RefinedCollection(collection, refinement);
 			refined.refinement.value.should.equal(refinement);
+		});
+
+		it('applies refinement to existing collection items', function () {
+			var collection = new nx.Collection({ items: [1, 2, 3] });
+			var refineSpy = sinon.spy(refinement, 'refine');
+			var refined = new nx.RefinedCollection(collection, refinement);
+			refineSpy.should.have.been.calledWith(new nx.Command('reset', { items: collection.items }));
+			refined.items.should.deep.equal(collection.items);
 		});
 
 		/* eslint-disable max-len */
 		it('creates a binding with source collection\'s command cell and calls refinement\'s `refine` method', function () {
 		/* eslint-enable */
 			var collection = new nx.Collection();
-			var refinement = new nx.Refinement({ values: function () {} });
-			refinement.refine = nx.Identity;
 			var refineSpy = sinon.spy(refinement, 'refine');
 			var refined = new nx.RefinedCollection(collection, refinement);
 			collection.append(1);
@@ -51,7 +61,6 @@ describe('nx.RefinedCollection', function () {
 					{ name: new nx.Cell({ value: 'Douglas Spaulding' }) }
 				]
 			});
-			var refinement = new nx.Refinement({ values: function () {} });
 			refinement.live = function (change) {
 				return new nx.Command('reset', { items: [change.item] });
 			};

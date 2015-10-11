@@ -1,6 +1,7 @@
 var nx = {
 	Cell:       require('../core/cell'),
 	Collection: require('../core/collection'),
+	Command:    require('../core/command'),
 	Utils:      require('../core/utils')
 };
 
@@ -21,6 +22,9 @@ nx.RefinedCollection = function (source, refinement) {
 			return _this.refinement.value.live(change);
 		});
 	}
+
+	var resetCommand = new nx.Command('reset', { items: source.items });
+	this.command.value = this.refinement.value.refine(resetCommand);
 };
 
 nx.Utils.mixin(nx.RefinedCollection.prototype, nx.Collection.prototype);
