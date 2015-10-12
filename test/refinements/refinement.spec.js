@@ -36,6 +36,13 @@ describe('nx.Refinement', function () {
 			var values = refinement.values(item);
 			values.should.deep.equal(['cellar door']);
 		});
+
+		it('returns the item itself when no `values` option was passed to the constructor', function () {
+			var item = { text: new nx.Cell({ value: 'cellar door' }) };
+			var refinement = new nx.Refinement();
+			var values = refinement.values(item);
+			values.should.equal(item);
+		});
 	});
 
 	describe('refine', function () {

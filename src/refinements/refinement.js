@@ -1,6 +1,7 @@
 var nx = {};
 
 nx.Refinement = function (options) {
+	options = options || {};
 	this._values = options.values;
 	this._source = options.source;
 };
@@ -12,6 +13,8 @@ nx.Refinement.prototype.values = function (item) {
 		return this._values.map(function (key) {
 			return item[key].value;
 		});
+	} else {
+		return item;
 	}
 };
 
