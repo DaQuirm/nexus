@@ -1,8 +1,9 @@
 var nx = {
-	ArrayTransform: require('./array-transform'),
-	Cell: require('./cell'),
-	Command: require('./command'),
-	Utils: require('./utils')
+	ArrayTransform:    require('./array-transform'),
+	Cell:              require('./cell'),
+	Command:           require('./command'),
+	MapRefinement:     require('../refinements/map-refinement'),
+	Utils:             require('./utils')
 };
 
 nx.Collection = function (options) {
@@ -87,4 +88,15 @@ nx.Collection.prototype.swap = function (firstItem, secondItem) {
 	});
 };
 
+/* Refinement methods */
+
+nx.Collection.prototype.map = function (map) {
+	return new nx.RefinedCollection(
+		this,
+		new nx.MapRefinement({ source: this, map: map })
+	);
+};
+
 module.exports = nx.Collection;
+
+nx.RefinedCollection = require('../refinements/refined-collection');

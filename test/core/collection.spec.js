@@ -1,8 +1,9 @@
 var nx = {
-	ArrayTransform: require('../../src/core/array-transform'),
-	Cell: require('../../src/core/cell'),
-	Collection: require('../../src/core/collection'),
-	Command: require('../../src/core/command')
+	ArrayTransform:    require('../../src/core/array-transform'),
+	Cell:              require('../../src/core/cell'),
+	Collection:        require('../../src/core/collection'),
+	Command:           require('../../src/core/command'),
+	RefinedCollection: require('../../src/refinements/refined-collection')
 };
 
 describe('nx.Collection', function () {
@@ -221,6 +222,20 @@ describe('nx.Collection', function () {
 			cell.value.should.deep.equal([]);
 			collection.items = ['a', 'b', 'c'];
 			cell.value.should.deep.equal(['a', 'b', 'c']);
+		});
+	});
+
+	/* Refinement methods */
+
+	describe('map', function () {
+		it('creates a refined collection using a mapping function', function () {
+			var collection = new nx.Collection({ items: [1, 2, 3] });
+			var map = function (item) { return -item; };
+			var refined = collection.map(map);
+			refined.should.be.an.instanceof(nx.RefinedCollection);
+			collection.insertBefore(2, 2);
+			refined.items.should.deep.equal(collection.items.map(map));
+			refined.refinement.value._map.should.equal(map);
 		});
 	});
 
