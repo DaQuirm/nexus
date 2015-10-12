@@ -27,6 +27,28 @@ describe('nx.Refinement', function () {
 			var refinement = new nx.Refinement({ values: values, source: source });
 			refinement._source.should.equal(source);
 		});
+
+		it('creates cells that reset the refinement on update by their names', function () {
+			var source = new nx.Collection();
+			var refinement = new nx.Refinement({
+				source: source,
+				resetters: {
+					filter: 'cellar',
+					compare: 'door'
+				}
+			});
+			refinement.reset = sinon.spy();
+
+			refinement.filter.should.be.an.instanceof(nx.Cell);
+			refinement.filter.value.should.equal('cellar');
+			refinement.filter.value = 'cellar door';
+			refinement.reset.should.have.been.calledWith({ items: source.items }, source.items);
+
+			refinement.compare.should.be.an.instanceof(nx.Cell);
+			refinement.compare.value.should.equal('door');
+			refinement.compare.value = 'cellar door';
+			refinement.reset.should.have.been.calledWith({ items: source.items }, source.items);
+		});
 	});
 
 	describe('values', function () {

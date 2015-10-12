@@ -13,6 +13,7 @@ describe('nx.FilterRefinement', function () {
 	var collection;
 	var refined;
 	var refinement;
+	var filter;
 
 	var Model = function (value) {
 		return { text: new nx.Cell({ value: value }) };
@@ -23,12 +24,15 @@ describe('nx.FilterRefinement', function () {
 			items: [1, 2, 3, 4, 5].map(Model),
 			transform: nx.LiveTransform(['text'])
 		});
-		var filter = function (value) { return value & 1; };
+
+		filter = function (value) { return value & 1; };
+
 		refinement = new nx.FilterRefinement({
 			values: ['text'],
 			filter: filter,
 			source: collection
 		});
+
 		refined = new nx.RefinedCollection(collection, refinement);
 	});
 

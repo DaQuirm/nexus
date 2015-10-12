@@ -5,8 +5,8 @@ var nx = {
 };
 
 nx.FilterRefinement = function (options) {
+	options.resetters = { filter: options.filter };
 	nx.Refinement.call(this, options);
-	this._filter = options.filter;
 	this._indexes = [];
 };
 
@@ -18,7 +18,7 @@ nx.FilterRefinement.prototype._filterItems = function (items, values) {
 	var filteredItems = [];
 
 	items.forEach(function (item, index) {
-		if (this._filter.apply(null, values[index])) {
+		if (this.filter.value.apply(null, values[index])) {
 			filteredItems.push(item);
 			indexes.push(index);
 		}

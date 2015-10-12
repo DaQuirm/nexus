@@ -235,7 +235,7 @@ describe('nx.Collection', function () {
 			refined.should.be.an.instanceof(nx.RefinedCollection);
 			collection.insertBefore(2, 2);
 			refined.items.should.deep.equal(collection.items.map(map));
-			refined.refinement.value._map.should.equal(map);
+			refined.refinement.value.map.value.should.equal(map);
 		});
 	});
 

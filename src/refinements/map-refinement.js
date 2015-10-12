@@ -5,15 +5,15 @@ var nx = {
 };
 
 nx.MapRefinement = function (options) {
+	options.resetters = { map: options.map };
 	nx.Refinement.call(this, options);
-	this._map = options.map;
 };
 
 nx.Utils.mixin(nx.MapRefinement.prototype, nx.Refinement.prototype);
 nx.MapRefinement.prototype.constructor = nx.MapRefinement;
 
 nx.MapRefinement.prototype.values = function (item) {
-	return this._map(item);
+	return this.map.value(item);
 };
 
 nx.MapRefinement.prototype.append = function (data, items) {

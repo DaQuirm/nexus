@@ -1,9 +1,25 @@
-var nx = {};
+var nx = {
+	Cell:    require('../core/cell'),
+	Command: require('../core/command')
+};
 
 nx.Refinement = function (options) {
 	options = options || {};
 	this._values = options.values;
 	this._source = options.source;
+
+	var _this = this;
+	var reset = function () {
+		var command = new nx.Command('reset', { items: _this._source.items });
+		_this.refine(command);
+	};
+
+	for (var key in options.resetters) {
+		this[key] = new nx.Cell({
+			value: options.resetters[key],
+			action: reset
+		});
+	}
 };
 
 nx.Refinement.prototype.values = function (item) {
