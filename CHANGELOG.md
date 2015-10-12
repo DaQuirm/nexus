@@ -1,3 +1,7 @@
+## 0.4.11
+### Major
+* Added nx.MapRefinement
+
 ## 0.4.10
 ### Major
 * Added draft implementation of refinements:
