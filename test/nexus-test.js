@@ -36,4 +36,5 @@ require('./refinements/refined-collection.spec.js');
 require('./refinements/refinement.spec.js');
 
 require('./refinements/filter-refinement.spec.js');
+require('./refinements/map-refinement.spec.js');
 

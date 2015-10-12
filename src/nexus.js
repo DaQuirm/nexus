@@ -18,7 +18,8 @@ var nx = window.nx = {
 	RefinedCollection: require('./refinements/refined-collection'),
 	Refinement:        require('./refinements/refinement'),
 
-	FilterRefinement:  require('./refinements/filter-refinement')
+	FilterRefinement:  require('./refinements/filter-refinement'),
+	MapRefinement:     require('./refinements/map-refinement')
 };
 
 var nxt = window.nxt = require('./nxt/helpers');

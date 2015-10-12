@@ -13,6 +13,7 @@ module.exports = {
 		RefinedCollection: require('./refinements/refined-collection'),
 		Refinement:        require('./refinements/refinement'),
 
-		FilterRefinement:  require('./refinements/filter-refinement')
+		FilterRefinement:  require('./refinements/filter-refinement'),
+		MapRefinement:     require('./refinements/map-refinement')
 	}
 };
