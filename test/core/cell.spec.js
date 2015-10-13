@@ -38,13 +38,13 @@ describe('nx.Cell', function () {
 			});
 			cell.value = 10;
 			target.value.should.equal(-10);
-			var a = new nx.Cell();
-			var b = new nx.Cell();
+			var cellA = new nx.Cell();
+			var cellB = new nx.Cell();
 			cell = new nx.Cell({
-				'<-': [[a, b], function (a, b) { return a + ' ' + b; }]
+				'<-': [[cellA, cellB], function (a, b) { return a + ' ' + b; }]
 			});
-			a.value = 'cellar';
-			b.value = 'door';
+			cellA.value = 'cellar';
+			cellB.value = 'door';
 			cell.value.should.equal('cellar door');
 		});
 

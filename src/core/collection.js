@@ -98,7 +98,7 @@ nx.Collection.prototype.map = function (map) {
 	);
 };
 
-nx.Collection.prototype.filter = function(options) {
+nx.Collection.prototype.filter = function (options) {
 	options.source = this;
 	return new nx.RefinedCollection(
 		this,
