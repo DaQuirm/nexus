@@ -1,3 +1,6 @@
+## 0.4.13
+* Added refinement resetter initialization with a cell
+
 ## 0.4.12
 ### Major
 * (Internal) refinement resetters
