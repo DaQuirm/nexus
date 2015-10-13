@@ -1,3 +1,11 @@
+## 0.4.12
+### Major
+* (Internal) refinement resetters
+
+### Sweet sugar
+* nx.Collection map and filter helper methods
+* nx.Cell pre-binding
+
 ## 0.4.11
 ### Major
 * Added nx.MapRefinement
