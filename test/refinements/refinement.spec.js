@@ -49,6 +49,20 @@ describe('nx.Refinement', function () {
 			refinement.compare.value = 'cellar door';
 			refinement.reset.should.have.been.calledWith({ items: source.items }, source.items);
 		});
+
+		it('binds a cell to a resetter if it is passed instead of a resetter\'s value', function () {
+			var source = new nx.Collection();
+			var cell = new nx.Cell();
+			var refinement = new nx.Refinement({
+				source: source,
+				resetters: {
+					filter: cell,
+					compare: 'door'
+				}
+			});
+			cell.value = 'cellar door';
+			refinement.filter.value.should.equal('cellar door');
+		});
 	});
 
 	describe('values', function () {
