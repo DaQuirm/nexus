@@ -31,6 +31,23 @@ describe('nx.Cell', function () {
 			spy.should.have.been.calledWith('^__^');
 		});
 
+		it('accepts binding data and transforms it into binding method calls', function () {
+			var target = new nx.Cell();
+			var cell = new nx.Cell({
+				'->': [target, function (value) { return -value; }]
+			});
+			cell.value = 10;
+			target.value.should.equal(-10);
+			var a = new nx.Cell();
+			var b = new nx.Cell();
+			cell = new nx.Cell({
+				'<-': [[a, b], function (a, b) { return a + ' ' + b; }]
+			});
+			a.value = 'cellar';
+			b.value = 'door';
+			cell.value.should.equal('cellar door');
+		});
+
 		it('accepts a compare function for comparing values');
 	});
 
