@@ -239,4 +239,22 @@ describe('nx.Collection', function () {
 		});
 	});
 
+	describe('filter', function () {
+		it('creates a refined collection using filter refinement settings', function () {
+			var Model = function (value) {
+				return { value: new nx.Cell({ value: value }) };
+			};
+			var collection = new nx.Collection({ items: [1, 2, 3, 4, 5].map(Model) });
+			var filter = function (value) { return value & 1; };
+			var refined = collection.filter({
+				values: ['value'],
+				filter: filter
+			});
+			refined.should.be.an.instanceof(nx.RefinedCollection);
+			refined.items.map(function (item) { return item.value.value; })
+				.should.deep.equal([1, 3, 5]);
+			refined.refinement.value.filter.value.should.equal(filter);
+		});
+	});
+
 });

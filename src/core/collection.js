@@ -2,6 +2,7 @@ var nx = {
 	ArrayTransform:    require('./array-transform'),
 	Cell:              require('./cell'),
 	Command:           require('./command'),
+	FilterRefinement:  require('../refinements/filter-refinement'),
 	MapRefinement:     require('../refinements/map-refinement'),
 	Utils:             require('./utils')
 };
@@ -94,6 +95,14 @@ nx.Collection.prototype.map = function (map) {
 	return new nx.RefinedCollection(
 		this,
 		new nx.MapRefinement({ source: this, map: map })
+	);
+};
+
+nx.Collection.prototype.filter = function(options) {
+	options.source = this;
+	return new nx.RefinedCollection(
+		this,
+		new nx.FilterRefinement(options)
 	);
 };
 
