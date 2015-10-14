@@ -17,7 +17,7 @@ nx.Refinement = function (options) {
 	for (var key in options.resetters) {
 		this[key] = new nx.Cell({ action: reset });
 		if (options.resetters[key] instanceof nx.Cell) {
-			this[key]['<-'](options.resetters[key]);
+			this[key]['<<-'](options.resetters[key]);
 		} else {
 			this[key].value = options.resetters[key];
 		}

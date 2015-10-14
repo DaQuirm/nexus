@@ -14,7 +14,7 @@ nx.Cell = function (options) {
 	this._bindingIndex = 0;
 	this.bindings = {};
 
-	['->', '<-'].forEach(function (method) {
+	['->', '<-', '<<-', '->>', '<->'].forEach(function (method) {
 		if (typeof options[method] !== 'undefined') {
 			this[method].apply(this, options[method]);
 		}
