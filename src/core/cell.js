@@ -14,16 +14,16 @@ nx.Cell = function (options) {
 	this._bindingIndex = 0;
 	this.bindings = {};
 
+	this.onvalue = new nx.Event();
+	if (typeof options.action !== 'undefined') {
+		this.onvalue.add(options.action);
+	}
+
 	['->', '<-', '<<-', '->>', '<->'].forEach(function (method) {
 		if (typeof options[method] !== 'undefined') {
 			this[method].apply(this, options[method]);
 		}
 	}, this);
-
-	this.onvalue = new nx.Event();
-	if (typeof options.action !== 'undefined') {
-		this.onvalue.add(options.action);
-	}
 };
 
 Object.defineProperty(nx.Cell.prototype, 'value', {
