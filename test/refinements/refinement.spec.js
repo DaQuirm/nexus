@@ -77,7 +77,7 @@ describe('nx.Refinement', function () {
 			var item = { text: new nx.Cell({ value: 'cellar door' }) };
 			var refinement = new nx.Refinement();
 			var values = refinement.values(item);
-			values.should.equal(item);
+			values.should.deep.equal([item]);
 		});
 	});
 

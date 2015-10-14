@@ -32,7 +32,7 @@ nx.Refinement.prototype.values = function (item) {
 			return item[key].value;
 		});
 	} else {
-		return item;
+		return [item];
 	}
 };
 
