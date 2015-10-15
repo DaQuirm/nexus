@@ -1,3 +1,6 @@
+## 0.4.15
+* Fixed a number of refinement-related issues
+
 ## 0.4.14
 * Added non-lazy binding methods to cell pre-binding
 
