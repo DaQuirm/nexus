@@ -37,17 +37,17 @@ describe('nx.Refinement', function () {
 					compare: 'door'
 				}
 			});
-			refinement.reset = sinon.spy();
+			var resetCommand = new nx.Command('reset', { items: source.items });
 
 			refinement.filter.should.be.an.instanceof(nx.Cell);
 			refinement.filter.value.should.equal('cellar');
 			refinement.filter.value = 'cellar door';
-			refinement.reset.should.have.been.calledWith({ items: source.items }, source.items);
+			refinement.command.value.should.deep.equal(resetCommand);
 
 			refinement.compare.should.be.an.instanceof(nx.Cell);
 			refinement.compare.value.should.equal('door');
 			refinement.compare.value = 'cellar door';
-			refinement.reset.should.have.been.calledWith({ items: source.items }, source.items);
+			refinement.command.value.should.deep.equal(resetCommand);
 		});
 
 		it('binds a cell to a resetter if it is passed instead of a resetter\'s value', function () {

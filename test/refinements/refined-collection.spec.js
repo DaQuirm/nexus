@@ -52,6 +52,17 @@ describe('nx.RefinedCollection', function () {
 			refineSpy.restore();
 		});
 
+		it('creates a binding with refinement\'s command cell and calls refinement\'s `refine` method', function () {
+		/* eslint-enable */
+			var collection = new nx.Collection();
+			var refineSpy = sinon.spy(refinement, 'refine');
+			var refined = new nx.RefinedCollection(collection, refinement);
+			refinement.command.value = new nx.Command('append', { items: [1] });
+			refineSpy.should.have.been.calledWith(refinement.command.value);
+			refined.command.value.should.deep.equal(refinement.refine(refinement.command.value));
+			refineSpy.restore();
+		});
+
 		/* eslint-disable max-len */
 		it('creates a binding to the LiveTransform\'s `change` cell and calls refinement\'s `live` method', function () {
 		/* eslint-enable */

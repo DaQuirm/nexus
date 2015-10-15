@@ -7,11 +7,11 @@ nx.Refinement = function (options) {
 	options = options || {};
 	this._values = options.values;
 	this._source = options.source;
+	this.command = new nx.Cell();
 
 	var _this = this;
 	var reset = function () {
-		var command = new nx.Command('reset', { items: _this._source.items });
-		_this.refine(command);
+		_this.command.value = new nx.Command('reset', { items: _this._source.items });
 	};
 
 	for (var key in options.resetters) {

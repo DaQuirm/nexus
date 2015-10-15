@@ -13,9 +13,12 @@ nx.RefinedCollection = function (source, refinement) {
 	this.source = source;
 	this.refinement = new nx.Cell({ value: refinement });
 
-	this.source.command['->'](this.command, function (command) {
+	var conversion = function (command) {
 		return _this.refinement.value.refine(command);
-	});
+	};
+
+	this.source.command['->'](this.command, conversion);
+	refinement.command['->'](this.command, conversion);
 
 	if (typeof source.transform.change !== 'undefined') { // nx.LiveTransform
 		source.transform.change['->'](this.command, function (change) {
