@@ -22,7 +22,21 @@ nx.Binding.prototype.sync = function () {
 			value = this.conversion(value);
 		}
 	}
-	this.target.value = value;
+
+	var targets;
+	if (typeof this.target === 'function') {
+		targets = this.target(value);
+		if (Array.isArray(targets)) {
+			targets.forEach(function (target) {
+				target.value = value;
+			});
+		} else {
+			targets.value = value;
+		}
+	} else {
+		this.target.value = value;
+	}
+
 };
 
 nx.Binding.prototype.pair = function (binding) {

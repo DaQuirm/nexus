@@ -1,6 +1,7 @@
 var nx = {
 	Binding: require('../../src/core/binding'),
 	Cell: require('../../src/core/cell'),
+	Collection: require('../../src/core/collection'),
 	Event: require('../../src/core/event'),
 	Mapping: require('../../src/core/mapping')
 };
@@ -215,6 +216,29 @@ describe('nx.Cell', function () {
 				year: 2015
 			});
 
+		});
+
+		they('accept a function for one-to-many demux source-target binding', function () {
+			var students = new nx.Collection();
+			var gryffindor = new nx.Collection();
+			var slytherin = new nx.Collection();
+			var sortingHat = function (command) {
+				var student = command.data.items[0];
+				if (student.brave) {
+					return gryffindor.command;
+				} else if (student.cunning) {
+					return slytherin.command;
+				}
+			};
+			students.command['->'](sortingHat);
+			var potter = { brave: true };
+			var malfoy = { cunning: true };
+			var longbottom = { brave: true };
+			students.append(malfoy);
+			students.append(potter);
+			students.append(longbottom);
+			gryffindor.items.should.deep.equal([potter, longbottom]);
+			slytherin.items.should.deep.equal([malfoy]);
 		});
 	});
 
