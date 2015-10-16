@@ -1,3 +1,7 @@
+## 0.4.17
+### Major
+* Added demux binding
+
 ## 0.4.15
 * Fixed a number of refinement-related issues
 
