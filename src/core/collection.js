@@ -91,10 +91,11 @@ nx.Collection.prototype.swap = function (firstItem, secondItem) {
 
 /* Refinement methods */
 
-nx.Collection.prototype.map = function (map) {
+nx.Collection.prototype.map = function (options) {
 	return new nx.RefinedCollection(
 		this,
-		new nx.MapRefinement({ source: this, map: map })
+		new nx.MapRefinement({ source: this, map: options.map }),
+		options.binding
 	);
 };
 
@@ -102,7 +103,8 @@ nx.Collection.prototype.filter = function (options) {
 	options.source = this;
 	return new nx.RefinedCollection(
 		this,
-		new nx.FilterRefinement(options)
+		new nx.FilterRefinement(options),
+		options.binding
 	);
 };
 

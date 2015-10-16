@@ -36,7 +36,7 @@ describe('nx.MapRefinement', function () {
 			source: collection
 		});
 
-		refined = new nx.RefinedCollection(collection, refinement);
+		refined = new nx.RefinedCollection(collection, refinement, '->>');
 	});
 
 	describe('append', function () {

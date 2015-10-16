@@ -32,12 +32,14 @@ describe('nx.RefinedCollection', function () {
 			refined.refinement.value.should.equal(refinement);
 		});
 
-		it('applies refinement to existing collection items', function () {
+		it('applies refinement to existing collection items only if non-lazy binding is passed', function () {
 			var collection = new nx.Collection({ items: [1, 2, 3] });
 			var refineSpy = sinon.spy(refinement, 'refine');
-			var refined = new nx.RefinedCollection(collection, refinement);
+			var refined = new nx.RefinedCollection(collection, refinement, '->>');
 			refineSpy.should.have.been.calledWith(new nx.Command('reset', { items: collection.items }));
 			refined.items.should.deep.equal(collection.items);
+			refined = new nx.RefinedCollection(collection, refinement);
+			refined.items.should.deep.equal([]);
 		});
 
 		/* eslint-disable max-len */

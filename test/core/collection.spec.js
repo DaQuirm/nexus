@@ -231,7 +231,7 @@ describe('nx.Collection', function () {
 		it('creates a refined collection using a mapping function', function () {
 			var collection = new nx.Collection({ items: [1, 2, 3] });
 			var map = function (item) { return -item; };
-			var refined = collection.map(map);
+			var refined = collection.map({ map: map, binding: '->>' });
 			refined.should.be.an.instanceof(nx.RefinedCollection);
 			collection.insertBefore(2, 2);
 			refined.items.should.deep.equal(collection.items.map(map));
@@ -248,7 +248,8 @@ describe('nx.Collection', function () {
 			var filter = function (value) { return value & 1; };
 			var refined = collection.filter({
 				values: ['value'],
-				filter: filter
+				filter: filter,
+				binding: '->>'
 			});
 			refined.should.be.an.instanceof(nx.RefinedCollection);
 			refined.items.map(function (item) { return item.value.value; })

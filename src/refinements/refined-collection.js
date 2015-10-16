@@ -5,8 +5,9 @@ var nx = {
 	Utils:      require('../core/utils')
 };
 
-nx.RefinedCollection = function (source, refinement) {
+nx.RefinedCollection = function (source, refinement, binding) {
 	var _this = this;
+	binding = binding || '->';
 
 	nx.Collection.call(this);
 
@@ -17,7 +18,7 @@ nx.RefinedCollection = function (source, refinement) {
 		return _this.refinement.value.refine(command);
 	};
 
-	this.source.command['->'](this.command, conversion);
+	this.source.command[binding](this.command, conversion);
 	refinement.command['->'](this.command, conversion);
 
 	if (typeof source.transform.change !== 'undefined') { // nx.LiveTransform
@@ -25,9 +26,6 @@ nx.RefinedCollection = function (source, refinement) {
 			return _this.refinement.value.live(change);
 		});
 	}
-
-	var resetCommand = new nx.Command('reset', { items: source.items });
-	this.command.value = this.refinement.value.refine(resetCommand);
 };
 
 nx.Utils.mixin(nx.RefinedCollection.prototype, nx.Collection.prototype);

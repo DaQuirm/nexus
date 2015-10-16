@@ -33,7 +33,7 @@ describe('nx.FilterRefinement', function () {
 			source: collection
 		});
 
-		refined = new nx.RefinedCollection(collection, refinement);
+		refined = new nx.RefinedCollection(collection, refinement, '->>');
 	});
 
 	describe('append', function () {
