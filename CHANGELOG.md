@@ -1,3 +1,6 @@
+## 0.4.18
+* Make refinements and nx.RefinedCollection lazy by default
+
 ## 0.4.17
 ### Major
 * Added demux binding
