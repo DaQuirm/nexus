@@ -353,6 +353,18 @@ describe('nxt helpers', function () {
 			cell.value += ' door';
 			input.data.node.value.should.equal('cellar door');
 		});
+
+		it('doesn\'t rerender the attribute when value is changed', function () {
+			var cell = new nx.Cell();
+			var conversionSpy = sinon.spy();
+			var input = nxt.Element('input', nxt.ValueBinding(cell, conversionSpy));
+			input.data.node.value = 'cellar';
+			var event = new Event('input');
+			input.data.node.dispatchEvent(event);
+			/* eslint-disable no-unused-expressions */
+			conversionSpy.should.not.have.been.calledWith('cellar');
+			/* eslint-enable */
+		});
 	});
 
 	describe('nxt.Style', function () {
