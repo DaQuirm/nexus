@@ -21,7 +21,13 @@ nx.Collection = function (options) {
 			return new nx.Command('reset', { items: items });
 		},
 		function (command) {
-			return _this.transform(_this.items, command);
+			if (Array.isArray(command)) {
+				return command.reduce(function (items, item) {
+					return _this.transform(items, item);
+				}, _this.items);
+			} else {
+				return _this.transform(_this.items, command);
+			}
 		}
 	);
 

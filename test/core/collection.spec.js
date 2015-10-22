@@ -92,6 +92,15 @@ describe('nx.Collection', function () {
 			collection.command.value = new nx.Command('remove', { indexes: [1] });
 			collection.value.should.deep.equal([1, 3]);
 		});
+
+		it('can process an array of consequent commands', function () {
+			var collection = new nx.Collection({ items: [1, 2, 3] });
+			collection.command.value = [
+				new nx.Command('remove', { indexes: [0] }),
+				new nx.Command('insertBefore', { index: 1, items: [0, -1] })
+			];
+			collection.value.should.deep.equal([2, 0, -1, 3]);
+		});
 	});
 
 	describe('length', function () {
