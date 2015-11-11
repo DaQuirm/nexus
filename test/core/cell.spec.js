@@ -48,9 +48,51 @@ describe('nx.Cell', function () {
 			cellB.value = 'door';
 			cell.value.should.equal('cellar door');
 		});
-
-		it('accepts a compare function for comparing values');
 	});
+
+	describe('flatten', function () {
+		it('creates a cells dynamically bound to cells in cell\'s value', function () {
+			var pointer = new nx.Cell();
+			var string = pointer.flatten(function (value) {
+				return value.string;
+			});
+			var first = new nx.Cell();
+			var second = new nx.Cell();
+			pointer.value = { string: first };
+			string.value = 'cellar';
+			first.value.should.equal(string.value);
+
+			pointer.value = { string: second };
+			string.value = 'door';
+			second.value.should.equal(string.value);
+			first.value.should.equal('cellar');
+
+			first.value = '*';
+			string.value.should.equal('door');
+
+			second.value = '**';
+			string.value.should.equal('**');
+		});
+
+		it.skip('accepts a binding value conversion function', function () {
+			var pointer = new nx.Cell();
+			var string = pointer.flatten(
+				function (value) {
+					return value.string;
+				},
+				function (value) {
+					return value.toUpperCase();
+				}
+			);
+			var cell = new nx.Cell();
+			pointer.value = { string: cell };
+			cell.value = 'cellar door';
+			string.value.should.equal('CELLAR DOOR');
+		});
+	});
+
+
+	it('accepts a compare function for comparing values');
 
 	describe('value', function () {
 		it('creates an interface for the cell value', function () {

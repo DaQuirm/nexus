@@ -112,4 +112,18 @@ nx.Cell.prototype.bind = function (cell, mode, conversion, backConversion) {
 	this[mode](cell, conversion, backConversion);
 };
 
+nx.Cell.prototype.flatten = function (transform) {
+	var flat = new nx.Cell();
+	var bindings;
+	this.onvalue.add(function (value) {
+		var cell = transform(value);
+		if (typeof bindings !== 'undefined') {
+			bindings[0].unbind();
+			bindings[1].unbind();
+		}
+		bindings = flat['<->'](cell);
+	});
+	return flat;
+};
+
 module.exports = nx.Cell;
