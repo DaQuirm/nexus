@@ -4,6 +4,11 @@ var nx = {
 	Mapping: require('./mapping')
 };
 
+var flatMethods = [
+	'<-*', '<<-*', '->*', '->>*',
+	'*->', '*->>', '*<-', '*<<-'
+];
+
 nx.Cell = function (options) {
 	options = options || {};
 
@@ -19,11 +24,13 @@ nx.Cell = function (options) {
 		this.onvalue.add(options.action);
 	}
 
-	['->', '<-', '<<-', '->>', '<->'].forEach(function (method) {
-		if (typeof options[method] !== 'undefined') {
-			this[method].apply(this, options[method]);
-		}
-	}, this);
+	['->', '<-', '<<-', '->>', '<->']
+		.concat(flatMethods)
+		.forEach(function (method) {
+			if (typeof options[method] !== 'undefined') {
+				this[method].apply(this, options[method]);
+			}
+		}, this);
 };
 
 Object.defineProperty(nx.Cell.prototype, 'value', {
@@ -139,11 +146,7 @@ nx.Cell.prototype._flatBind = function (cell, selector, conversion, method) {
 	cell.onvalue.add(bind);
 };
 
-[
-	'<-*', '<<-*', '->*', '->>*',
-	'*->', '*->>', '*<-', '*<<-'
-]
-.forEach(function (method) {
+flatMethods.forEach(function (method) {
 	nx.Cell.prototype[method] = function (cell, selector, conversion) {
 		this._flatBind(cell, selector, conversion, method.replace('*', ''));
 	};
