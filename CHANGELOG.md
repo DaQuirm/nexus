@@ -1,3 +1,6 @@
+## 0.4.21
+* Make flat binding methods callable in constructor options
+
 ## 0.4.20
 ### Major
 * Added flat binding methods to bind to cell values
