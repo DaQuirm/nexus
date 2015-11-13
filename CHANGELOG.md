@@ -1,3 +1,7 @@
+## 0.4.20
+### Major
+* Added flat binding methods to bind to cell values
+
 ## 0.4.18
 * Make refinements and nx.RefinedCollection lazy by default
 
