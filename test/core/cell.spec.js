@@ -50,48 +50,6 @@ describe('nx.Cell', function () {
 		});
 	});
 
-	describe('flatten', function () {
-		it('creates a cells dynamically bound to cells in cell\'s value', function () {
-			var pointer = new nx.Cell();
-			var string = pointer.flatten(function (value) {
-				return value.string;
-			});
-			var first = new nx.Cell();
-			var second = new nx.Cell();
-			pointer.value = { string: first };
-			string.value = 'cellar';
-			first.value.should.equal(string.value);
-
-			pointer.value = { string: second };
-			string.value = 'door';
-			second.value.should.equal(string.value);
-			first.value.should.equal('cellar');
-
-			first.value = '*';
-			string.value.should.equal('door');
-
-			second.value = '**';
-			string.value.should.equal('**');
-		});
-
-		it.skip('accepts a binding value conversion function', function () {
-			var pointer = new nx.Cell();
-			var string = pointer.flatten(
-				function (value) {
-					return value.string;
-				},
-				function (value) {
-					return value.toUpperCase();
-				}
-			);
-			var cell = new nx.Cell();
-			pointer.value = { string: cell };
-			cell.value = 'cellar door';
-			string.value.should.equal('CELLAR DOOR');
-		});
-	});
-
-
 	it('accepts a compare function for comparing values');
 
 	describe('value', function () {
@@ -282,6 +240,49 @@ describe('nx.Cell', function () {
 			gryffindor.items.should.deep.equal([potter, longbottom]);
 			slytherin.items.should.deep.equal([malfoy]);
 		});
+
+		they('bind cells dynamically to cells derived from cell\'s value: one-way', function () {
+			var reader = new nx.Cell();
+			var writer = new nx.Cell();
+			var string = new nx.Cell();
+
+			reader['<-*'](string, 'string');
+			writer['->*'](string, 'string');
+			var first = new nx.Cell();
+			var second = new nx.Cell();
+			string.value = { string: first };
+			first.value = 'cellar';
+			reader.value.should.equal(first.value);
+
+			string.value = { string: second };
+			writer.value = 'door';
+			second.value.should.equal(writer.value);
+			first.value.should.not.equal(writer.value);
+
+			first.value = '*';
+			reader.value.should.equal(second.value);
+
+			second.value = '**';
+			reader.value.should.equal('**');
+		});
+
+		they('bind cells dynamically to cells derived from cell\'s value: one-way, forced', function () {
+			var reader = new nx.Cell();
+			var writer = new nx.Cell({ value: 'door' });
+			var string = new nx.Cell({ string: new nx.Cell({ value: 'cellar' }) });
+
+			reader['<<-*'](string, 'string');
+			var first = new nx.Cell({ value: '*' });
+			var second = new nx.Cell();
+			string.value = { string: first };
+			reader.value.should.equal(first.value);
+
+			string.value = { string: second };
+			writer['->>*'](string, 'string');
+			second.value.should.equal(writer.value);
+			first.value.should.not.equal(writer.value);
+		});
+
 	});
 
 	describe('onvalue', function () {

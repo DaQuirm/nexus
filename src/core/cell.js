@@ -112,18 +112,41 @@ nx.Cell.prototype.bind = function (cell, mode, conversion, backConversion) {
 	this[mode](cell, conversion, backConversion);
 };
 
-nx.Cell.prototype.flatten = function (transform) {
-	var flat = new nx.Cell();
-	var bindings;
-	this.onvalue.add(function (value) {
-		var cell = transform(value);
-		if (typeof bindings !== 'undefined') {
-			bindings[0].unbind();
-			bindings[1].unbind();
+nx.Cell.prototype._flatBind = function (cell, selector, conversion, method) {
+	var _this = this;
+	var binding;
+
+	var getTarget = function (value) {
+		var type = typeof selector;
+		if (type === 'string') {
+			return value[selector];
+		} else if (type === 'function') {
+			return selector(value);
 		}
-		bindings = flat['<->'](cell);
-	});
-	return flat;
+	};
+
+	var bind = function (value) {
+		if (typeof binding !== 'undefined') {
+			binding.unbind();
+		}
+		var target = getTarget(value);
+		binding = _this[method](target, conversion);
+	};
+
+	if (typeof cell.value !== 'undefined') {
+		bind(cell.value);
+	}
+	cell.onvalue.add(bind);
 };
+
+[
+	'<-*', '<<-*', '->*', '->>*',
+	'*->', '*->>', '*<-', '*<<-'
+]
+.forEach(function (method) {
+	nx.Cell.prototype[method] = function (cell, selector, conversion) {
+		this._flatBind(cell, selector, conversion, method.replace('*', ''));
+	};
+});
 
 module.exports = nx.Cell;
