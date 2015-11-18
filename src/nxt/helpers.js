@@ -105,12 +105,34 @@ nxt.Style = function (data) {
 	return new nxt.Command('Style', 'render', data);
 };
 
+nxt.Fragment = function () {
+	var args = [].slice.call(arguments);
+	args = args.reduce(function (acc, item) {
+		return acc.concat(item);
+	}, []);
+	var fragment = document.createDocumentFragment();
+	if (args.length > 0) {
+		nxt.ContentRenderer.render({ items: args }, { container: fragment });
+	}
+	return new nxt.Command('Node', 'render', { node: fragment });
+};
+
+nxt.If = function () {
+	var args = [].slice.call(arguments);
+	var condition = args[0];
+	if (condition) {
+		return nxt.Fragment.apply(null, args.slice(1));
+	}
+};
+
 module.exports = {
 	Attr:         nxt.Attr,
 	Class:        nxt.Class,
 	Text:         nxt.Text,
 	Event:        nxt.Event,
 	Element:      nxt.Element,
+	Fragment:     nxt.Fragment,
+	If:           nxt.If,
 	Binding:      nxt.Binding,
 	ItemEvent:    nxt.ItemEvent,
 	Collection:   nxt.Collection,

@@ -382,4 +382,27 @@ describe('nxt helpers', function () {
 		});
 	});
 
+	describe('nxt.Fragment', function () {
+		it('creates a document fragment with specified content', function () {
+			var content = [
+				nxt.Element('span'),
+				nxt.Text('cellar door')
+			];
+			var command = nxt.Fragment(content);
+			command.type.should.equal('Node');
+			command.method.should.equal('render');
+			command.data.node.nodeType.should.equal(Node.DOCUMENT_FRAGMENT_NODE);
+			var childNodes = [].slice.call(command.data.node.childNodes);
+			childNodes.should.deep.equal(content.map(function (item) { return item.data.node; }));
+		});
+	});
+
+	describe('nxt.If', function () {
+		it('returns its 2nd and further arguments if the first argument evaluates to true', function () {
+			nxt.If(true, nxt.Element('a'), nxt.Element('b'))
+				.should.deep.equal(nxt.Fragment(nxt.Element('a'), nxt.Element('b')));
+			should.not.exist(nxt.If(false, nxt.Element('a')));
+		});
+	});
+
 });
