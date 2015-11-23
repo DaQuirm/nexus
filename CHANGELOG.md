@@ -1,3 +1,6 @@
+## 0.4.22
+* Introduce nx.If and nx.Fragment
+
 ## 0.4.21
 * Make flat binding methods callable in constructor options
 
