@@ -1,3 +1,6 @@
+## 0.4.23
+* Implement basic SortRefinement
+
 ## 0.4.22
 * Introduce nx.If and nx.Fragment
 
