@@ -62,6 +62,11 @@ describe('nx.OrderTree', function () {
 			var tree = new nx.OrderTree(values, comparator);
 			tree.list().should.deep.equal([1, 2, 3, 4, 5]);
 		});
+
+		it('returns an empty array for empty tree', function () {
+			var tree = new nx.OrderTree([], comparator);
+			tree.list().should.deep.equal([]);
+		});
 	});
 
 	describe('rank', function () {

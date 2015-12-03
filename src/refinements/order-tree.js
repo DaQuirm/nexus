@@ -4,6 +4,7 @@ var nx = {
 
 nx.OrderTree = function (values, comparator) {
 	this.comparator = comparator;
+	this.root = null;
 	this.build(values);
 };
 
@@ -19,9 +20,11 @@ nx.OrderTree.Direction = {
 };
 
 nx.OrderTree.prototype.build = function (values) {
-	this.root = new nx.OrderTreeNode(values[0]);
-	for (var index = 1; index < values.length; index++) {
-		this.insert(values[index]);
+	if (values.length > 0) {
+		this.root = new nx.OrderTreeNode(values[0]);
+		for (var index = 1; index < values.length; index++) {
+			this.insert(values[index]);
+		}
 	}
 };
 
