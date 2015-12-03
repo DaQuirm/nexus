@@ -4,6 +4,7 @@ var nx = {
 	Command:           require('./command'),
 	FilterRefinement:  require('../refinements/filter-refinement'),
 	MapRefinement:     require('../refinements/map-refinement'),
+	SortRefinement:    require('../refinements/sort-refinement'),
 	Utils:             require('./utils')
 };
 
@@ -114,6 +115,14 @@ nx.Collection.prototype.filter = function (options) {
 	);
 };
 
-module.exports = nx.Collection;
+nx.Collection.prototype.sort = function (options) {
+	options.source = this;
+	return new nx.RefinedCollection(
+		this,
+		new nx.SortRefinement(options),
+		options.binding
+	);
+};
 
+module.exports = nx.Collection;
 nx.RefinedCollection = require('../refinements/refined-collection');

@@ -267,4 +267,25 @@ describe('nx.Collection', function () {
 		});
 	});
 
+	describe('sort', function () {
+		it('creates a refined collection using sort refinement settings', function () {
+			var Model = function (value) {
+				return { value: new nx.Cell({ value: value }) };
+			};
+			var collection = new nx.Collection({ items: [2, 4, 1, 5, 3].map(Model) });
+			var compare = function (firstValues, secondValues) {
+				return secondValues[0] - firstValues[0];
+			};
+			var refined = collection.sort({
+				values: ['value'],
+				compare: compare,
+				binding: '->>'
+			});
+			refined.should.be.an.instanceof(nx.RefinedCollection);
+			refined.items.map(function (item) { return item.value.value; })
+				.should.deep.equal([5, 4, 3, 2, 1]);
+			refined.refinement.value.compare.value.should.equal(compare);
+		});
+	});
+
 });
