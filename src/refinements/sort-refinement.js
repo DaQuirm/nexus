@@ -9,8 +9,9 @@ nx.SortRefinement = function (options) {
 	options.resetters = { compare: options.compare };
 	nx.Refinement.call(this, options);
 	var values = this._source.items.map(this.values.bind(this));
+	var _this = this;
 	this._compare = function (one, another) {
-		return options.compare(one.value, another.value);
+		return _this.compare.value(one.value, another.value);
 	};
 	this._tree = new nx.OrderTree(values, this._compare);
 };
