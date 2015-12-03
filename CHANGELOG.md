@@ -1,3 +1,6 @@
+## 0.4.24
+* Fix SortRefinement when compare is a cell
+
 ## 0.4.23
 * Implement basic SortRefinement
 
