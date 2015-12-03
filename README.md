@@ -27,9 +27,6 @@ class TemperatureModel
 		# nx.Cell is a “spreadsheet cell”
 		@celsius = new nx.Cell value:-20
 
-	measure: ->
-		@celsius.value = Math.round(Math.random()*50 - 25)
-
 # ViewModel describes data transformation for representation in views
 class TemperatureViewModel extends TemperatureModel
 	constructor: ->
@@ -51,10 +48,8 @@ AppView = (context) ->
 				nxt.Text "#{fahrenheit}°F"
 		nxt.Element 'button',
 			nxt.Text 'Measure!'
-			# event-as-a-cell feature is coming :3
-			nxt.Event 'click', ->
-				# model methods (commands) initiate data flow
-				do context.measure
+			# fake measurement
+			nxt.Event 'click', context.celsius, -> Math.round(Math.random()*50 - 25)
 
 window.addEventListener 'load', ->
 	window.model = new TemperatureViewModel
