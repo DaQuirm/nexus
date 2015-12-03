@@ -34,7 +34,9 @@ require('./rest/rest-document.spec.js');
 /* Refinements */
 require('./refinements/refined-collection.spec.js');
 require('./refinements/refinement.spec.js');
+require('./refinements/order-tree.spec.js');
 
 require('./refinements/filter-refinement.spec.js');
 require('./refinements/map-refinement.spec.js');
+require('./refinements/sort-refinement.spec.js');
 
