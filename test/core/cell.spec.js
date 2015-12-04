@@ -32,6 +32,13 @@ describe('nx.Cell', function () {
 			spy.should.have.been.calledWith('^__^');
 		});
 
+		it('passes the old value to action as the second argument', function () {
+			var spy = sinon.spy();
+			var cell = new nx.Cell({ action: spy, value: 'old' });
+			cell.value = 'new';
+			spy.should.have.been.calledWith('new', 'old');
+		});
+
 		it('accepts binding data and transforms it into binding method calls', function () {
 			var target = new nx.Cell();
 			var cell = new nx.Cell({

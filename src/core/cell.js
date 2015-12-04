@@ -37,8 +37,9 @@ Object.defineProperty(nx.Cell.prototype, 'value', {
 	enumerable : true,
 	get: function () { return this._value; },
 	set: function (value) {
+		var oldValue = this._value;
 		this._value = value;
-		this.onvalue.trigger(value);
+		this.onvalue.trigger(value, oldValue);
 		for (var index in this.bindings) {
 			var binding = this.bindings[index];
 			var hasTwin = typeof binding.twin !== 'undefined';
