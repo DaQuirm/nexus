@@ -1,3 +1,6 @@
+## 0.4.25
+* Pass old cell value into action
+
 ## 0.4.24
 * Fix SortRefinement when compare is a cell
 
