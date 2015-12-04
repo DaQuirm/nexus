@@ -14,14 +14,14 @@ describe('nx.Event', function () {
 	});
 
 	describe('trigger', function () {
-		it('fires the event calling all added handlers passing its argument to them', function () {
+		it('fires the event calling all added handlers passing its arguments to them', function () {
 			var evt = new nx.Event();
 			var triggerCount = 0;
 			evt.add(function (value) {
-				value.should.equal('cellar door');
+				value.should.equal('cellar');
 				triggerCount++;
 			});
-			evt.trigger('cellar door');
+			evt.trigger('cellar', 'door');
 			triggerCount.should.equal(1);
 		});
 
@@ -31,9 +31,9 @@ describe('nx.Event', function () {
 			var anotherHandler = sinon.spy();
 			evt.add(handler);
 			evt.add(anotherHandler);
-			evt.trigger('cellar door');
+			evt.trigger('cellar', 'door');
 			/* eslint-disable no-unused-expressions */
-			handler.should.have.been.called;
+			handler.should.have.been.calledWith('cellar', 'door');
 			anotherHandler.should.have.been.called;
 			/* eslint-enable */
 		});

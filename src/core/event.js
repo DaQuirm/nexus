@@ -5,9 +5,9 @@ nx.Event = function () {
 	this._nameIndex = 0;
 };
 
-nx.Event.prototype.trigger = function (argument) {
+nx.Event.prototype.trigger = function () {
 	for (var name in this.handlers) {
-		this.handlers[name].call(null, argument);
+		this.handlers[name].apply(null, arguments);
 	}
 };
 
