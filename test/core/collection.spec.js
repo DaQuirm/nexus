@@ -32,6 +32,14 @@ describe('nx.Collection', function () {
 			collection.should.be.an.instanceof(nx.Collection);
 		});
 
+		it('passes its options to the cell constructor', function () {
+			var cell = new nx.Cell();
+			var options = { '->': [cell] };
+			var collection = new nx.Collection(options);
+			collection.items = [1, 2, 3];
+			cell.value.should.deep.equal(collection.items);
+		});
+
 		it('can be initialized with the `items` option', function () {
 			var collection = new nx.Collection({ items: [1, 2, 3] });
 			collection.items.should.deep.equal([1, 2, 3]);

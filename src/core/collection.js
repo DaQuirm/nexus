@@ -10,7 +10,7 @@ var nx = {
 
 nx.Collection = function (options) {
 	options = options || {};
-	nx.Cell.call(this, { value: [] });
+	nx.Cell.call(this, options);
 
 	var _this = this;
 	this.transform = options.transform || nx.ArrayTransform;
