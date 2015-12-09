@@ -21,8 +21,7 @@ describe('nx.FilterRefinement', function () {
 
 	beforeEach(function () {
 		collection = new nx.Collection({
-			items: [1, 2, 3, 4, 5].map(Model),
-			transform: nx.LiveTransform(['text'])
+			items: [1, 2, 3, 4, 5].map(Model)
 		});
 
 		filter = function (value) { return value & 1; };
@@ -39,8 +38,7 @@ describe('nx.FilterRefinement', function () {
 	describe('append', function () {
 		it('it appends items to the refined collection after applying the filter', function () {
 			var items = [6, 7].map(Model);
-			var values = items.map(refinement.values.bind(refinement));
-			refined.command.value = refinement.append({ items: items }, values);
+			collection.append.apply(collection, items);
 			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 3, 5, 7]);
 			refined.command.value.should.deep.equal(
 				new nx.Command('append', { items: [7].map(Model) })
@@ -52,8 +50,7 @@ describe('nx.FilterRefinement', function () {
 	describe('insertBefore', function () {
 		it('is inserts items to appropriate positions after applying the filter', function () {
 			var items = [Model(9)];
-			var values = items.map(refinement.values.bind(refinement));
-			refined.command.value = refinement.insertBefore({ items: [9].map(Model), index: 2 }, values);
+			collection.insertBefore(collection.items[2], items);
 			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 9, 3, 5]);
 			refined.command.value.should.deep.equal(
 				new nx.Command('insertBefore', {
@@ -67,8 +64,7 @@ describe('nx.FilterRefinement', function () {
 		it('returns an append command if the insert reference is at the end of the filtered collection', function () {
 			collection.append(Model(6));
 			var items = [6, 7].map(Model);
-			var values = items.map(refinement.values.bind(refinement));
-			refined.command.value = refinement.insertBefore({ items: items, index: 5 }, values);
+			collection.insertBefore(collection.items[5], items);
 			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 3, 5, 7]);
 			refined.command.value.should.deep.equal(
 				new nx.Command('append', { items: [7].map(Model) })
@@ -79,10 +75,10 @@ describe('nx.FilterRefinement', function () {
 
 	describe('remove', function () {
 		it('removes items from the refined collection after applying the filter', function () {
-			refined.command.value = refinement.remove({ indexes: [1] });
+			collection.remove(collection.items[1]);
 			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 3, 5]);
 			refinement._indexes.should.deep.equal([0, 2, 4]);
-			refined.command.value = refinement.remove({ indexes: [2] });
+			collection.remove(collection.items[2]);
 			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 5]);
 			refined.command.value.should.deep.equal(
 				new nx.Command('remove', { indexes: [1] })
@@ -94,8 +90,7 @@ describe('nx.FilterRefinement', function () {
 	describe('reset', function () {
 		it('applies filter and resets the refined collection', function () {
 			var items = [10, 11, 12, 13, 14].map(Model);
-			var values = items.map(refinement.values.bind(refinement));
-			refined.command.value = refinement.reset({ items: items }, values);
+			collection.reset(items);
 			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([11, 13]);
 			refined.command.value.should.deep.equal(
 				new nx.Command('reset', { items: [11, 13].map(Model) })

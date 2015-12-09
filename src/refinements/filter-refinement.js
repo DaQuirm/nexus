@@ -29,9 +29,10 @@ nx.FilterRefinement.prototype._filterItems = function (items, values) {
 
 nx.FilterRefinement.prototype.append = function (data, values) {
 	var filtered = this._filterItems(data.items, values);
+	var originalLength = this._source.items.length - data.items.length;
 	this._indexes = this._indexes.concat(
 		filtered.indexes.map(
-			function (index) { return index + this._source.items.length; },
+			function (index) { return index + originalLength; },
 			this
 		)
 	);
@@ -46,9 +47,10 @@ nx.FilterRefinement.prototype.insertBefore = function (data, values) {
 		closestIndex++;
 	}
 	if (closestIndex === this._indexes.length) {
+		var originalLength = this._source.items.length - data.items.length;
 		this._indexes = this._indexes.concat(
 			filtered.indexes.map(function (filteredIndex) {
-				return filteredIndex + this._source.items.length;
+				return filteredIndex + originalLength;
 			}, this)
 		);
 		return new nx.Command('append', { items: filtered.items });
