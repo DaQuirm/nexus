@@ -9,17 +9,16 @@ nx.Binding = function (source, target, conversion) {
 	this.conversion = conversion;
 };
 
-nx.Binding.prototype.sync = function () {
+nx.Binding.prototype.sync = function (value, oldValue) {
 	if (this.locked) {
 		return;
 	}
 
-	var value = this.source.value;
 	if (typeof this.conversion !== 'undefined') {
 		if (this.conversion instanceof nx.Mapping) {
 			value = this.conversion.map(value, this.target.value);
 		} else if (typeof this.conversion === 'function') {
-			value = this.conversion(value);
+			value = this.conversion(value, oldValue);
 		}
 	}
 

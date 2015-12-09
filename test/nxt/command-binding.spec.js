@@ -31,7 +31,7 @@ describe('nxt.CommandBinding', function () {
 			var cmmExitSpy = sinon.spy(nxt.CommandCellModel, 'exit');
 			var syncSpy = sinon.spy(nx.Binding.prototype, 'sync');
 
-			binding.sync();
+			binding.sync(sourceCell.value);
 
 			cmmEnterSpy.should.have.been.calledWith(targetCell);
 			sinon.assert.callOrder(cmmEnterSpy, syncSpy, cmmExitSpy);

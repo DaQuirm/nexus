@@ -15,9 +15,9 @@ nxt.CommandBinding = function (source, target, conversion) {
 
 nx.Utils.mixin(nxt.CommandBinding.prototype, nx.Binding.prototype);
 
-nxt.CommandBinding.prototype.sync = function () {
+nxt.CommandBinding.prototype.sync = function (value) {
 	nxt.CommandCellModel.enter(this.target);
-	nx.Binding.prototype.sync.call(this);
+	nx.Binding.prototype.sync.call(this, value);
 	nxt.CommandCellModel.exit();
 };
 

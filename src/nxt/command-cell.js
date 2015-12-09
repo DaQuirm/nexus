@@ -18,7 +18,7 @@ nx.Utils.mixin(nxt.CommandCell.prototype, nx.Cell.prototype);
 
 nxt.CommandCell.prototype.reverseBind = function (cell, conversion) {
 	this._binding = new nxt.CommandBinding(cell, this, conversion);
-	this._binding.sync();
+	this._binding.sync(cell.value);
 	return this._binding;
 };
 

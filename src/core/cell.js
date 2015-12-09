@@ -12,8 +12,10 @@ var flatMethods = [
 nx.Cell = function (options) {
 	options = options || {};
 
+	this._history = [];
 	if (typeof options.value !== 'undefined') {
 		this._value = options.value;
+		this._history = [options.value];
 	}
 
 	this._bindingIndex = 0;
@@ -37,16 +39,16 @@ Object.defineProperty(nx.Cell.prototype, 'value', {
 	enumerable : true,
 	get: function () { return this._value; },
 	set: function (value) {
-		var oldValue = this._value;
+		this._history = [value, this._value];
 		this._value = value;
-		this.onvalue.trigger(value, oldValue);
+		this.onvalue.trigger.apply(this.onvalue, this._history);
 		for (var index in this.bindings) {
 			var binding = this.bindings[index];
 			var hasTwin = typeof binding.twin !== 'undefined';
 			if (hasTwin) {
 				binding.twin.lock();
 			}
-			binding.sync();
+			binding.sync.apply(binding, this._history);
 			if (hasTwin) {
 				binding.twin.unlock();
 			}
@@ -64,7 +66,7 @@ nx.Cell.prototype._createBinding = function (cell, conversion) {
 nx.Cell.prototype['->'] = function (cell, conversion, sync) {
 	var binding = this._createBinding(cell, conversion);
 	if (sync) {
-		binding.sync();
+		binding.sync.apply(binding, this._history);
 	}
 	return binding;
 };
@@ -101,9 +103,9 @@ nx.Cell.prototype['<->'] = function (cell, conversion, backConversion, sync) {
 	var backBinding = cell._createBinding(this, backConversion);
 	binding.pair(backBinding);
 	if (sync === '->') {
-		binding.sync();
+		binding.sync.apply(binding, this._history);
 	} else if (sync === '<-') {
-		backBinding.sync();
+		backBinding.sync.apply(backBinding, cell._history);
 	}
 	return [binding, backBinding];
 };

@@ -19,7 +19,7 @@ describe('nx.Binding', function () {
 			var target = new nx.Cell();
 			var binding = new nx.Binding(source, target);
 			source.value = 'cellar door';
-			binding.sync();
+			binding.sync(source.value);
 			target.value.should.equal('cellar door');
 		});
 
@@ -35,7 +35,7 @@ describe('nx.Binding', function () {
 			var negative = new nx.Cell();
 			var binding = new nx.Binding(positive, negative, function (value) { return -value; });
 			positive.value = 1;
-			binding.sync();
+			binding.sync(positive.value);
 			negative.value.should.equal(-1);
 		});
 	});
@@ -59,10 +59,10 @@ describe('nx.Binding', function () {
 			var q = new nx.Cell({ value: '!' });
 			var binding = new nx.Binding(p, q);
 			binding.lock();
-			binding.sync();
+			binding.sync(p.value);
 			q.value.should.equal('!').and.should.not.equal(p.value);
 			binding.unlock();
-			binding.sync();
+			binding.sync(p.value);
 			q.value.should.equal(p.value);
 		});
 	});

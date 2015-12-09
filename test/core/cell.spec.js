@@ -106,6 +106,23 @@ describe('nx.Cell', function () {
 			p.value.should.equal('echo');
 		});
 
+		they('accept a converting function of new and old values', function () {
+			var p = new nx.Cell();
+			var q = new nx.Cell();
+			var spy = sinon.spy(function (number, oldNumber) {
+				return [number, oldNumber];
+			});
+			p['->'](q, spy);
+			p.value = 0;
+			spy.should.have.been.calledWith(p.value, undefined);
+			p.value = 1;
+			spy.should.have.been.calledWith(1, 0);
+			p.value = 2;
+			p.value = 3;
+			spy.should.have.been.calledWith(3, 2);
+			q.value.should.deep.equal([3, 2]);
+		});
+
 		they('return an nx.Binding instance', function () {
 			var p = new nx.Cell();
 			var q = new nx.Cell();
