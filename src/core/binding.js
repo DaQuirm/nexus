@@ -9,33 +9,35 @@ nx.Binding = function (source, target, conversion) {
 	this.conversion = conversion;
 };
 
+nx.Binding.prototype.convert = function (value, oldValue) {
+	if (typeof this.conversion !== 'undefined') {
+		if (this.conversion instanceof nx.Mapping) {
+			return this.conversion.map(value, this.target.value);
+		} else if (typeof this.conversion === 'function') {
+			return this.conversion(value, oldValue);
+		}
+	} else {
+		return value;
+	}
+};
+
 nx.Binding.prototype.sync = function (value, oldValue) {
 	if (this.locked) {
 		return;
 	}
-
-	if (typeof this.conversion !== 'undefined') {
-		if (this.conversion instanceof nx.Mapping) {
-			value = this.conversion.map(value, this.target.value);
-		} else if (typeof this.conversion === 'function') {
-			value = this.conversion(value, oldValue);
-		}
-	}
-
 	var targets;
 	if (typeof this.target === 'function') {
-		targets = this.target(value);
+		targets = this.target(value, oldValue);
 		if (Array.isArray(targets)) {
 			targets.forEach(function (target) {
-				target.value = value;
-			});
+				target.value = this.convert(value, oldValue);
+			}, this);
 		} else {
-			targets.value = value;
+			targets.value = this.convert(value, oldValue);
 		}
 	} else {
-		this.target.value = value;
+		this.target.value = this.convert(value, oldValue);
 	}
-
 };
 
 nx.Binding.prototype.pair = function (binding) {
