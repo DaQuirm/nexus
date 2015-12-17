@@ -38,7 +38,7 @@ nxt.Event = function (name, secondArg, thirdArg) {
 	if (secondArg instanceof nx.Cell) {
 		var cell = secondArg;
 		handler = function (event) {
-			cell.value = thirdArg(event);
+			cell.value = thirdArg ? thirdArg(event) : event;
 		};
 	}
 	return new nxt.Command('Event', 'add', { name: name, handler: handler });

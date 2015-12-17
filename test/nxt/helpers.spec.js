@@ -100,6 +100,16 @@ describe('nxt helpers', function () {
 			command.data.node.click();
 			cell.value.should.equal('cellar door');
 		});
+
+		it('links an event to a cell using without conversion', function () {
+			var cell = new nx.Cell();
+
+			var command = nxt.Element('div',
+				nxt.Event('click', cell)
+			);
+			command.data.node.click();
+			cell.value.type.should.equal('click');
+		});
 	});
 
 	describe('nxt.Element', function () {
