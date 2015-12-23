@@ -23,8 +23,9 @@ require('./nxt/helpers.spec.js');
 require('./nxt/renderers/content-renderer.spec.js');
 require('./nxt/renderers/attr-renderer.spec.js');
 require('./nxt/renderers/class-renderer.spec.js');
-require('./nxt/renderers/node-renderer.spec.js');
 require('./nxt/renderers/event-renderer.spec.js');
+require('./nxt/renderers/fragment-renderer.spec.js');
+require('./nxt/renderers/node-renderer.spec.js');
 require('./nxt/renderers/style-renderer.spec.js');
 
 /* REST */

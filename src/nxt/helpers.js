@@ -114,7 +114,7 @@ nxt.Fragment = function () {
 	if (args.length > 0) {
 		nxt.ContentRenderer.render({ items: args }, { container: fragment });
 	}
-	return new nxt.Command('Node', 'render', { node: fragment });
+	return new nxt.Command('Fragment', 'render', { fragment: fragment });
 };
 
 nxt.If = function () {

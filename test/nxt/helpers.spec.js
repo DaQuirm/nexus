@@ -399,10 +399,10 @@ describe('nxt helpers', function () {
 				nxt.Text('cellar door')
 			];
 			var command = nxt.Fragment(content);
-			command.type.should.equal('Node');
+			command.type.should.equal('Fragment');
 			command.method.should.equal('render');
-			command.data.node.nodeType.should.equal(Node.DOCUMENT_FRAGMENT_NODE);
-			var childNodes = [].slice.call(command.data.node.childNodes);
+			command.data.fragment.nodeType.should.equal(Node.DOCUMENT_FRAGMENT_NODE);
+			var childNodes = [].slice.call(command.data.fragment.childNodes);
 			childNodes.should.deep.equal(content.map(function (item) { return item.data.node; }));
 		});
 	});
