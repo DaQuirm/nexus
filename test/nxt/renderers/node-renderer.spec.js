@@ -77,6 +77,30 @@ describe('nxt.NodeRenderer', function () {
 			domContext.container.childNodes[1].textContent.should.equal('Lethal Weapon II');
 			domContext.container.childNodes[1].nodeName.toLowerCase().should.equal('span');
 		});
+
+		it('calls the `focus` method of the rendered node if "nx-focus" attribute is set to `true`', function () {
+			var command = nxt.Element('input', nxt.Focus(true));
+			var focusSpy = sinon.spy(command.data.node, 'focus');
+			renderer.render(command.data, domContext);
+			/* eslint-disable no-unused-expressions */
+			focusSpy.should.have.been.called;
+			/* eslint-enable */
+		});
+
+		it('calls the `blur` method of the rendered node if "nx-focus" attribute is set to `false`', function () {
+			var command = nxt.Element('input', nxt.Focus(false));
+			var blurSpy = sinon.spy(command.data.node, 'blur');
+			renderer.render(command.data, domContext);
+			/* eslint-disable no-unused-expressions */
+			blurSpy.should.have.been.called;
+			/* eslint-enable */
+		});
+
+		it('removes the "nx-focus" attribute', function () {
+			var command = nxt.Element('input', nxt.Focus(false));
+			renderer.render(command.data, domContext);
+			command.data.node.hasAttribute('nx-focus').should.equal(false);
+		});
 	});
 
 	describe('isVisible', function () {

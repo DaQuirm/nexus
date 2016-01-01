@@ -1,5 +1,7 @@
 var nxt = {};
 
+var FOCUS_ATTR = 'nx-focus';
+
 nxt.NodeRenderer = {
 
 	render: function (data, domContext) {
@@ -10,6 +12,17 @@ nxt.NodeRenderer = {
 		} else {
 			domContext.container.appendChild(data.node);
 		}
+
+		if (data.node.nodeType === Node.ELEMENT_NODE && data.node.hasAttribute(FOCUS_ATTR)) {
+			var focus = data.node.getAttribute(FOCUS_ATTR);
+			if (focus === 'true') {
+				data.node.focus();
+			} else {
+				data.node.blur();
+			}
+			data.node.removeAttribute(FOCUS_ATTR);
+		}
+
 		return data.node;
 	},
 

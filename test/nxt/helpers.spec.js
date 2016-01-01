@@ -415,4 +415,10 @@ describe('nxt helpers', function () {
 		});
 	});
 
+	describe('nxt.Focus', function () {
+		it('adds an internal "nx-focus" attribute', function () {
+			nxt.Focus(true).should.deep.equal(nxt.Attr('nx-focus', true));
+		});
+	});
+
 });

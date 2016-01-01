@@ -125,6 +125,10 @@ nxt.If = function () {
 	}
 };
 
+nxt.Focus = function (focus) {
+	return nxt.Attr('nx-focus', focus);
+};
+
 module.exports = {
 	Attr:         nxt.Attr,
 	Class:        nxt.Class,
@@ -132,6 +136,7 @@ module.exports = {
 	Event:        nxt.Event,
 	Element:      nxt.Element,
 	Fragment:     nxt.Fragment,
+	Focus:        nxt.Focus,
 	If:           nxt.If,
 	Binding:      nxt.Binding,
 	ItemEvent:    nxt.ItemEvent,
