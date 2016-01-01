@@ -15,6 +15,11 @@ describe('nxt.NodeRenderer', function () {
 
 	beforeEach(function () {
 		domContext = { container: document.createElement('div') };
+		document.body.appendChild(domContext.container);
+	});
+
+	afterEach(function () {
+		document.body.removeChild(domContext.container);
 	});
 
 	describe('render', function () {

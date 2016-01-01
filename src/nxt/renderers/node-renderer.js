@@ -4,6 +4,14 @@ var FOCUS_ATTR = 'nx-focus';
 
 nxt.NodeRenderer = {
 
+	_isAttached: function (node) {
+		var parent;
+		while (node.parentNode !== null) {
+			node = parent = node.parentNode;
+		}
+		return parent === document;
+	},
+
 	render: function (data, domContext) {
 		if (typeof domContext.content !== 'undefined') {
 			domContext.container.replaceChild(data.node, domContext.content);
@@ -16,11 +24,23 @@ nxt.NodeRenderer = {
 		if (data.node.nodeType === Node.ELEMENT_NODE && data.node.hasAttribute(FOCUS_ATTR)) {
 			var focus = data.node.getAttribute(FOCUS_ATTR);
 			if (focus === 'true') {
-				data.node.focus();
+				nxt.NodeRenderer._postRender = function () {
+					data.node.focus();
+					nxt.NodeRenderer._postRender = undefined;
+				};
 			} else {
-				data.node.blur();
+				nxt.NodeRenderer._postRender = function () {
+					data.node.blur();
+					nxt.NodeRenderer._postRender = undefined;
+				};
 			}
 			data.node.removeAttribute(FOCUS_ATTR);
+		}
+
+		if (typeof nxt.NodeRenderer._postRender === 'function') {
+			if (nxt.NodeRenderer._isAttached(data.node)) {
+				nxt.NodeRenderer._postRender();
+			}
 		}
 
 		return data.node;
