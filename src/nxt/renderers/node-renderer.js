@@ -39,7 +39,7 @@ nxt.NodeRenderer = {
 
 		if (typeof nxt.NodeRenderer._postRender === 'function') {
 			if (nxt.NodeRenderer._isAttached(data.node)) {
-				nxt.NodeRenderer._postRender();
+				window.setTimeout(nxt.NodeRenderer._postRender, 0);
 			}
 		}
 
