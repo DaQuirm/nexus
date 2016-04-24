@@ -83,21 +83,27 @@ describe('nxt.NodeRenderer', function () {
 			domContext.container.childNodes[1].nodeName.toLowerCase().should.equal('span');
 		});
 
-		it('calls the `focus` method of the rendered node if "nx-focus" attribute is set to `true`', function () {
+		it('calls the `focus` method of the rendered node if "nx-focus" attribute is set to `true`', function (done) {
 			var command = nxt.Element('input', nxt.Focus(true));
 			var focusSpy = sinon.spy(command.data.node, 'focus');
 			renderer.render(command.data, domContext);
 			/* eslint-disable no-unused-expressions */
-			focusSpy.should.have.been.called;
+			setTimeout(function () {
+				focusSpy.should.have.been.called;
+				done();
+			}, 0);
 			/* eslint-enable */
 		});
 
-		it('calls the `blur` method of the rendered node if "nx-focus" attribute is set to `false`', function () {
+		it('calls the `blur` method of the rendered node if "nx-focus" attribute is set to `false`', function (done) {
 			var command = nxt.Element('input', nxt.Focus(false));
 			var blurSpy = sinon.spy(command.data.node, 'blur');
 			renderer.render(command.data, domContext);
 			/* eslint-disable no-unused-expressions */
-			blurSpy.should.have.been.called;
+			setTimeout(function () {
+				blurSpy.should.have.been.called;
+				done();
+			}, 0);
 			/* eslint-enable */
 		});
 
