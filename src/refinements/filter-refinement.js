@@ -71,17 +71,18 @@ nx.FilterRefinement.prototype.insertBefore = function (data, values) {
 };
 
 nx.FilterRefinement.prototype.remove = function (data) {
-	var filteredIndexes = [];
-	data.indexes
-		.sort(function (a, b) { return a - b; })
-		.forEach(function (index, count) {
-			var indexPosition = this._indexes.indexOf(index);
-			if (indexPosition !== -1) {
-				filteredIndexes.push(indexPosition + count);
-				this._indexes.splice(indexPosition, 1);
-			}
-		}, this);
-	return new nx.Command('remove', { indexes: filteredIndexes });
+	var newIndexes = [];
+	var refinedIndexes = [];
+	this._indexes.forEach(function (index, refinedIndex) {
+		var indexPosition = data.indexes.indexOf(index);
+		if (indexPosition !== -1) {
+			refinedIndexes.push(refinedIndex);
+		} else {
+			newIndexes.push(index - refinedIndexes.length);
+		}
+	});
+	this._indexes = newIndexes;
+	return new nx.Command('remove', { indexes: refinedIndexes });
 };
 
 nx.FilterRefinement.prototype.reset = function (data, values) {

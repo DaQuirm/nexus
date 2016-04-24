@@ -83,7 +83,7 @@ describe('nx.FilterRefinement', function () {
 			refined.command.value.should.deep.equal(
 				new nx.Command('remove', { indexes: [1] })
 			);
-			refinement._indexes.should.deep.equal([0, 4]);
+			refinement._indexes.should.deep.equal([0, 3]);
 		});
 	});
 
