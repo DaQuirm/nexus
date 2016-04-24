@@ -13,9 +13,11 @@ nx.ArrayTransform.append = function (data, array) {
 };
 
 nx.ArrayTransform.remove = function (data, array) {
-	data.indexes.forEach(function (index, count) {
-		array.splice(index - count, 1);
-	});
+	data.indexes
+		.sort(function (a, b) { return a - b; })
+		.forEach(function (index, count) {
+			array.splice(index - count, 1);
+		});
 	return array;
 };
 

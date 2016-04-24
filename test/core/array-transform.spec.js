@@ -19,7 +19,7 @@ describe('nx.ArrayTransform', function () {
 	describe('remove', function () {
 		it('removes items by their indexes from an array', function () {
 			var array = [1, 2, 3, 4, 5];
-			var result = nx.ArrayTransform.remove({ indexes: [1, 3] }, array);
+			var result = nx.ArrayTransform.remove({ indexes: [3, 1] }, array);
 			result.should.deep.equal([1, 3, 5]);
 		});
 	});
