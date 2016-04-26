@@ -21,6 +21,7 @@ describe('nx.FilterRefinement', function () {
 
 	beforeEach(function () {
 		collection = new nx.Collection({
+			transform: nx.LiveTransform(['text']),
 			items: [1, 2, 3, 4, 5].map(Model)
 		});
 
@@ -110,5 +111,40 @@ describe('nx.FilterRefinement', function () {
 	});
 
 	describe('change', function () {
+		it('removes the item from the refined collection if it no longer passes the filter', function () {
+			collection.items[2].text.value = '6';
+			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 5]);
+			refined.command.value.should.deep.equal(
+				new nx.Command('remove', { indexes: [2] })
+			);
+			refinement._indexes.should.deep.equal([0, 4]);
+		});
+
+		it('adds the item to the refined collection if it passes the filter', function () {
+			collection.items[1].text.value = '7';
+			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 7, 3, 5]);
+			refined.command.value.should.deep.equal(
+				new nx.Command('insertBefore', { indexes: [1], items: [7].map(Model) })
+			);
+			refinement._indexes.should.deep.equal([0, 1, 2, 4]);
+		});
+
+		it('generates an empty command if an item remains filtered', function () {
+			collection.items[1].text.value = '8';
+			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 3, 5]);
+			refined.command.value.should.deep.equal(
+				new nx.Command('remove', { indexes: [] })
+			);
+			refinement._indexes.should.deep.equal([0, 2, 4]);
+		});
+
+		it('generates an empty command if an item remains unfiltered', function () {
+			collection.items[2].text.value = '7';
+			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 7, 5]);
+			refined.command.value.should.deep.equal(
+				new nx.Command('remove', { indexes: [] })
+			);
+			refinement._indexes.should.deep.equal([0, 2, 4]);
+		});
 	});
 });
