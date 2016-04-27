@@ -44,18 +44,38 @@ nxt.Event = function (name, secondArg, thirdArg) {
 	return new nxt.Command('Event', 'add', { name: name, handler: handler });
 };
 
-nxt.Element = function () {
-	var args = [].slice.call(arguments);
-	args = args.reduce(function (acc, item) {
-		return acc.concat(item);
-	}, []);
+function createElement (namespace, args) {
 	var name = args[0];
-	var node = document.createElement(name);
+	var node;
+	if (namespace !== null) {
+		node = document.createElementNS(namespace, name);
+	} else {
+		node = document.createElement(name);
+	}
 	if (args.length > 1) {
 		var content = args.slice(1);
 		nxt.ContentRenderer.render({ items: content }, { container: node });
 	}
 	return new nxt.Command('Node', 'render', { node: node });
+}
+
+function flattenArgs (args) {
+	return []
+		.slice.call(args)
+		.reduce(function (acc, item) {
+			return acc.concat(item);
+		}, []);
+}
+
+nxt.Element = function () {
+	var args = flattenArgs(arguments);
+	return createElement(null, args);
+};
+
+nxt.SvgElement = function () {
+	var svgNS = 'http://www.w3.org/2000/svg';
+	var args = flattenArgs(arguments);
+	return createElement(svgNS, args);
 };
 
 nxt.Binding = function (cell, conversion) {
@@ -135,6 +155,7 @@ module.exports = {
 	Text:         nxt.Text,
 	Event:        nxt.Event,
 	Element:      nxt.Element,
+	SvgElement:   nxt.SvgElement,
 	Fragment:     nxt.Fragment,
 	Focus:        nxt.Focus,
 	If:           nxt.If,
