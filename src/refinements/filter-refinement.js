@@ -91,6 +91,25 @@ nx.FilterRefinement.prototype.reset = function (data, values) {
 	return new nx.Command('reset', { items: filtered.items });
 };
 
+nx.FilterRefinement.prototype.change = function (change, values) {
+	var index = this._source.items.indexOf(change.item);
+	var filteredIndex = this._indexes.indexOf(index);
+	var wasFiltered = filteredIndex !== -1;
+	var isFiltered = this.filter.value.apply(null, values);
+	if (wasFiltered && !isFiltered) {
+		var indexes = wasFiltered ? [filteredIndex] : [];
+		this._indexes.splice(filteredIndex, 1);
+		return new nx.Command('remove', { indexes: indexes });
+	} else if (!wasFiltered && isFiltered) {
+		if (filteredIndex === this._source.items.length - 1) {
+			return new nx.Command('append', { items: [change.item] });
+		}
+		return this.insertBefore({ index: index, items: [change.item] }, [values]);
+	} else {
+		return new nx.Command('remove', { indexes: [] });
+	}
+};
+
 nx.FilterRefinement.prototype.swap = function () {
 
 };

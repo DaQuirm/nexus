@@ -41,9 +41,10 @@ describe('nx.FilterRefinement', function () {
 			var items = [6, 7].map(Model);
 			collection.append.apply(collection, items);
 			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 3, 5, 7]);
-			refined.command.value.should.deep.equal(
-				new nx.Command('append', { items: [7].map(Model) })
-			);
+			refined.command.value.method.should.equal('append');
+			refined.command.value.data.items
+				.map(function (item) { return item.text.value; })
+				.should.deep.equal([7]);
 			refinement._indexes.should.deep.equal([0, 2, 4, 6]);
 		});
 	});
@@ -53,12 +54,11 @@ describe('nx.FilterRefinement', function () {
 			var items = [Model(9)];
 			collection.insertBefore(collection.items[2], items);
 			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 9, 3, 5]);
-			refined.command.value.should.deep.equal(
-				new nx.Command('insertBefore', {
-					items: [9].map(Model),
-					index: 1
-				})
-			);
+			refined.command.value.method.should.equal('insertBefore');
+			refined.command.value.data.index.should.equal(1);
+			refined.command.value.data.items
+				.map(function (item) { return item.text.value; })
+				.should.deep.equal([9]);
 			refinement._indexes.should.deep.equal([0, 2, 3, 5]);
 		});
 
@@ -67,9 +67,10 @@ describe('nx.FilterRefinement', function () {
 			var items = [6, 7].map(Model);
 			collection.insertBefore(collection.items[5], items);
 			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 3, 5, 7]);
-			refined.command.value.should.deep.equal(
-				new nx.Command('append', { items: [7].map(Model) })
-			);
+			refined.command.value.method.should.equal('append');
+			refined.command.value.data.items
+				.map(function (item) { return item.text.value; })
+				.should.deep.equal([7]);
 			refinement._indexes.should.deep.equal([0, 2, 4, 7]);
 		});
 	});
@@ -93,9 +94,10 @@ describe('nx.FilterRefinement', function () {
 			var items = [10, 11, 12, 13, 14].map(Model);
 			collection.reset(items);
 			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([11, 13]);
-			refined.command.value.should.deep.equal(
-				new nx.Command('reset', { items: [11, 13].map(Model) })
-			);
+			refined.command.value.method.should.equal('reset');
+			refined.command.value.data.items
+				.map(function (item) { return item.text.value; })
+				.should.deep.equal([11, 13]);
 			refinement._indexes.should.deep.equal([1, 3]);
 		});
 	});
@@ -112,25 +114,27 @@ describe('nx.FilterRefinement', function () {
 
 	describe('change', function () {
 		it('removes the item from the refined collection if it no longer passes the filter', function () {
-			collection.items[2].text.value = '6';
+			collection.items[2].text.value = 6;
 			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 5]);
 			refined.command.value.should.deep.equal(
-				new nx.Command('remove', { indexes: [2] })
+				new nx.Command('remove', { indexes: [1] })
 			);
 			refinement._indexes.should.deep.equal([0, 4]);
 		});
 
 		it('adds the item to the refined collection if it passes the filter', function () {
-			collection.items[1].text.value = '7';
+			collection.items[1].text.value = 7;
 			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 7, 3, 5]);
-			refined.command.value.should.deep.equal(
-				new nx.Command('insertBefore', { indexes: [1], items: [7].map(Model) })
-			);
+			refined.command.value.method.should.equal('insertBefore');
+			refined.command.value.indexes.should.deep.equal([1]);
+			refined.command.value.data.items
+				.map(function (item) { return item.text.value; })
+				.should.deep.equal([7]);
 			refinement._indexes.should.deep.equal([0, 1, 2, 4]);
 		});
 
 		it('generates an empty command if an item remains filtered', function () {
-			collection.items[1].text.value = '8';
+			collection.items[1].text.value = 8;
 			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 3, 5]);
 			refined.command.value.should.deep.equal(
 				new nx.Command('remove', { indexes: [] })
@@ -139,7 +143,7 @@ describe('nx.FilterRefinement', function () {
 		});
 
 		it('generates an empty command if an item remains unfiltered', function () {
-			collection.items[2].text.value = '7';
+			collection.items[2].text.value = 7;
 			refined.items.map(function (item) { return item.text.value; }).should.deep.equal([1, 7, 5]);
 			refined.command.value.should.deep.equal(
 				new nx.Command('remove', { indexes: [] })
